@@ -12,19 +12,20 @@
 
 ### 1.2 Product summary
 
-PESISIR adalah platform digital yang dirancang khusus untuk membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) dalam mengotomasi proses pembuatan draft dokumen pabean. Platform ini menggunakan teknologi OCR (Optical Character Recognition) dan AI untuk mengekstrak data dari dokumen PDF berbentuk image (seperti Bill of Lading, Invoice, Packing List) dan secara otomatis menghasilkan draft dokumen pabean yang siap digunakan.
+PESISIR adalah platform digital yang dirancang khusus untuk membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) dalam mengotomasi proses pembuatan draft dokumen pabean. Platform ini menggunakan teknologi parser PDF untuk mengekstrak data dari dokumen PDF (seperti Bill of Lading, Invoice, Packing List) dan secara otomatis menghasilkan draft dokumen pabean yang siap digunakan.
 
 Dengan pendekatan B2C, PESISIR menargetkan karyawan PPJK secara individual, bukan perusahaan. Hal ini memungkinkan adopsi yang lebih cepat dan fleksibel. Platform ini dirancang dengan pemahaman mendalam tentang tantangan teknis dan operasional yang khas di Indonesia, seperti dokumen scan berkualitas rendah, format tidak standar, dan workflow yang bervariasi antar perusahaan.
 
-MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (Dokumen Pemberitahuan Impor Barang untuk Ditimbun di TPS/TPP), dan BC 3.0 (Dokumen Pemberitahuan Impor Barang Untuk Diangkut Terus/Diangkut Lanjut). Dengan otomasi ini, waktu pembuatan dokumen dapat dikurangi dari 10 menit menjadi hanya 1 menit per dokumen - penghematan waktu hingga 90%.
+MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest - Daftar Cargo), BC 2.3 (Dokumen Pemberitahuan Impor Barang untuk Ditimbun di TPS/TPP), dan BC 3.0 (Dokumen Pemberitahuan Impor Barang Untuk Diangkut Terus/Diangkut Lanjut). Dengan otomasi ini, waktu pembuatan dokumen dapat dikurangi dari 10 menit menjadi hanya 1 menit per dokumen - penghematan waktu hingga 90%.
 
 ## 2. Goals
 
 ### 2.1 Business goals
 
-- **Akuisisi pengguna cepat**: Mencapai 100 pengguna aktif dalam 3 bulan pertama sejak peluncuran MVP
+- **Akuisisi pengguna cepat**: Mencapai 100 pengguna aktif dalam 3 bulan pertama sejak peluncuran MVP melalui organic growth dan word-of-mouth dari satisfied users, termasuk skenario referral incentive
 - **Validasi product-market fit**: Memvalidasi model pay-per-document dengan tingkat konversi minimum 20% dari free trial users
 - **Membangun reputasi kualitas**: Mencapai tingkat akurasi ekstraksi data minimum 95% untuk mengurangi bug dan kesalahan
+- **Program referral**: Memberikan insentif balance kredit untuk pengguna yang berhasil mengajak pengguna baru sebagai mekanisme growth untuk mencapai target 100 user
 - **Revenue generation**: Mencapai break-even operasional (biaya infrastructure + marketing) dalam 6 bulan
 - **Foundation untuk ekspansi**: Membangun basis pengguna yang solid untuk ekspansi ke fitur tambahan (Learn, HS Code Classifier) dan target B2B di masa depan
 - **Brand positioning**: Memposisikan PESISIR sebagai solusi lokal yang memahami tantangan khas Indonesia dalam pengurusan dokumen pabean
@@ -40,6 +41,7 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (D
 
 ### 2.3 Non-goals (Out of Scope)
 
+- **Fitur OCR advanced**: OCR dan AI untuk image-based PDF tidak termasuk dalam MVP. MVP fokus pada PDF parsing untuk text-based/searchable PDFs. OCR adalah fitur advanced untuk fase selanjutnya.
 - **Integrasi langsung dengan CEISA**: MVP tidak akan terintegrasi langsung dengan API CEISA (akan menghasilkan file Excel/CSV yang dapat di-import manual)
 - **Fitur edukatif (Learn)**: Konten pembelajaran tentang customs dan regulasi tidak termasuk dalam MVP
 - **HS Code Classifier**: Tool untuk klasifikasi otomatis HS Code tidak termasuk dalam MVP
@@ -48,6 +50,7 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (D
 - **Target B2B/Enterprise**: MVP fokus ke individual users (B2C), bukan penjualan enterprise dengan SLA dan custom features
 - **Multi-language support**: MVP hanya mendukung Bahasa Indonesia dan Bahasa Inggris untuk UI
 - **Mobile native app**: MVP hanya mendukung web application (responsive design), tidak ada iOS/Android native app
+- **Email delivery untuk generated documents**: MVP hanya menyediakan download di browser. Pengiriman via email tidak termasuk dalam MVP (KISS principle).
 
 ## 3. User personas
 
@@ -101,7 +104,7 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (D
 ### 3.3 Role-based access
 
 - **Individual User (Free Trial)**:
-  - Akses: 5 dokumen gratis untuk trial
+  - Akses: Rp 50.000 saldo kredit diberikan saat pendaftaran (bukan gratis, tapi kredit balance yang terbatas)
   - Features: Full access ke semua fitur ekstraksi dan generation
   - Limitations: Watermark pada output, no priority processing
 - **Individual User (Paid)**:
@@ -113,13 +116,13 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (D
 
 ### 4.1 Document upload & parsing (Priority: CRITICAL)
 
-- System harus dapat menerima upload dokumen dalam format PDF (image-based dan text-based), JPG, dan PNG
+- System harus dapat menerima upload dokumen dalam format PDF (text-based dan searchable), JPG, dan PNG
 - Maximum file size: 10MB per dokumen
 - System harus dapat mendeteksi jenis dokumen (Bill of Lading, Commercial Invoice, Packing List) secara otomatis
-- OCR processing harus selesai dalam maksimal 2 menit untuk dokumen standar (1-3 halaman)
-- System harus menampilkan progress bar real-time saat OCR processing
+- PDF parsing processing harus selesai dalam maksimal 2 menit untuk dokumen standar (1-3 halaman)
+- System harus menampilkan progress bar real-time saat parsing processing
 - User dapat upload multiple documents sekaligus (batch upload) hingga 10 files
-- System harus dapat handle dokumen dengan kualitas scan rendah (minimum 150 DPI)
+- System dapat handle dokumen PDF dengan teks yang dapat dicari (searchable PDF), JPG dan PNG dengan kualitas memadai
 
 ### 4.2 Data extraction & validation (Priority: CRITICAL)
 
@@ -140,21 +143,21 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: Manifest, BC 2.3 (D
 ### 4.3 Document generation (Priority: CRITICAL)
 
 - System harus dapat generate 3 jenis dokumen prioritas:
-  - **Manifest**: Daftar cargo dalam shipment dengan detail container (revisi: Manifest itu adalah BC 1.1)
+  - **BC 1.1 (Manifest)**: Daftar cargo dalam shipment dengan detail container
   - **BC 2.3**: Pemberitahuan Impor Barang untuk Ditimbun di TPS
   - **BC 3.0**: Pemberitahuan Impor Barang untuk Diangkut Terus/Lanjut
 - Output format: Excel (.xlsx) yang compatible dengan template CEISA
 - Generated document harus include semua mandatory fields sesuai regulasi Bea Cukai
 - System harus menyediakan preview dokumen sebelum download
 - User dapat memilih template version (jika ada update regulasi)
-- Generated document harus dapat di-download langsung atau dikirim via email
+- Generated document hanya dapat di-download langsung di browser (KISS principle - tidak perlu kirim via email)
 
 ### 4.4 User onboarding & authentication (Priority: HIGH)
 
 - Registration hanya memerlukan email dan password (no phone verification di MVP)
 - Email verification mandatory sebelum dapat menggunakan layanan
 - Social login option: Google OAuth untuk kemudahan akses dan passkey
-- New user automatically mendapat 5 free trial documents (revisi: ubah menjadi 17 kali.)
+- New user automatically mendapat Rp 50.000 saldo kredit balance saat pendaftaran
 - Onboarding wizard menjelaskan cara upload dokumen dan review hasil ekstraksi
 - User profile harus dapat menyimpan default settings (currency preference, company info untuk auto-fill consignee)
 
@@ -279,9 +282,10 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 
 ### 7.1 User-centric metrics
 
-- **User acquisition**: 100 registered users dalam 3 bulan pertama
+- **User acquisition**: 100 registered users dalam 3 bulan pertama dengan support dari program referral (users yang membawa user baru mendapat balance kredit bonus)
 - **Activation rate**: Minimum 60% dari registered users complete onboarding dan process minimal 1 dokumen
-- **Trial conversion**: Minimum 20% dari trial users convert ke paid users (beli document credits)
+- **Trial conversion**: Minimum 20% dari trial users dengan saldo kredit initial convert ke paid users (beli document credits)
+- **Referral conversion**: Minimum 15% dari referred users yang actually sign up dan active
 - **Retention rate**:
   - Day 7 retention: Minimum 40%
   - Day 30 retention: Minimum 25%
@@ -324,7 +328,7 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 
 ### 8.1 Integration points
 
-- **Azure Document Intelligence (Form Recognizer)**: OCR engine untuk ekstraksi data dari PDF images
+- **PDF parsing library** (e.g., iTextSharp, PDFSharp, atau Apache PDFBox): Parser untuk ekstraksi data dari text-based/searchable PDF documents
 - **Payment gateway**: Midtrans atau Xendit untuk payment processing
 - **Email service**: SendGrid atau AWS SES untuk transactional emails (verification, invoices, notifications)
 - **Cloud storage**: Azure Blob Storage atau AWS S3 untuk storing uploaded documents dan generated files
@@ -414,14 +418,17 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 - Project setup: Repository, CI/CD pipeline, development environment
 - Authentication system: User registration, login, email verification, Google OAuth
 - Database schema dan Entity Framework migrations
-- Azure Document Intelligence integration dan testing dengan sample documents
+- Initial balance allocation system: Setiap new user dapat Rp 50.000 balance saat pendaftaran
+- PDF parsing library integration dan testing dengan sample text-based PDFs
 - Basic UI layout: Landing page, registration flow, dashboard skeleton
 - Document upload functionality dengan file validation
+- Referral program infrastructure setup: Tracking referred users dan bonus balance allocation
 
 **Success criteria**:
 
-- User dapat register dan login
-- User dapat upload PDF dan system dapat call OCR API
+- User dapat register dan login dengan initial Rp 50.000 balance
+- User dapat upload PDF dan system dapat parse text-based content
+- Referral tracking mechanism working
 - Infrastructure deployed ke staging environment
 
 #### Phase 2: Document Processing & Generation (Week 5-8)
@@ -430,12 +437,14 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 
 **Key deliverables**:
 
-- OCR processing pipeline dengan Hangfire background jobs
+- PDF parsing pipeline dengan Hangfire background jobs untuk text-based/searchable PDFs
 - Data extraction dan confidence scoring logic
 - Review & edit interface untuk extracted data
-- Excel generation engine untuk 3 jenis dokumen (Manifest, BC 2.3, BC 3.0)
-- Document preview dan download functionality
-- History page untuk melihat processed documents
+- Excel generation engine untuk 3 jenis dokumen (BC 1.1 Manifest, BC 2.3, BC 3.0)
+- Document preview dan download functionality (hanya di browser, KISS principle)
+- History page untuk melihat processed documents dengan 30-day retention
+- Balance deduction logic saat document processing
+- Referral bonus distribution system
 - Error handling dan retry mechanism
 
 **Success criteria**:
@@ -443,6 +452,7 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 - End-to-end flow: Upload → Extract → Edit → Generate → Download working
 - Accuracy testing: Minimum 95% pada 50 sample documents
 - Processing time: p95 < 2 menit untuk standard document
+- Referral bonus successfully allocated ke referring users
 
 #### Phase 3: Payment & Polish (Week 9-12)
 
@@ -451,23 +461,25 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 **Key deliverables**:
 
 - Payment gateway integration (Midtrans atau Xendit)
-- Credit system: Free trial credits, purchase document bundles, credit tracking
+- Balance system: Initial balance allocation, top-up purchase, balance tracking
+- Referral program UI: Referral link generation, referral bonus tracking, referral history
 - Transaction history dan invoice generation
-- Onboarding wizard dan tutorial
+- Onboarding wizard dan tutorial (dengan highlight initial balance dan referral opportunities)
 - UI/UX polish: Responsive design, loading states, error messages
 - Performance optimization dan caching
 - Comprehensive testing: Unit tests, integration tests, end-to-end tests
-- Documentation: User guide, API documentation, deployment guide
-- Marketing website updates dan pricing page
+- Documentation: User guide, API documentation, deployment guide, referral program guidelines
+- Marketing website updates, pricing page, dan referral program landing page
 - Beta testing dengan 10-20 early adopters
 - Bug fixing dan final polish untuk launch
 
 **Success criteria**:
 
 - Payment flow working end-to-end dengan 3 payment methods
+- Referral program fully functional dengan ability untuk tracking dan bonus distribution
 - Zero critical bugs
 - Beta tester feedback positive (NPS > +20)
-- System ready untuk public launch
+- System ready untuk public launch dengan referral as key acquisition channel
 
 #### Phase 4: Launch & Iteration (Week 13+)
 
@@ -510,22 +522,23 @@ Sebagai staff PPJK yang baru mendengar tentang PESISIR, saya ingin dapat mendaft
 - User yang sign up dengan Google tidak perlu email verification (auto-verified)
 - Error handling: Clear error message jika email sudah terdaftar atau password tidak memenuhi requirement
 
-### 10.2 Free trial allocation
+### 10.2 Initial balance allocation
 
 **ID**: PESISIR-002
 
 **Description**:
-Sebagai new user, saya ingin mendapat free trial credits untuk mencoba layanan sebelum membeli, sehingga saya dapat memvalidasi bahwa PESISIR sesuai kebutuhan saya tanpa risiko finansial.
+Sebagai new user, saya ingin mendapat initial balance kredit saat mendaftar untuk mencoba layanan sebelum membeli lebih banyak, sehingga saya dapat memvalidasi bahwa PESISIR sesuai kebutuhan saya.
 
 **Acceptance criteria**:
 
-- Setiap new user otomatis mendapat 5 free trial credits setelah verify email
-- Trial credits ditampilkan di dashboard dengan clear indication "5 Dokumen Gratis Tersisa"
-- Trial credits digunakan first (sebelum paid credits) ketika process dokumen
-- User dapat melihat history penggunaan trial credits
-- Ketika trial credits habis, system menampilkan prompt untuk purchase paid credits
-- Trial credits tidak dapat di-refill atau di-transfer
-- Trial credits tidak ada expiration date
+- Setiap new user otomatis mendapat Rp 50.000 initial balance kredit setelah verify email
+- Initial balance ditampilkan di dashboard dengan clear indication "Saldo Kredit: Rp 50.000"
+- Initial balance digunakan first (sebelum paid credits) ketika process dokumen
+- User dapat melihat history penggunaan balance dan transaksi
+- Ketika balance habis, system menampilkan prompt untuk purchase paid credits
+- Initial balance tidak dapat di-refill atau di-transfer ke user lain
+- Initial balance tidak ada expiration date
+- Nilai balance berkurang sesuai pricing per dokumen yang diproses
 
 ### 10.3 Document upload
 
@@ -606,37 +619,39 @@ Sebagai user, saya ingin dapat generate dokumen pabean dalam format Excel yang s
 **Acceptance criteria**:
 
 - User dapat memilih document type yang ingin di-generate:
-  - Manifest
+  - BC 1.1 (Manifest)
   - BC 2.3 (Pemberitahuan Impor untuk Ditimbun di TPS)
   - BC 3.0 (Pemberitahuan Impor untuk Diangkut Terus/Lanjut)
 - System generate Excel file dalam maksimal 10 detik
 - Generated file menggunakan template terbaru sesuai regulasi Bea Cukai
 - Preview dokumen ditampilkan sebelum download (read-only Excel view atau screenshot)
-- User dapat download file dengan one-click "Download" button
+- User dapat download file langsung di browser dengan one-click "Download" button
 - Downloaded file naming convention: `{DocumentType}_{BOLNumber}_{Date}.xlsx`
 - User dapat regenerate document dengan different template jika needed
 - Generated document tersimpan di History untuk re-download hingga 30 hari
+- Generated document hanya tersedia untuk download di browser (tidak ada opsi kirim via email)
 
 ### 10.7 Purchase document credits
 
 **ID**: PESISIR-007
 
 **Description**:
-Sebagai user yang sudah habis free trial credits, saya ingin dapat membeli document credits dengan berbagai pilihan payment method, sehingga saya dapat continue menggunakan layanan.
+Sebagai user yang sudah habis balance kredit initial, saya ingin dapat membeli document credits dengan berbagai pilihan payment method, sehingga saya dapat continue menggunakan layanan.
 
 **Acceptance criteria**:
 
-- User dapat access "Buy Credits" page dari dashboard atau ketika credits habis
+- User dapat access "Top Up Saldo" page dari dashboard atau ketika balance habis
 - System menampilkan 3 pricing tiers:
-  - Single document: Rp 10.000
-  - Bundle 50 documents: Rp 400.000 (20% discount)
-  - Bundle 100 documents: Rp 700.000 (30% discount)
+  - Top up Rp 100.000 (untuk ~14 dokumen)
+  - Top up Rp 200.000 (untuk ~29 dokumen, lebih hemat)
+  - Top up Rp 500.000 (untuk ~71 dokumen, paling hemat)
+  - Alternative: Single document Rp 10.000, Bundle 50 documents Rp 400.000 (20% discount), Bundle 100 documents Rp 700.000 (30% discount)
 - User dapat memilih payment method:
   - Credit/debit card (Visa, Mastercard)
   - E-wallet (GoPay, OVO, DANA)
   - Bank transfer (manual verification)
 - Payment flow via Midtrans/Xendit payment gateway
-- Setelah payment success, credits otomatis ditambahkan ke user balance dalam 1 menit
+- Setelah payment success, balance kredit otomatis ditambahkan ke user account dalam 1 menit
 - User menerima invoice via email setelah successful payment
 - Transaction history ditampilkan di "Billing" page
 - Failed payment: Clear error message dengan option untuk retry atau change payment method
@@ -717,6 +732,8 @@ Sebagai user yang sering mobile, saya ingin dapat mengakses PESISIR dari smartph
 - **TPS**: Tempat Penimbunan Sementara
 - **Lartas**: Larangan dan Pembatasan - Barang-barang yang dilarang atau dibatasi untuk impor/ekspor
 - **HS Code**: Harmonized System Code - Kode klasifikasi internasional untuk barang
+- **BC 1.1**: Dokumen pemberitahuan impor/ekspor barang yang berisi daftar cargo (Manifest). Nama umum dokumen ini adalah "Manifest"
+- **PDF Parser**: Tools untuk mengekstrak data dari PDF text-based/searchable tanpa menggunakan teknologi OCR
 
 ### B. References
 
