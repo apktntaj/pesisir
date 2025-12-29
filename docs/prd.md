@@ -33,7 +33,7 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest), 
 - **Organic Growth**: Mencapai 50 active users dalam 6 bulan pertama melalui word-of-mouth dan organic channels (no paid marketing budget)
 - **Revenue Validation**: Generate Rp 10 juta revenue dalam 6 bulan pertama untuk validate willingness-to-pay
 - **Product Quality**: Mencapai 90%+ data extraction accuracy untuk searchable PDFs (defer OCR untuk phase 2)
-- **Technical Foundation**: Build solid technical foundation dengan clean architecture untuk future scaling
+- **Technical Foundation**: Build solid technical foundation dengan functional programming principles untuk future scaling
 - **Learning & Iteration**: Fast feedback loops - deploy setiap sprint, gather user feedback, iterate quickly
 - **Sustainable Development**: Avoid burnout - work at sustainable pace, maintain code quality, comprehensive documentation
 
