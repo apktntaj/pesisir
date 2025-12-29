@@ -6,9 +6,9 @@
 
 - PRD: PESISIR - Platform Otomasi Dokumen Pabean untuk PPJK
 <!-- - PRD: PESISIR - Platform Solusi Digital Satu Atap Ekspor-Impor -->
-- Version: 1.0.0
-- Date: December 13, 2025
-- Status: Draft
+- Version: 2.0.0 (Agile Methodology)
+- Date: December 29, 2025
+- Status: Draft - Agile Revision
 
 ### 1.2 Product summary
 
@@ -17,6 +17,8 @@ PESISIR adalah platform digital yang dirancang khusus untuk membantu staff PPJK 
 Dengan pendekatan B2C, PESISIR menargetkan karyawan PPJK secara individual, bukan perusahaan. Hal ini memungkinkan adopsi yang lebih cepat dan fleksibel. Platform ini dirancang dengan pemahaman mendalam tentang tantangan teknis dan operasional yang khas di Indonesia, seperti dokumen scan berkualitas rendah, format tidak standar, dan workflow yang bervariasi antar perusahaan.
 
 MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest - Daftar Cargo), BC 2.3 (Dokumen Pemberitahuan Impor Barang untuk Ditimbun di TPS/TPP), dan BC 3.0 (Dokumen Pemberitahuan Impor Barang Untuk Diangkut Terus/Diangkut Lanjut). Dengan otomasi ini, waktu pembuatan dokumen dapat dikurangi dari 10 menit menjadi hanya 1 menit per dokumen - penghematan waktu hingga 90%.
+
+**Agile Development Philosophy**: PESISIR dibangun dengan metodologi **Agile Scrum**, dengan 2-week sprints dan focus pada continuous delivery. Setiap sprint menghasilkan potentially shippable increment, memungkinkan fast feedback loops dan adaptive planning berdasarkan real user needs.
 
 ## 2. Goals
 
@@ -324,6 +326,30 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
   - P1 bugs (feature completely broken): MTTR < 4 hours
   - P2 bugs (degraded functionality): MTTR < 24 hours
 
+### 7.4 Agile Team Metrics
+
+- **Sprint Velocity**: Track completed story points per sprint
+  - Target: Establish baseline velocity dalam 3 sprints pertama
+  - Goal: Predictable velocity (± 10% variance) setelah Sprint 3
+- **Sprint Commitment Accuracy**: % dari committed stories yang completed
+  - Target: >85% commitment accuracy
+- **Sprint Goal Achievement**: % sprints yang achieve sprint goal
+  - Target: >90% sprint goals achieved
+- **Cycle Time**: Average time dari "In Progress" ke "Done"
+  - Target: <5 days per user story
+- **Lead Time**: Average time dari backlog entry ke production deployment
+  - Target: <3 weeks (1.5 sprints average)
+- **Defect Escape Rate**: Bugs found in production vs caught in sprint
+  - Target: <10% escape rate
+- **Technical Debt Ratio**: % sprint capacity allocated ke tech debt
+  - Target: 10-20% per sprint
+- **Team Satisfaction**: Sprint retrospective happiness metric
+  - Target: Average rating >4/5
+- **Code Review Time**: Average time untuk complete code review
+  - Target: <24 hours
+- **Deployment Frequency**: How often deployed to production
+  - Target: At least 1x per sprint (bi-weekly)
+
 ## 8. Technical considerations (Input untuk Mode Spesifikasi)
 
 ### 8.1 Integration points
@@ -386,127 +412,419 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
   - Technical error messages perlu di-translate ke Bahasa Indonesia yang user-friendly
   - Mitigation: Error message dictionary, consistent error handling patterns
 
-## 9. Milestones & sequencing
+## 9. Agile Development Approach & Sprint Planning
 
-### 9.1 Project estimate
+### 9.1 Agile Methodology Overview
 
-- **Size**: Medium project
-- **Timeline**: 3 bulan dari development kick-off hingga MVP launch
-- **Effort estimate**:
-  - Month 1: Core infrastructure dan OCR integration (40% progress)
-  - Month 2: Document generation, payment integration, dan UI polish (80% progress)
-  - Month 3: Testing, bug fixing, dan soft launch (100%)
+PESISIR akan dibangun menggunakan **Scrum framework** dengan pendekatan iterative dan incremental. Setiap sprint berdurasi 2 minggu dengan tujuan menghasilkan **potentially shippable product increment**.
 
-### 9.2 Team size & composition
+**Prinsip Agile yang diterapkan:**
+- **Iterative Development**: Membangun MVP secara bertahap dengan regular releases
+- **Customer Collaboration**: Frequent feedback dari early adopters dan pilot users
+- **Responding to Change**: Fleksibilitas untuk adjust priorities berdasarkan learning dan feedback
+- **Working Software**: Focus pada delivering functional features setiap sprint, bukan dokumentasi berlebihan
+- **Continuous Improvement**: Sprint retrospectives untuk improve team velocity dan quality
 
-- **Team size**: 4-5 orang
-- **Roles**:
-  - 1 Product Manager (part-time, 50% allocation)
+### 9.2 Team Structure & Roles
+
+**Team Size**: 4-5 orang (cross-functional)
+
+**Scrum Roles**:
+- **Product Owner** (1 person, 50% allocation): Maintain dan prioritize product backlog, define user stories, accept sprint deliverables
+- **Scrum Master** (part-time, bisa dilakukan oleh Tech Lead): Facilitate ceremonies, remove blockers, ensure Scrum practices
+- **Development Team** (3-4 people): Self-organizing, cross-functional
   - 2 Full-stack developers (.NET + Blazor)
-  - 1 UI/UX Designer (part-time for Month 1-2)
-  - 1 QA Engineer (full-time for Month 2-3)
-  - 1 DevOps/Infrastructure engineer (part-time, 25% allocation)
+  - 1 UI/UX Designer (part-time sprint 1-4)
+  - 1 QA Engineer (embedded in dev team)
+  - DevOps responsibilities distributed dalam team
 
-### 9.3 Suggested phases
+### 9.3 Agile Ceremonies
 
-#### Phase 1: Foundation & Core Infrastructure (Week 1-4)
+**Sprint Planning** (setiap 2 minggu, 2 jam):
+- Review product backlog dan prioritize user stories
+- Team commit ke sprint backlog (what can be delivered)
+- Break down user stories menjadi tasks dengan estimates
+- Define sprint goal dan success criteria
 
-**Timeline**: 4 minggu
+**Daily Standup** (setiap hari, 15 menit):
+- What did I complete yesterday?
+- What will I work on today?
+- Any blockers atau impediments?
 
-**Key deliverables**:
+**Sprint Review** (akhir sprint, 1 jam):
+- Demo working software ke stakeholders dan early users
+- Gather feedback
+- Update product backlog based on learnings
 
-- Project setup: Repository, CI/CD pipeline, development environment
-- Authentication system: User registration, login, email verification, Google OAuth
-- Database schema dan Entity Framework migrations
-- Initial balance allocation system: Setiap new user dapat Rp 50.000 balance saat pendaftaran
-- PDF parsing library integration dan testing dengan sample text-based PDFs
-- Basic UI layout: Landing page, registration flow, dashboard skeleton
-- Document upload functionality dengan file validation
-- Referral program infrastructure setup: Tracking referred users dan bonus balance allocation
+**Sprint Retrospective** (akhir sprint, 1 jam):
+- What went well?
+- What can be improved?
+- Action items untuk next sprint
 
-**Success criteria**:
+**Backlog Refinement** (mid-sprint, 1 jam):
+- Review upcoming user stories
+- Add details, estimates, acceptance criteria
+- Ensure next sprint backlog is ready
 
-- User dapat register dan login dengan initial Rp 50.000 balance
-- User dapat upload PDF dan system dapat parse text-based content
-- Referral tracking mechanism working
-- Infrastructure deployed ke staging environment
+### 9.4 Sprint Breakdown (6 Sprints = 12 Minggu)
 
-#### Phase 2: Document Processing & Generation (Week 5-8)
+**Sprint Timeline Overview**:
+```
+Sprint 0 (Pre-Dev)    Sprint 1         Sprint 2         Sprint 3
+[====Setup====]     [==Auth/Core==]  [==Upload/OCR==] [==Review/Edit==]
+  Week -1-0          Week 1-2          Week 3-4          Week 5-6
+  
+Sprint 4            Sprint 5          Sprint 6
+[==Generation==]   [==Payment====]   [==Polish/Test==]
+  Week 7-8          Week 9-10         Week 11-12
+                                      
+                                      MVP LAUNCH ⭐
+```
 
-**Timeline**: 4 minggu
+**Key Milestones**:
+- **End of Sprint 2**: Users dapat upload dan extract data (Core value prop working)
+- **End of Sprint 4**: End-to-end flow complete (Upload → Extract → Edit → Generate → Download)
+- **End of Sprint 5**: Monetization working (Payment integration complete)
+- **End of Sprint 6**: Production-ready MVP dengan polish dan testing
 
-**Key deliverables**:
+---
 
-- PDF parsing pipeline dengan Hangfire background jobs untuk text-based/searchable PDFs
-- Data extraction dan confidence scoring logic
-- Review & edit interface untuk extracted data
-- Excel generation engine untuk 3 jenis dokumen (BC 1.1 Manifest, BC 2.3, BC 3.0)
-- Document preview dan download functionality (hanya di browser, KISS principle)
-- History page untuk melihat processed documents dengan 30-day retention
-- Balance deduction logic saat document processing
-- Referral bonus distribution system
-- Error handling dan retry mechanism
+#### Sprint 0: Pre-Development Setup (Week -1 to 0)
 
-**Success criteria**:
+**Focus**: Foundation dan environment setup
 
-- End-to-end flow: Upload → Extract → Edit → Generate → Download working
-- Accuracy testing: Minimum 95% pada 50 sample documents
-- Processing time: p95 < 2 menit untuk standard document
-- Referral bonus successfully allocated ke referring users
+**Sprint Goal**: Development environment siap, tim aligned dengan vision
 
-#### Phase 3: Payment & Polish (Week 9-12)
+**Key Activities**:
+- Repository setup, CI/CD pipeline basic
+- Development environment configuration (Docker, SQL Server)
+- Architecture design finalization
+- Database schema design
+- Initial backlog creation dan prioritization
+- Team kick-off dan Scrum training
 
-**Timeline**: 4 minggu
+**Definition of Done (DoD)**:
+- Semua developers dapat run project locally
+- CI pipeline can build dan run unit tests
+- Architecture dan database schema documented dan approved
+- Product backlog dengan 20+ user stories ready
 
-**Key deliverables**:
+---
 
-- Payment gateway integration (Midtrans atau Xendit)
-- Balance system: Initial balance allocation, top-up purchase, balance tracking
-- Referral program UI: Referral link generation, referral bonus tracking, referral history
-- Transaction history dan invoice generation
-- Onboarding wizard dan tutorial (dengan highlight initial balance dan referral opportunities)
-- UI/UX polish: Responsive design, loading states, error messages
-- Performance optimization dan caching
-- Comprehensive testing: Unit tests, integration tests, end-to-end tests
-- Documentation: User guide, API documentation, deployment guide, referral program guidelines
-- Marketing website updates, pricing page, dan referral program landing page
-- Beta testing dengan 10-20 early adopters
-- Bug fixing dan final polish untuk launch
+#### Sprint 1: Authentication & Core Infrastructure (Week 1-2)
 
-**Success criteria**:
+**Sprint Goal**: User dapat register, login, dan manage profile
 
-- Payment flow working end-to-end dengan 3 payment methods
-- Referral program fully functional dengan ability untuk tracking dan bonus distribution
-- Zero critical bugs
-- Beta tester feedback positive (NPS > +20)
-- System ready untuk public launch dengan referral as key acquisition channel
+**User Stories** (in priority order):
+- PESISIR-001: User registration dan email verification (8 points)
+- PESISIR-002: Initial balance allocation (5 points)
+- PESISIR-017: Basic authentication dengan JWT (8 points)
+- Technical: Database migrations dan Entity Framework setup (5 points)
 
-#### Phase 4: Launch & Iteration (Week 13+)
+**Acceptance Criteria Summary**:
+- User dapat register dengan email atau Google OAuth
+- Email verification working
+- User auto-receive Rp 50.000 balance
+- JWT authentication working untuk API calls
 
-**Timeline**: Ongoing post-launch
+**Team Capacity**: ~20-25 story points
 
-**Key activities**:
+**Risks**: Google OAuth integration delay
 
-- Public launch announcement via social media, LinkedIn, industry forums
-- User acquisition campaign: Paid ads (Google, LinkedIn), content marketing
-- User support: Setup customer support channels (email, WhatsApp, in-app chat)
-- Monitoring dan analytics: Track success metrics daily
-- Rapid iteration: Weekly releases untuk fix bugs dan minor improvements
-- User feedback collection: In-app surveys, user interviews
-- Plan for next features: Prepare roadmap untuk post-MVP features (HS Code Classifier, Learn module)
+**Demo**: Live demo registration flow dan show user dengan initial balance
 
-**Success milestones**:
+---
 
-- Week 2 post-launch: 20 registered users
-- Week 4 post-launch: 50 registered users, 5 paid users
-- Week 8 post-launch: 100 registered users, 20 paid users
-- Week 12 post-launch: Decision point untuk pivot, persevere, atau accelerate berdasarkan metrics
+#### Sprint 2: Document Upload & PDF Parsing (Week 3-4)
 
-## 10. User stories
+**Sprint Goal**: User dapat upload dokumen dan system parse PDF
+
+**User Stories**:
+- PESISIR-003: Document upload functionality (5 points)
+- PESISIR-004: PDF parsing integration (13 points)
+- PESISIR-005: Data extraction basic flow (8 points)
+- Technical: Azure Blob Storage integration (3 points)
+
+**Acceptance Criteria Summary**:
+- User dapat drag-and-drop upload PDF/image files
+- System parse text-based PDF dan extract basic data
+- File tersimpan di Azure Blob Storage
+- Upload progress indicator working
+
+**Team Capacity**: ~25-30 story points
+
+**Risks**: PDF parsing accuracy < 90% untuk certain formats
+
+**Demo**: Upload real Bill of Lading dan show extracted data
+
+---
+
+#### Sprint 3: Data Review & Editing (Week 5-6)
+
+**Sprint Goal**: User dapat review dan edit extracted data dengan confidence
+
+**User Stories**:
+- PESISIR-005: Data review interface dengan confidence scores (8 points)
+- PESISIR-005: Inline editing capability (5 points)
+- Technical: Confidence scoring logic (5 points)
+- Technical: Auto-save functionality (3 points)
+
+**Acceptance Criteria Summary**:
+- Split-screen view: PDF kiri, form kanan
+- Confidence scores displayed dengan color coding
+- User dapat edit any field dengan inline editing
+- Changes auto-saved
+
+**Team Capacity**: ~20-25 story points
+
+**Risks**: UX complexity untuk mobile responsiveness
+
+**Demo**: Review flow dengan real sample documents, show editing dan auto-save
+
+---
+
+#### Sprint 4: Document Generation & History (Week 7-8)
+
+**Sprint Goal**: User dapat generate CEISA documents dan access history
+
+**User Stories**:
+- PESISIR-006: Excel document generation untuk BC types (13 points)
+- PESISIR-008: Document history view (5 points)
+- Technical: Balance deduction logic (3 points)
+- Technical: 30-day retention policy implementation (3 points)
+
+**Acceptance Criteria Summary**:
+- User select document type dan generate Excel
+- Download working dengan proper naming convention
+- Document history shows all processed docs
+- Balance deducted correctly per document
+
+**Team Capacity**: ~23-28 story points
+
+**Risks**: CEISA template format changes, Excel generation errors
+
+**Demo**: End-to-end flow dari upload hingga download Excel document
+
+---
+
+#### Sprint 5: Payment Integration & Referral (Week 9-10)
+
+**Sprint Goal**: User dapat top-up balance dan refer friends
+
+**User Stories**:
+- PESISIR-007: Payment gateway integration (13 points)
+- Technical: Referral tracking system (8 points)
+- PESISIR-002: Referral bonus allocation (5 points)
+- Technical: Transaction history dan invoicing (3 points)
+
+**Acceptance Criteria Summary**:
+- User dapat purchase credits via Midtrans/Xendit
+- Multiple payment methods working (card, e-wallet, bank transfer)
+- Referral link generation working
+- Referral bonus auto-allocated
+
+**Team Capacity**: ~25-30 story points
+
+**Risks**: Payment gateway approval delays, webhook configuration issues
+
+**Demo**: Complete payment flow, referral link sharing, bonus allocation
+
+---
+
+#### Sprint 6: Polish, Testing & Launch Prep (Week 11-12)
+
+**Sprint Goal**: System production-ready dengan high quality dan good UX
+
+**User Stories**:
+- PESISIR-001: Onboarding wizard (5 points)
+- PESISIR-009: Feedback dan error reporting (3 points)
+- PESISIR-010: Mobile responsive optimization (8 points)
+- Technical: Performance optimization (5 points)
+- Technical: Security hardening (5 points)
+
+**Additional Activities**:
+- Comprehensive testing (regression, load, security)
+- Beta testing dengan 10-20 users
+- Bug fixing dan polish
+- Production deployment preparation
+- Marketing materials preparation
+
+**Team Capacity**: ~20-25 story points + testing activities
+
+**Risks**: Critical bugs discovered late, beta user feedback requiring changes
+
+**Demo**: Complete product walkthrough, showcase all features working together
+
+---
+
+### 9.5 Post-MVP Agile Roadmap (Sprint 7+)
+
+Setelah MVP launch, development continue dengan 2-week sprints focusing pada:
+
+**Sprint 7-8: Feedback & Iteration**
+- Address user feedback dari launch
+- Quick wins dan UX improvements
+- Performance optimization berdasarkan real usage
+- Bug fixes untuk production issues
+
+**Sprint 9-10: Advanced Features Round 1**
+- HS Code Classifier basic functionality
+- Learn module prototype
+- Advanced OCR untuk image-based PDFs
+
+**Sprint 11-12: Scale & Optimization**
+- Infrastructure scaling berdasarkan user growth
+- API rate limiting improvements
+- Multi-language support expansion
+
+**Backlog Items untuk Future Sprints**:
+- Collaborative features (comments, approvals)
+- CEISA API integration (direct submission)
+- Mobile native app (React Native)
+- Shipment tracking real-time
+- Advanced analytics dashboard
+- B2B/Enterprise features
+
+### 9.6 Velocity & Capacity Planning
+
+**Initial Team Velocity Estimate**: 20-25 story points per sprint (akan adjust berdasarkan actual velocity)
+
+**Sprint Capacity Considerations**:
+- Account untuk holidays dan PTO
+- Reserve 20% capacity untuk bug fixes dan tech debt
+- Include learning time untuk new technologies (Sprint 1-2)
+
+**Velocity Tracking**:
+- Measure completed story points per sprint
+- Calculate running average after Sprint 3
+- Adjust future sprint commitments based on velocity trends
+
+### 9.7 Definition of Done (Team Agreement)
+
+Setiap user story considered "Done" ketika:
+- [ ] Code completed dan follows coding standards
+- [ ] Unit tests written dengan >80% coverage
+- [ ] Integration tests passed
+- [ ] Code reviewed dan approved oleh minimal 1 peer
+- [ ] Feature tested manually (exploratory testing)
+- [ ] No critical atau high-severity bugs
+- [ ] Documentation updated (API docs, user guide)
+- [ ] Deployed to staging environment
+- [ ] Product Owner acceptance obtained
+
+**Additional DoD untuk Sprint**:
+- [ ] All committed user stories meet DoD
+- [ ] Sprint goal achieved
+- [ ] Build is green (all tests passing)
+- [ ] No known critical bugs in sprint increment
+- [ ] Demo prepared dan successfully conducted
+- [ ] Retrospective action items documented
+
+### 9.8 Risk Management dalam Agile Context
+
+**Sprint-Level Risks**:
+- **Velocity drops**: Mitigate dengan realistic commitments, buffer capacity
+- **Scope creep**: Mitigate dengan strong Product Owner, strict backlog prioritization
+- **Technical debt accumulation**: Mitigate dengan 20% capacity allocation untuk tech debt
+
+**Project-Level Risks**:
+- **External dependency delays** (e.g., Midtrans approval): Mitigate dengan parallel tracks, fallback options
+- **Accuracy below target**: Mitigate dengan iterative improvement, collect feedback data
+- **Team velocity uncertainty**: Mitigate dengan conservative Sprint 1-2 commitments, adjust later
+
+**Mitigation Strategy**:
+- Regular risk review dalam Sprint Planning
+- Escalate blockers immediately dalam Daily Standups
+- Adapt sprint goals jika risk materialized
+
+### 9.9 Continuous Integration & Continuous Delivery (CI/CD)
+
+**CI/CD Pipeline** (Essential untuk Agile velocity):
+- **Continuous Integration**:
+  - Code commit triggers automated build
+  - Unit tests run automatically (must pass)
+  - Code quality checks (linting, static analysis)
+  - Build artifacts created
+  - Fast feedback: <5 minutes untuk build + unit tests
+  
+- **Continuous Delivery**:
+  - Automated deployment ke Staging setelah CI pass
+  - Integration tests run di Staging
+  - Manual approval gate untuk Production
+  - One-click deployment ke Production
+  - Rollback capability dalam <5 minutes
+
+**Deployment Strategy**:
+- **Sprint 1-3**: Deploy to Staging setiap end of sprint
+- **Sprint 4+**: Deploy to Staging setiap merged PR (continuous)
+- **Production**: Deploy at end of each sprint (bi-weekly releases)
+- **Hotfixes**: Deploy immediately via fast-track pipeline
+
+**Quality Gates** (Must pass sebelum merge):
+- All unit tests passing (>80% coverage)
+- No critical security vulnerabilities (Snyk scan)
+- Code review approved (minimum 1 reviewer)
+- No merge conflicts
+- Branch up to date dengan main
+
+### 9.10 Agile Tools & Collaboration
+
+**Project Management Tools**:
+- **Primary**: Jira atau Azure DevOps untuk backlog management
+  - Sprint boards (Kanban style)
+  - Burndown charts untuk track velocity
+  - Story point tracking
+  - Release planning roadmap
+  
+**Communication & Collaboration**:
+- **Daily Communication**: Slack/Microsoft Teams
+- **Code Repository**: GitHub dengan PR reviews
+- **Documentation**: Confluence atau Notion
+- **Design**: Figma untuk UI/UX collaboration
+- **Video Calls**: Zoom/Teams untuk remote ceremonies
+
+**Metrics Dashboard**:
+- Real-time sprint progress (burndown)
+- Team velocity trends
+- Defect trends
+- Code quality metrics (coverage, technical debt)
+- Production health metrics (uptime, performance)
+
+## 10. Product Backlog & User Stories
+
+### 10.0 Product Backlog Overview
+
+Product backlog dikelola menggunakan **prioritization framework MoSCoW** (Must have, Should have, Could have, Won't have) dengan additional **story point estimation** menggunakan Fibonacci sequence (1, 2, 3, 5, 8, 13, 21).
+
+**Backlog Prioritization Criteria**:
+1. **Business Value**: Impact ke user dan revenue potential
+2. **User Impact**: Number of users affected
+3. **Risk Reduction**: Technical atau business risk mitigation
+4. **Dependencies**: Technical dependencies yang block other stories
+5. **Effort**: Story points estimate (lower effort = higher priority jika value sama)
+
+**Current Backlog Status** (MVP Scope):
+- **Must Have**: 10 user stories (85 story points estimated)
+- **Should Have**: 3 user stories (21 story points estimated)
+- **Could Have**: 5 user stories (34 story points estimated)
+- **Won't Have (Post-MVP)**: 15+ stories dalam icebox
+
+**Backlog Grooming Process**:
+- Weekly backlog refinement sessions (1 hour mid-sprint)
+- Stories broken down ketika >13 points (too large untuk single sprint)
+- Acceptance criteria defined before sprint planning
+- Technical spikes allocated jika high uncertainty (max 5 points)
+
+---
+
+## 10. User Stories
 
 ### 10.1 User registration dan onboarding
 
 **ID**: PESISIR-001
+**Priority**: Must Have
+**Story Points**: 8
+**Sprint**: Sprint 1
 
 **Description**:
 Sebagai staff PPJK yang baru mendengar tentang PESISIR, saya ingin dapat mendaftar dengan cepat dan mudah tanpa proses verifikasi yang rumit, sehingga saya dapat langsung mencoba layanan tanpa hambatan.
@@ -525,6 +843,9 @@ Sebagai staff PPJK yang baru mendengar tentang PESISIR, saya ingin dapat mendaft
 ### 10.2 Initial balance allocation
 
 **ID**: PESISIR-002
+**Priority**: Must Have
+**Story Points**: 5
+**Sprint**: Sprint 1
 
 **Description**:
 Sebagai new user, saya ingin mendapat initial balance kredit saat mendaftar untuk mencoba layanan sebelum membeli lebih banyak, sehingga saya dapat memvalidasi bahwa PESISIR sesuai kebutuhan saya.
@@ -543,6 +864,9 @@ Sebagai new user, saya ingin mendapat initial balance kredit saat mendaftar untu
 ### 10.3 Document upload
 
 **ID**: PESISIR-003
+**Priority**: Must Have
+**Story Points**: 5
+**Sprint**: Sprint 2
 
 **Description**:
 Sebagai PPJK staff, saya ingin dapat upload dokumen Bill of Lading atau Invoice dalam format PDF atau image dengan mudah, sehingga saya dapat memulai proses ekstraksi data.
@@ -562,6 +886,9 @@ Sebagai PPJK staff, saya ingin dapat upload dokumen Bill of Lading atau Invoice 
 ### 10.4 OCR processing dan data extraction
 
 **ID**: PESISIR-004
+**Priority**: Must Have
+**Story Points**: 13
+**Sprint**: Sprint 2
 
 **Description**:
 Sebagai user, saya ingin system dapat otomatis membaca dan mengekstrak data dari dokumen yang saya upload dengan cepat dan akurat, sehingga saya tidak perlu manual copy-paste.
@@ -586,6 +913,9 @@ Sebagai user, saya ingin system dapat otomatis membaca dan mengekstrak data dari
 ### 10.5 Data review dan editing
 
 **ID**: PESISIR-005
+**Priority**: Must Have
+**Story Points**: 8
+**Sprint**: Sprint 3
 
 **Description**:
 Sebagai user, saya ingin dapat review hasil ekstraksi data dan mengedit jika ada kesalahan atau data yang missing, sehingga dokumen yang di-generate akurat dan sesuai kebutuhan.
@@ -612,6 +942,9 @@ Sebagai user, saya ingin dapat review hasil ekstraksi data dan mengedit jika ada
 ### 10.6 Document generation
 
 **ID**: PESISIR-006
+**Priority**: Must Have
+**Story Points**: 13
+**Sprint**: Sprint 4
 
 **Description**:
 Sebagai user, saya ingin dapat generate dokumen pabean dalam format Excel yang sesuai template CEISA berdasarkan data yang sudah di-review, sehingga saya dapat langsung import ke CEISA tanpa perlu re-format.
@@ -634,6 +967,9 @@ Sebagai user, saya ingin dapat generate dokumen pabean dalam format Excel yang s
 ### 10.7 Purchase document credits
 
 **ID**: PESISIR-007
+**Priority**: Must Have
+**Story Points**: 13
+**Sprint**: Sprint 5
 
 **Description**:
 Sebagai user yang sudah habis balance kredit initial, saya ingin dapat membeli document credits dengan berbagai pilihan payment method, sehingga saya dapat continue menggunakan layanan.
@@ -659,6 +995,9 @@ Sebagai user yang sudah habis balance kredit initial, saya ingin dapat membeli d
 ### 10.8 View document history
 
 **ID**: PESISIR-008
+**Priority**: Must Have
+**Story Points**: 5
+**Sprint**: Sprint 4
 
 **Description**:
 Sebagai user, saya ingin dapat melihat history semua dokumen yang pernah saya process, sehingga saya dapat re-download atau reference dokumen lama jika needed.
@@ -681,6 +1020,9 @@ Sebagai user, saya ingin dapat melihat history semua dokumen yang pernah saya pr
 ### 10.9 Report inaccurate extraction
 
 **ID**: PESISIR-009
+**Priority**: Should Have
+**Story Points**: 3
+**Sprint**: Sprint 6
 
 **Description**:
 Sebagai user, saya ingin dapat report jika hasil ekstraksi tidak akurat atau ada fields yang salah, sehingga system dapat improve dan akurasi meningkat dari waktu ke waktu.
@@ -699,6 +1041,9 @@ Sebagai user, saya ingin dapat report jika hasil ekstraksi tidak akurat atau ada
 ### 10.10 Mobile responsive access
 
 **ID**: PESISIR-010
+**Priority**: Must Have
+**Story Points**: 8
+**Sprint**: Sprint 6
 
 **Description**:
 Sebagai user yang sering mobile, saya ingin dapat mengakses PESISIR dari smartphone atau tablet dengan experience yang smooth, sehingga saya dapat process dokumen dari mana saja.
@@ -745,12 +1090,20 @@ Sebagai user yang sering mobile, saya ingin dapat mengakses PESISIR dari smartph
 ### C. Document history
 
 - **Version 1.0.0** (December 13, 2025): Initial PRD draft untuk MVP PESISIR
+- **Version 2.0.0** (December 29, 2025): **Agile Methodology Revision** - Updated dari waterfall approach ke Agile Scrum dengan 2-week sprints, added sprint planning, backlog prioritization, agile ceremonies, dan team velocity metrics
 
 ---
 
 **Next Steps**:
 
-1. Review dan approval PRD dari stakeholders -- Saat ini cuma saya :(
-2. Create GitHub issues untuk setiap user story
-3. Kickoff technical specification document (Mode: Specification)
-4. Begin Phase 1 development
+1. ✅ Review dan approval PRD dari stakeholders
+2. **Sprint 0 Preparation** (Week -1):
+   - Setup product backlog dalam project management tool (Jira/Azure DevOps)
+   - Create sprint board dengan columns: Backlog → To Do → In Progress → Review → Done
+   - Schedule recurring sprint ceremonies (planning, daily standup, review, retro)
+   - Team kick-off meeting dan Scrum role assignment
+3. **Sprint Planning Session** (Before Sprint 1):
+   - Backlog refinement untuk Sprint 1 user stories
+   - Story point estimation session (Planning Poker)
+   - Sprint 1 commitment dan sprint goal definition
+4. **Begin Sprint 1 Development** (Week 1)

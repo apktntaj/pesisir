@@ -1,8 +1,10 @@
 # Pesisir - Multi-Tenant Customs Business Automation Platform
 
-[![SDLC Phase](https://img.shields.io/badge/SDLC-Planning-blue.svg)]()
+[![SDLC Phase](https://img.shields.io/badge/Sprint-0%20Planning-blue.svg)]()
+[![Methodology](https://img.shields.io/badge/Methodology-Agile%20Scrum-green.svg)]()
 [![Project Type](https://img.shields.io/badge/Type-Mini%20SaaS-green.svg)]()
 [![Tech Stack](https://img.shields.io/badge/.NET-8.0-purple.svg)]()
+[![Sprint Duration](https://img.shields.io/badge/Sprint-2%20Weeks-orange.svg)]()
 
 ## 📋 Overview
 
@@ -13,23 +15,27 @@ Pesisir is a one-stop solution for customs business operations, designed as a sc
 
 ## 📚 Documentation
 
-This repository follows the Software Development Life Cycle (SDLC) methodology for comprehensive planning and implementation:
+This repository follows **Agile Scrum methodology** for iterative and incremental development:
 
 ### Core Documents
 
-- **[PESISIR_PLAN.md](docs/PESISIR_PLAN.md)** - Complete MVP planning document including:
-  - Feature specifications
-  - Technology stack decisions
-  - Architecture design
-  - Database schema
-  - Implementation phases
-  - External service integrations
+- **[prd.md](docs/prd.md)** - **Product Requirements Document (v2.0 - Agile Edition)**:
+  - Product vision dan objectives
+  - User personas dan user goals
+  - Functional requirements dengan acceptance criteria
+  - **NEW: Agile Sprint Planning (6 sprints)**
+  - **NEW: Product Backlog dengan MoSCoW prioritization**
+  - **NEW: Story points estimation untuk semua user stories**
+  - **NEW: Agile ceremonies dan team structure**
+  - **NEW: Definition of Done dan CI/CD strategy**
+  - **NEW: Agile team metrics (velocity, cycle time, etc)**
 
-- **[SDLC_REVIEW.md](docs/SDLC_REVIEW.md)** - Comprehensive SDLC review covering:
-  - Phase-by-phase analysis
-  - Best practices assessment
-  - Gap analysis and recommendations
-  - Quality assurance guidelines
+- **[PRD_AGILE_REVISION_SUMMARY.md](docs/PRD_AGILE_REVISION_SUMMARY.md)** - **Agile Revision Summary**:
+  - Overview perubahan dari waterfall ke Agile
+  - Key additions dan improvements
+  - Sprint breakdown details
+  - Benefits of Agile approach
+  - Migration guide dan next steps
 
 - **[REQUIREMENTS.md](docs/REQUIREMENTS.md)** - Formal requirements specification:
   - Functional requirements
@@ -51,9 +57,10 @@ This repository follows the Software Development Life Cycle (SDLC) methodology f
 
 ## 🎯 Project Status
 
-**Current Phase:** Planning & Requirements Analysis  
-**Estimated MVP Launch:** February 2026  
-**Total Development Duration:** 8 weeks
+**Current Phase:** Sprint 0 - Planning & Requirements (Agile Scrum)  
+**Next Sprint:** Sprint 1 - Authentication & Core Infrastructure  
+**Estimated MVP Launch:** February 2026 (End of Sprint 6)  
+**Total Development Duration:** 12 weeks (6 sprints @ 2 weeks each)
 
 ## 🏗️ Technology Stack
 
@@ -93,49 +100,40 @@ ls -la
 
 ## 📊 SDLC Methodology
 
-This project follows a structured SDLC approach:
+This project follows an **Agile Scrum** approach with 2-week sprints:
 
-1. **Planning** ✅ (Current Phase)
-   - Requirements gathering
-   - Feasibility analysis
-   - Resource allocation
-   - Timeline estimation
+### Agile Sprint Cycle
 
-2. **Requirements Analysis** 🔄 (In Progress)
-   - Functional requirements specification
-   - Non-functional requirements
-   - Use case development
-   - Requirements validation
+**Sprint Duration**: 2 weeks (6 sprints total for MVP)
 
-3. **Design** ⏳ (Next)
-   - System architecture design
-   - Database schema design
-   - API design and documentation
-   - UI/UX wireframes
+**Sprint Ceremonies**:
+- **Sprint Planning**: 2 hours (every 2 weeks) - Define sprint goal and commit to user stories
+- **Daily Standup**: 15 minutes (daily) - Sync on progress and blockers
+- **Sprint Review**: 1 hour (end of sprint) - Demo working software to stakeholders
+- **Sprint Retrospective**: 1 hour (end of sprint) - Continuous improvement discussion
+- **Backlog Refinement**: 1 hour (mid-sprint) - Prepare upcoming stories
 
-4. **Implementation** ⏳
-   - Microservices development
-   - API implementation
-   - Integration with external services
-   - Unit and integration testing
+### Sprint Timeline (MVP Development)
 
-5. **Testing** ⏳
-   - System testing
-   - Integration testing
-   - User acceptance testing
-   - Performance testing
+```
+Sprint 0     Sprint 1       Sprint 2       Sprint 3       Sprint 4       Sprint 5       Sprint 6
+[Setup]    [Auth/Core]  [Upload/OCR]  [Review/Edit]  [Generation]   [Payment]    [Polish/Test]
+Week -1-0    Week 1-2      Week 3-4       Week 5-6       Week 7-8      Week 9-10     Week 11-12
+                                                                                           ⭐ MVP LAUNCH
+```
 
-6. **Deployment** ⏳
-   - Production environment setup
-   - CI/CD pipeline configuration
-   - Monitoring and logging setup
-   - Launch preparation
+**Current Status**: 
+- ✅ **Sprint 0**: Planning & Requirements (Completed)
+- 🔄 **Sprint 1**: Authentication & Core Infrastructure (Next)
 
-7. **Maintenance** ⏳
-   - Bug fixes
-   - Feature enhancements
-   - Performance optimization
-   - User support
+### Agile Principles Applied
+
+1. ✅ **Working Software Over Documentation**: Focus on delivering functional increments every sprint
+2. ✅ **Customer Collaboration**: Regular sprint reviews with stakeholders and early user feedback
+3. ✅ **Responding to Change**: Adaptive planning based on sprint learnings and velocity
+4. ✅ **Iterative Development**: Each sprint builds on previous increments
+5. ✅ **Continuous Delivery**: CI/CD pipeline enables bi-weekly production deployments
+6. ✅ **Team Empowerment**: Self-organizing cross-functional development team
 
 ## 📝 Contributing
 
