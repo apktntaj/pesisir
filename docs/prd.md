@@ -5,32 +5,37 @@
 ### 1.1 Document title and version
 
 - PRD: PESISIR - Platform Otomasi Dokumen Pabean untuk PPJK
-<!-- - PRD: PESISIR - Platform Solusi Digital Satu Atap Ekspor-Impor -->
-- Version: 2.0.0 (Agile Methodology)
+- Version: 3.0.0 (Solo Founder Edition - Clojure Stack)
 - Date: December 29, 2025
-- Status: Draft - Agile Revision
+- Status: Active Development - MVP Focus
+- Team: Solo Founder + GitHub Copilot
 
 ### 1.2 Product summary
 
-PESISIR adalah platform digital yang dirancang khusus untuk membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) dalam mengotomasi proses pembuatan draft dokumen pabean. Platform ini menggunakan teknologi parser PDF untuk mengekstrak data dari dokumen PDF (seperti Bill of Lading, Invoice, Packing List) dan secara otomatis menghasilkan draft dokumen pabean yang siap digunakan.
+PESISIR adalah platform digital yang dirancang khusus untuk membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) dalam mengotomasi proses pembuatan draft dokumen pabean. Platform ini menggunakan teknologi PDF parsing untuk mengekstrak data dari dokumen PDF dan secara otomatis menghasilkan draft dokumen pabean yang siap digunakan.
 
-Dengan pendekatan B2C, PESISIR menargetkan karyawan PPJK secara individual, bukan perusahaan. Hal ini memungkinkan adopsi yang lebih cepat dan fleksibel. Platform ini dirancang dengan pemahaman mendalam tentang tantangan teknis dan operasional yang khas di Indonesia, seperti dokumen scan berkualitas rendah, format tidak standar, dan workflow yang bervariasi antar perusahaan.
+Dengan pendekatan B2C, PESISIR menargetkan karyawan PPJK secara individual, bukan perusahaan. Hal ini memungkinkan adopsi yang lebih cepat dan fleksibel.
 
-MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest - Daftar Cargo), BC 2.3 (Dokumen Pemberitahuan Impor Barang untuk Ditimbun di TPS/TPP), dan BC 3.0 (Dokumen Pemberitahuan Impor Barang Untuk Diangkut Terus/Diangkut Lanjut). Dengan otomasi ini, waktu pembuatan dokumen dapat dikurangi dari 10 menit menjadi hanya 1 menit per dokumen - penghematan waktu hingga 90%.
+MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest), BC 2.3 (Dokumen Pemberitahuan Impor Barang untuk Ditimbun di TPS/TPP), dan BC 3.0 (Dokumen Pemberitahuan Impor Barang Untuk Diangkut Terus/Diangkut Lanjut). Dengan otomasi ini, waktu pembuatan dokumen dapat dikurangi dari 10 menit menjadi hanya 1 menit per dokumen.
 
-**Agile Development Philosophy**: PESISIR dibangun dengan metodologi **Agile Scrum**, dengan 2-week sprints dan focus pada continuous delivery. Setiap sprint menghasilkan potentially shippable increment, memungkinkan fast feedback loops dan adaptive planning berdasarkan real user needs.
+**Solo Founder Development Strategy**: Dibangun oleh solo founder menggunakan **Clojure full-stack** (Clojure + ClojureScript + Datomic) untuk maximum productivity dan maintainability. Focus pada monolith architecture untuk simplicity, REPL-driven development untuk rapid iteration, dan sustainable 3-week sprint cycles.
+
+**MVP Philosophy**: Ultra-minimal scope - PDF parsing only (no OCR), email notifications only (no WhatsApp), manual input alternatives (no vessel tracking), single-tenant first. Defer all non-essential features to post-MVP.
 
 ## 2. Goals
 
 ### 2.1 Business goals
 
-- **Akuisisi pengguna cepat**: Mencapai 100 pengguna aktif dalam 3 bulan pertama sejak peluncuran MVP melalui organic growth dan word-of-mouth dari satisfied users, termasuk skenario referral incentive
-- **Validasi product-market fit**: Memvalidasi model pay-per-document dengan tingkat konversi minimum 20% dari free trial users
-- **Membangun reputasi kualitas**: Mencapai tingkat akurasi ekstraksi data minimum 95% untuk mengurangi bug dan kesalahan
-- **Program referral**: Memberikan insentif balance kredit untuk pengguna yang berhasil mengajak pengguna baru sebagai mekanisme growth untuk mencapai target 100 user
-- **Revenue generation**: Mencapai break-even operasional (biaya infrastructure + marketing) dalam 6 bulan
-- **Foundation untuk ekspansi**: Membangun basis pengguna yang solid untuk ekspansi ke fitur tambahan (Learn, HS Code Classifier) dan target B2B di masa depan
-- **Brand positioning**: Memposisikan PESISIR sebagai solusi lokal yang memahami tantangan khas Indonesia dalam pengurusan dokumen pabean
+**Realistic Solo Founder Goals:**
+
+- **MVP Launch**: Launch functional MVP dalam 24 minggu (8 sprints @ 3 weeks) - sustainable pace untuk solo founder
+- **Early Validation**: Dapatkan 10 beta users dalam 2 bulan pertama untuk validate product-market fit
+- **Organic Growth**: Mencapai 50 active users dalam 6 bulan pertama melalui word-of-mouth dan organic channels (no paid marketing budget)
+- **Revenue Validation**: Generate Rp 10 juta revenue dalam 6 bulan pertama untuk validate willingness-to-pay
+- **Product Quality**: Mencapai 90%+ data extraction accuracy untuk searchable PDFs (defer OCR untuk phase 2)
+- **Technical Foundation**: Build solid technical foundation dengan clean architecture untuk future scaling
+- **Learning & Iteration**: Fast feedback loops - deploy setiap sprint, gather user feedback, iterate quickly
+- **Sustainable Development**: Avoid burnout - work at sustainable pace, maintain code quality, comprehensive documentation
 
 ### 2.2 User goals
 
@@ -41,18 +46,23 @@ MVP PESISIR fokus pada otomasi tiga jenis dokumen prioritas: BC 1.1 (Manifest - 
 - **Kemudahan adopsi**: Onboarding yang cepat tanpa perlu approval manajemen atau prosedur procurement perusahaan yang panjang
 - **Cost transparency**: Model pay-per-document yang jelas dan transparan tanpa biaya langganan bulanan yang memberatkan
 
-### 2.3 Non-goals (Out of Scope)
+### 2.3 Non-goals (Out of Scope untuk MVP)
 
-- **Fitur OCR advanced**: OCR dan AI untuk image-based PDF tidak termasuk dalam MVP. MVP fokus pada PDF parsing untuk text-based/searchable PDFs. OCR adalah fitur advanced untuk fase selanjutnya.
-- **Integrasi langsung dengan CEISA**: MVP tidak akan terintegrasi langsung dengan API CEISA (akan menghasilkan file Excel/CSV yang dapat di-import manual)
-- **Fitur edukatif (Learn)**: Konten pembelajaran tentang customs dan regulasi tidak termasuk dalam MVP
-- **HS Code Classifier**: Tool untuk klasifikasi otomatis HS Code tidak termasuk dalam MVP
-- **Shipment tracking real-time**: Pelacakan kapal dan notifikasi ETA tidak termasuk dalam MVP dokumen otomasi
-- **Collaborative features**: Fitur kolaborasi tim (comments, approvals, shared workspace) tidak termasuk dalam MVP
-- **Target B2B/Enterprise**: MVP fokus ke individual users (B2C), bukan penjualan enterprise dengan SLA dan custom features
-- **Multi-language support**: MVP hanya mendukung Bahasa Indonesia dan Bahasa Inggris untuk UI
-- **Mobile native app**: MVP hanya mendukung web application (responsive design), tidak ada iOS/Android native app
-- **Email delivery untuk generated documents**: MVP hanya menyediakan download di browser. Pengiriman via email tidak termasuk dalam MVP (KISS principle).
+**Deferred to Post-MVP (Phase 2+):**
+
+- **OCR untuk scanned documents**: MVP hanya support searchable/text-based PDFs. OCR untuk image-based PDFs adalah advanced feature untuk phase 2 (requires expensive Azure Document Intelligence atau complex self-hosted solution)
+- **WhatsApp notifications**: MVP hanya email notifications. WhatsApp via Twilio terlalu mahal untuk early stage (defer until proven revenue)
+- **Vessel tracking**: Manual input ETA saja di MVP. Real-time vessel tracking via MarineTraffic API expensive dan complex (defer to phase 2)
+- **Multi-tenant architecture**: MVP start dengan single-tenant approach untuk simplicity. Multi-tenancy added setelah validate product-market fit
+- **Integrasi langsung dengan CEISA**: MVP generate Excel/CSV untuk manual import. Direct API integration complex dan requires Bea Cukai partnership
+- **Referral program**: Start tanpa referral incentives. Add setelah ada proven users yang satisfied
+- **Fitur edukatif (Learn)**: Content creation time-consuming. Focus core value prop first
+- **HS Code Classifier**: Machine learning feature requires significant data dan development time
+- **Collaborative features**: Team collaboration tidak essential untuk B2C MVP
+- **Mobile native app**: Responsive web app sufficient untuk MVP. Native iOS/Android adalah nice-to-have
+- **Multiple payment methods**: Start dengan 1-2 payment methods (e.g., bank transfer + QRIS). Add more setelah validate demand
+
+**KISS Principle**: Setiap feature harus justify development time untuk solo founder. Jika bisa defer tanpa blocking core value proposition, defer to phase 2.
 
 ## 3. User personas
 
@@ -350,16 +360,50 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
 - **Deployment Frequency**: How often deployed to production
   - Target: At least 1x per sprint (bi-weekly)
 
-## 8. Technical considerations (Input untuk Mode Spesifikasi)
+## 8. Technical Stack & Architecture (Solo Founder - Clojure Full-Stack)
 
-### 8.1 Integration points
+### 8.1 Technology Stack
 
-- **PDF parsing library** (e.g., iTextSharp, PDFSharp, atau Apache PDFBox): Parser untuk ekstraksi data dari text-based/searchable PDF documents
-- **Payment gateway**: Midtrans atau Xendit untuk payment processing
-- **Email service**: SendGrid atau AWS SES untuk transactional emails (verification, invoices, notifications)
-- **Cloud storage**: Azure Blob Storage atau AWS S3 untuk storing uploaded documents dan generated files
-- **Authentication**: ASP.NET Core Identity dengan Google OAuth integration
-- **Analytics**: Google Analytics atau Mixpanel untuk user behavior tracking
+**Backend (Clojure):**
+- **Language**: Clojure 1.12+
+- **Web Framework**: Ring (HTTP server) + Reitit (routing)
+- **API**: REST API with JSON responses
+- **Authentication**: Buddy (JWT-based authentication)
+- **PDF Processing**: Apache PDFBox via Java interop
+- **Excel Generation**: Apache POI via Java interop  
+- **Email**: Postal (SMTP library) - simple email notifications
+- **Job Processing**: core.async untuk async operations
+
+**Frontend (ClojureScript):**
+- **Language**: ClojureScript (compiled to JavaScript)
+- **Framework**: Re-frame (reactive framework, wraps React)
+- **UI Components**: Reagent (ClojureScript interface to React)
+- **State Management**: Re-frame subscriptions & events
+- **Routing**: Reitit-frontend
+- **HTTP Client**: cljs-ajax or cljs-http
+- **Styling**: Tailwind CSS
+
+**Database:**
+- **Primary**: Datomic Cloud (ideal: immutable, time-travel) OR PostgreSQL (affordable alternative)
+- **Why Datomic**: Built-in audit log, immutable data, perfect untuk document trail
+- **Fallback**: PostgreSQL + next.jdbc jika budget constraint
+
+**Infrastructure:**
+- **Hosting**: Fly.io ($20-50/month, simple deployment)
+- **File Storage**: Local disk initially, migrate to S3 when needed
+- **CI/CD**: GitHub Actions (free for public repos)
+- **Monitoring**: Sentry (error tracking)
+- **Logging**: LogTail or Papertrail (affordable)
+
+**Payment:**
+- **Gateway**: Start dengan manual bank transfer + QRIS
+- **Later**: Integrate Xendit or Midtrans when volume justifies cost
+
+**Key Architecture Principles:**
+- **Monolith Architecture**: Simplicity over microservices untuk solo founder
+- **REPL-Driven Development**: Live coding, immediate feedback
+- **Java Interop**: Leverage mature Java libraries (PDFBox, POI)
+- **Same Language**: Clojure + ClojureScript = less context switching
 
 ### 8.2 Data storage & privacy
 
@@ -380,112 +424,147 @@ Dalam 3 bulan, Rina sudah memproses lebih dari 500 dokumen via PESISIR. Performa
   - No data sharing dengan third parties tanpa explicit user consent
   - Access control: User hanya dapat akses documents mereka sendiri
 
-### 8.3 Scalability & performance targets
+### 8.3 Scalability & performance targets (MVP Scope)
 
-- **Concurrent users**: System harus dapat handle minimum 50 concurrent users di MVP
-- **Document processing throughput**: Minimum 100 documents per hour
-- **Database**: SQL Server dengan indexing untuk fast query pada document history
-- **Caching**: Implement caching untuk static data (templates, pricing info)
-- **Background job processing**: Hangfire untuk async OCR processing agar tidak block user interface
-- **Auto-scaling consideration**: Infrastructure harus dapat di-scale horizontally jika traffic meningkat post-MVP
-- **CDN**: Serve static assets via CDN untuk faster loading di berbagai region Indonesia
+**Solo Founder Realistic Targets:**
+- **Concurrent users**: Support 10-20 concurrent users initially (sufficient untuk 50-100 total users)
+- **Document processing**: 20-30 documents per hour (enough untuk MVP validation)
+- **Database**: Start simple - Datomic Pro local atau PostgreSQL
+- **Background processing**: core.async untuk non-blocking PDF processing
+- **Caching**: Minimize initially, add when performance issues arise
+- **Static assets**: Serve from Fly.io initially, add CDN post-MVP jika needed
+- **Response time targets**: 
+  - Page load: < 3 seconds
+  - PDF processing: < 60 seconds
+  - Excel generation: < 5 seconds
+
+**Post-MVP Scaling Strategy:**
+- Horizontal scaling via Fly.io (add more instances)
+- Database migration to managed service (Datomic Cloud or Postgres on Fly)
+- CDN untuk static assets
+- Async job queue untuk long-running tasks
 
 ### 8.4 Potential technical challenges
 
-- **OCR accuracy variability**:
-  - Dokumen dengan kualitas scan buruk dapat menghasilkan accuracy < 95%
-  - Mitigation: Set confidence threshold dan flag low-confidence fields untuk manual review
-  - Continuous improvement: Collect feedback untuk training custom models
+**Solo Founder Specific Challenges:**
+
+- **PDF parsing accuracy variability**:
+  - Searchable PDFs memiliki format yang bervariasi (encoding, fonts, layout)
+  - Mitigation: Start dengan simple regex extraction, iterate based on real documents
+  - Test dengan sample documents dari beta users
 - **Document format variations**:
-  - Bill of Lading dan invoice dari berbagai shipping lines memiliki format yang berbeda-beda
-  - Mitigation: Train separate models untuk common formats, fallback ke generic model
+  - Bill of Lading dari berbagai shipping lines memiliki format berbeda
+  - Mitigation: Build flexible parser dengan fallback strategies
+  - Collect templates dari users untuk continuous improvement
 - **CEISA template changes**:
-  - Bea Cukai dapat mengubah format template dokumen pabean sewaktu-waktu
-  - Mitigation: Versioned templates, quick update mechanism, notification ke users jika ada template baru
-- **Processing time bottleneck**:
-  - Azure Document Intelligence API memiliki rate limits dan latency
-  - Mitigation: Implement queue system, batch processing, status polling
+  - Bea Cukai dapat mengubah format template sewaktu-waktu
+  - Mitigation: Versioned templates dengan config file, easy to update tanpa code changes
+- **Clojure learning curve**:
+  - Jika belum expert di Clojure, ada learning overhead
+  - Mitigation: Start simple, leverage REPL untuk exploration, extensive documentation
+- **Datomic cost**:
+  - Datomic Cloud bisa mahal untuk early stage ($50-100/month minimum)
+  - Mitigation: Start dengan Datomic Pro (local), atau fallback ke PostgreSQL jika needed
 - **Payment integration complexity**:
-  - Payment callbacks, reconciliation, failed payment handling
-  - Mitigation: Use established payment gateway (Midtrans/Xendit) dengan robust SDK dan documentation
-- **Localization of error messages**:
-  - Technical error messages perlu di-translate ke Bahasa Indonesia yang user-friendly
-  - Mitigation: Error message dictionary, consistent error handling patterns
+  - Manual bank transfer reconciliation time-consuming
+  - Mitigation: Start dengan manual verification, automate later when volume increases
+- **Solo founder capacity**:
+  - Limited bandwidth untuk support, bug fixes, feature development simultaneously
+  - Mitigation: Sustainable pace, 3-week sprints, 20% buffer time, clear prioritization
+- **Time zone & availability**:
+  - Users expect quick response, but solo founder has limited hours
+  - Mitigation: Set clear expectations, automated email responses, async support via email/form
 
 ## 9. Agile Development Approach & Sprint Planning
 
-### 9.1 Agile Methodology Overview
+### 9.1 Solo Founder Agile Methodology
 
-PESISIR akan dibangun menggunakan **Scrum framework** dengan pendekatan iterative dan incremental. Setiap sprint berdurasi 2 minggu dengan tujuan menghasilkan **potentially shippable product increment**.
+PESISIR dibangun oleh **solo founder** dengan bantuan GitHub Copilot, menggunakan **adapted Scrum framework** untuk sustainable solo development.
 
-**Prinsip Agile yang diterapkan:**
-- **Iterative Development**: Membangun MVP secara bertahap dengan regular releases
-- **Customer Collaboration**: Frequent feedback dari early adopters dan pilot users
-- **Responding to Change**: Fleksibilitas untuk adjust priorities berdasarkan learning dan feedback
-- **Working Software**: Focus pada delivering functional features setiap sprint, bukan dokumentasi berlebihan
-- **Continuous Improvement**: Sprint retrospectives untuk improve team velocity dan quality
+**Solo Founder Adjustments:**
+- **Sprint Duration**: 3 minggu (bukan 2) - lebih sustainable pace untuk solo developer
+- **Simplified Ceremonies**: Lightweight planning, no daily standups, focused retrospectives
+- **Buffer Time**: 20% time buffer setiap sprint untuk unexpected issues, learning, debugging
+- **Focus**: Satu major feature per sprint, avoid multi-tasking
+- **Quality over Speed**: Comprehensive tests, clean code, good documentation - penting untuk maintainability
 
-### 9.2 Team Structure & Roles
+**Prinsip Solo Founder Development:**
+- **REPL-Driven Development**: Fast feedback loops, live coding, immediate results
+- **Incremental Deployment**: Deploy setiap sprint untuk get real user feedback early
+- **Technical Debt Management**: Allocate 15-20% setiap sprint untuk refactoring dan tech debt
+- **Avoid Burnout**: Sustainable pace, realistic goals, celebrate small wins
+- **Leverage Tools**: GitHub Copilot untuk coding assistance, automated testing, CI/CD
 
-**Team Size**: 4-5 orang (cross-functional)
+### 9.2 Solo Founder "Team" Structure
 
-**Scrum Roles**:
-- **Product Owner** (1 person, 50% allocation): Maintain dan prioritize product backlog, define user stories, accept sprint deliverables
-- **Scrum Master** (part-time, bisa dilakukan oleh Tech Lead): Facilitate ceremonies, remove blockers, ensure Scrum practices
-- **Development Team** (3-4 people): Self-organizing, cross-functional
-  - 2 Full-stack developers (.NET + Blazor)
-  - 1 UI/UX Designer (part-time sprint 1-4)
-  - 1 QA Engineer (embedded in dev team)
-  - DevOps responsibilities distributed dalam team
+**Roles** (semua dilakukan oleh solo founder):
+- **Product Owner**: Define features, prioritize backlog
+- **Developer**: Write code, implement features
+- **DevOps**: Setup infrastructure, deployment, monitoring
+- **Designer**: UI/UX design (keep it simple, use existing components)
+- **QA**: Testing, bug fixes
+- **Support**: Handle user inquiries (initially manual, automate later)
 
-### 9.3 Agile Ceremonies
+**Support System:**
+- **GitHub Copilot**: Coding assistance, boilerplate generation
+- **AI Tools**: ChatGPT for problem-solving, documentation
+- **Community**: Clojure community (Slack, Reddit) for help
+- **Beta Users**: Early feedback, bug reports, feature validation
 
-**Sprint Planning** (setiap 2 minggu, 2 jam):
-- Review product backlog dan prioritize user stories
-- Team commit ke sprint backlog (what can be delivered)
-- Break down user stories menjadi tasks dengan estimates
-- Define sprint goal dan success criteria
+### 9.3 Lightweight Ceremonies
 
-**Daily Standup** (setiap hari, 15 menit):
-- What did I complete yesterday?
-- What will I work on today?
-- Any blockers atau impediments?
+**Sprint Planning** (setiap 3 minggu, 2-3 jam):
+- Review apa yang completed sprint sebelumnya
+- Prioritize top 3-5 user stories untuk next sprint
+- Break down tasks, estimate effort
+- Define sprint goal yang clear dan achievable
 
-**Sprint Review** (akhir sprint, 1 jam):
-- Demo working software ke stakeholders dan early users
-- Gather feedback
-- Update product backlog based on learnings
+**Weekly Review** (30 menit setiap Friday):
+- Check progress vs sprint goal
+- Adjust priorities jika needed
+- Document blockers dan decisions
 
 **Sprint Retrospective** (akhir sprint, 1 jam):
-- What went well?
-- What can be improved?
-- Action items untuk next sprint
+- What worked well? What didn't?
+- Technical learnings dan challenges
+- Process improvements untuk next sprint
+- Update velocity estimate
 
-**Backlog Refinement** (mid-sprint, 1 jam):
-- Review upcoming user stories
-- Add details, estimates, acceptance criteria
-- Ensure next sprint backlog is ready
+**Daily Log** (5-10 menit, end of day):
+- Document what was accomplished today
+- Note blockers atau questions
+- Plan tomorrow's focus
+- Track di simple markdown file atau Notion
 
-### 9.4 Sprint Breakdown (6 Sprints = 12 Minggu)
+### 9.4 Sprint Breakdown (8 Sprints = 24 Minggu)
 
-**Sprint Timeline Overview**:
+**Solo Founder Sprint Timeline:**
 ```
-Sprint 0 (Pre-Dev)    Sprint 1         Sprint 2         Sprint 3
-[====Setup====]     [==Auth/Core==]  [==Upload/OCR==] [==Review/Edit==]
-  Week -1-0          Week 1-2          Week 3-4          Week 5-6
-  
-Sprint 4            Sprint 5          Sprint 6
-[==Generation==]   [==Payment====]   [==Polish/Test==]
-  Week 7-8          Week 9-10         Week 11-12
-                                      
-                                      MVP LAUNCH ⭐
+Sprint 0        Sprint 1         Sprint 2         Sprint 3
+[Setup]      [Foundation]   [PDF Upload]   [Data Extract]
+Week -2-0      Week 1-3        Week 4-6         Week 7-9
+
+Sprint 4        Sprint 5         Sprint 6         Sprint 7
+[Review UI]   [Generation]   [Credit System]    [Polish]
+Week 10-12     Week 13-15       Week 16-18      Week 19-21
+
+Sprint 8
+[Testing/Launch]
+  Week 22-24
+                MVP LAUNCH ⭐ (May 2026)
 ```
 
-**Key Milestones**:
-- **End of Sprint 2**: Users dapat upload dan extract data (Core value prop working)
-- **End of Sprint 4**: End-to-end flow complete (Upload → Extract → Edit → Generate → Download)
-- **End of Sprint 5**: Monetization working (Payment integration complete)
-- **End of Sprint 6**: Production-ready MVP dengan polish dan testing
+**Realistic Story Points untuk Solo Founder:**
+- Sprint velocity target: 15-20 points per 3-week sprint
+- Buffer 20% untuk unexpected issues
+- Focus: Quality over quantity
+
+**Key Milestones:**
+- **End of Sprint 2**: PDF upload working, basic parsing
+- **End of Sprint 4**: Core value prop working (upload → extract → review → edit)
+- **End of Sprint 6**: Full flow working (including document generation & credit system)
+- **End of Sprint 7**: Polish, bug fixes, UX improvements
+- **End of Sprint 8**: Production-ready MVP + initial beta users
 
 ---
 

@@ -2,7 +2,9 @@
 
 **Last Updated**: December 29, 2025  
 **Project Status**: Sprint 0 - Agile Planning Complete ✅  
-**Next Phase**: Sprint 1 - Development Kick-off
+**Tech Stack**: Clojure Full-Stack (v3.0)  
+**Team**: Solo Founder + GitHub Copilot  
+**Next Phase**: Sprint 1 - Foundation & Authentication (Jan 2026)
 
 ---
 
@@ -10,9 +12,10 @@
 
 ### 🎯 Start Here (Essential Documents)
 
-1. **[README.md](../README.md)** - Project overview dan quick start
-2. **[prd.md](prd.md)** - **Product Requirements Document v2.0 (Agile Edition)** ⭐
-3. **[AGILE_QUICK_START_GUIDE.md](AGILE_QUICK_START_GUIDE.md)** - Implementation guide untuk Sprint 0
+1. **[README.md](../README.md)** - Project overview with Clojure stack
+2. **[prd.md](prd.md)** - **Product Requirements Document v3.0 (Solo Founder Edition)** ⭐
+3. **[CLOJURE_STACK_MIGRATION.md](CLOJURE_STACK_MIGRATION.md)** - **Why Clojure? Stack rationale** 🆕
+4. **[SDLC_CHECKLIST.md](SDLC_CHECKLIST.md)** - **Sprint-by-sprint implementation plan** ⭐
 
 ---
 
@@ -22,32 +25,53 @@
 
 | Document | Description | Status | Priority |
 |----------|-------------|--------|----------|
-| **[prd.md](prd.md)** | Complete PRD dengan Agile Scrum methodology, 6 sprints, product backlog, user stories dengan story points | ✅ v2.0 Complete | 🔴 Critical |
-| [REQUIREMENTS.md](REQUIREMENTS.md) | Formal requirements specification: functional, non-functional, user stories, traceability matrix | ✅ Complete | 🟡 High |
-| [PRD_AGILE_REVISION_SUMMARY.md](PRD_AGILE_REVISION_SUMMARY.md) | Summary of changes from waterfall to Agile approach | ✅ Complete | 🟢 Reference |
-| [PRD_BEFORE_AFTER_COMPARISON.md](PRD_BEFORE_AFTER_COMPARISON.md) | Visual comparison: waterfall vs Agile approach | ✅ Complete | 🟢 Reference |
+| **[prd.md](prd.md)** | Complete PRD v3.0: Solo founder, Clojure stack, 8 sprints @ 3 weeks, MVP focus | ✅ v3.0 Complete | 🔴 Critical |
+| **[CLOJURE_STACK_MIGRATION.md](CLOJURE_STACK_MIGRATION.md)** | Rationale untuk Clojure full-stack, architecture, comparison with .NET | ✅ Complete | 🔴 Critical |
+| [REQUIREMENTS.md](REQUIREMENTS.md) | Formal requirements specification (may need update untuk MVP scope) | ⚠️ Needs Review | 🟡 Medium |
 
-### Agile Implementation
-
-| Document | Description | Status | Priority |
-|----------|-------------|--------|----------|
-| **[AGILE_QUICK_START_GUIDE.md](AGILE_QUICK_START_GUIDE.md)** | Step-by-step guide: Sprint 0 setup, ceremonies, tools, checklist | ✅ Complete | 🔴 Critical |
-| [prd.md - Section 9](prd.md#9-agile-development-approach--sprint-planning) | Agile methodology, sprint breakdown, ceremonies, DoD, CI/CD | ✅ Complete | 🔴 Critical |
-| [prd.md - Section 10](prd.md#10-product-backlog--user-stories) | Product backlog management, prioritization, user stories | ✅ Complete | 🔴 Critical |
-
-### Planning & Risk
+### Implementation Plan
 
 | Document | Description | Status | Priority |
 |----------|-------------|--------|----------|
-| [RISK_ASSESSMENT.md](RISK_ASSESSMENT.md) | Risk identification, assessment, mitigation strategies, contingency plans | ✅ Complete | 🟡 High |
-| [SDLC_CHECKLIST.md](SDLC_CHECKLIST.md) | Phase tracking checklist (waterfall-based, may need Agile update) | ⚠️ Needs Update | 🟢 Reference |
-| [SDLC_REVIEW.md](SDLC_REVIEW.md) | SDLC review, best practices, gap analysis (waterfall-based) | ⚠️ Needs Update | 🟢 Reference |
+| **[SDLC_CHECKLIST.md](SDLC_CHECKLIST.md)** | Sprint-by-sprint checklist: Sprint 0-8, Clojure workflow, solo founder focus | ✅ v2.0 Complete | 🔴 Critical |
+| [README.md](../README.md) | Quick start guide, tech stack overview, 24-week timeline | ✅ Updated | 🔴 Critical |
+
+### Risk & Planning
+
+| Document | Description | Status | Priority |
+|----------|-------------|--------|----------|
+| [RISK_ASSESSMENT.md](RISK_ASSESSMENT.md) | Risk identification and mitigation (may need solo founder update) | ⚠️ Needs Review | 🟡 Medium |
+
+### Archive / Reference
+
+| Document | Description | Status | Priority |
+|----------|-------------|--------|----------|
+| [PRD_AGILE_REVISION_SUMMARY.md](PRD_AGILE_REVISION_SUMMARY.md) | v2.0 Agile revision summary (now superseded by v3.0) | 📦 Archive | 🟢 Reference |
+| [PRD_BEFORE_AFTER_COMPARISON.md](PRD_BEFORE_AFTER_COMPARISON.md) | Waterfall vs Agile comparison | 📦 Archive | 🟢 Reference |
+| [AGILE_QUICK_START_GUIDE.md](AGILE_QUICK_START_GUIDE.md) | Sprint 0 guide (team-based, may need solo update) | ⚠️ Needs Review | 🟢 Reference |
+| [SDLC_REVIEW.md](SDLC_REVIEW.md) | Original SDLC review (waterfall-based) | 📦 Archive | 🟢 Reference |
 
 ---
 
-## 🗺️ Document Usage by Role
+## 🗺️ Document Usage by Solo Founder
 
-### For Product Owner
+### Sprint Planning Phase
+**Read First:**
+1. [prd.md](prd.md) - Understand MVP scope, user stories, priorities
+2. [CLOJURE_STACK_MIGRATION.md](CLOJURE_STACK_MIGRATION.md) - Understand tech decisions
+3. [SDLC_CHECKLIST.md](SDLC_CHECKLIST.md) - Follow sprint-by-sprint plan
+
+### Development Phase (Sprints 1-8)
+**Daily Reference:**
+1. [SDLC_CHECKLIST.md](SDLC_CHECKLIST.md) - Track progress, check off completed tasks
+2. [prd.md - User Stories](prd.md#10-user-stories) - Implementation details, acceptance criteria
+3. [CLOJURE_STACK_MIGRATION.md](CLOJURE_STACK_MIGRATION.md) - Architecture reference, code examples
+
+### Sprint Review & Retro
+**Review:**
+1. Sprint goals from [SDLC_CHECKLIST.md](SDLC_CHECKLIST.md)
+2. User feedback integration back to [prd.md](prd.md)
+3. Update velocity and adjust next sprint plan
 **Primary Reading**:
 1. [prd.md](prd.md) - Complete product vision
 2. [prd.md - Section 10](prd.md#10-product-backlog--user-stories) - Backlog prioritization

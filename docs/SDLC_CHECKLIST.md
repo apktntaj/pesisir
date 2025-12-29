@@ -1,9 +1,11 @@
 # SDLC Implementation Checklist: Pesisir Platform
 
-**Project:** Pesisir - Multi-Tenant Customs Business Automation Platform  
-**Version:** 1.0  
-**Date:** December 8, 2025  
-**Target Launch:** February 2026
+**Project:** Pesisir - Platform Otomasi Dokumen Pabean  
+**Version:** 2.0 (Solo Founder Edition)  
+**Date:** December 29, 2025  
+**Team:** Solo Founder + GitHub Copilot  
+**Tech Stack:** Clojure + ClojureScript + Datomic  
+**Target Launch:** May 2026 (24 weeks, 8 sprints @ 3 weeks each)
 
 ---
 
@@ -19,84 +21,75 @@ This checklist serves as the single source of truth for project progress trackin
 
 ---
 
-## Phase 1: Planning (Weeks -1 to 0)
+## Phase 1: Planning (Weeks -2 to 0)
 
 ### Project Initiation
 - [x] Define project vision and objectives
-- [x] Identify target users (customs officers, brokers)
-- [x] Define MVP scope and features
-- [x] Estimate timeline (8 weeks)
-- [x] Create initial planning document (PESISIR_PLAN.md)
+- [x] Identify target users (PPJK staff, customs brokers)
+- [x] Define ultra-minimal MVP scope
+- [x] Estimate realistic timeline (24 weeks / 8 sprints)
+- [x] Choose technology stack (Clojure full-stack)
+- [x] Create planning documentation
 
-### Stakeholder Management
-- [ ] Create stakeholder matrix
-- [ ] Define communication plan (weekly updates)
-- [ ] Identify decision makers
-- [ ] Setup project communication channels (Slack, email)
-- [ ] Schedule weekly standup meetings
+### Solo Founder Reality Check
+- [x] Accept constraints: limited time, no team, need sustainable pace
+- [x] Identify what to defer: OCR, WhatsApp, vessel tracking, multi-tenant
+- [x] Set realistic goals: 10-50 beta users, not 100+
+- [x] Plan for 3-week sprints with 20% buffer time
+- [x] Prioritize ruthlessly: MVP must be minimal
 
 ### Resource Planning
-- [ ] Define team structure and roles
-  - [ ] Tech Lead (1)
-  - [ ] Backend Developers (2-3)
-  - [ ] DevOps Engineer (0.5)
-  - [ ] QA Engineer (0.5)
-- [ ] Estimate budget requirements
-  - [ ] Development costs
-  - [ ] Infrastructure costs ($600/month initially)
-  - [ ] External services ($600/month)
-- [ ] Allocate contingency budget ($30,000)
+- [x] Budget estimate:
+  - [x] Infrastructure: Fly.io ~$30-50/month
+  - [x] Database: Datomic Pro (local) or PostgreSQL (free initially)
+  - [x] Email: Postal + SMTP provider ~$10/month
+  - [x] Monitoring: Sentry free tier
+  - [x] Domain + SSL: ~$15/year
+  - [x] Total: ~$50-100/month for MVP phase
+- [x] No external services costs (no Azure OCR, no WhatsApp, no vessel tracking)
 
 ### Documentation
-- [x] Create comprehensive planning document
-- [x] Create SDLC review document
-- [x] Create requirements specification
-- [x] Create risk assessment matrix
+- [x] Create comprehensive PRD (v3.0 - Solo Founder Edition)
 - [x] Create SDLC checklist (this document)
-- [ ] Create project README
-
-### Risk Management
-- [x] Identify major risks (15 identified)
-- [x] Assess risk probability and impact
-- [x] Define mitigation strategies
-- [ ] Establish risk monitoring process
-- [ ] Setup risk review meetings (bi-weekly)
+- [x] Create stack migration rationale
+- [ ] Create architecture diagram (simple monolith)
+- [ ] Document development setup
 
 ### Decision Making
-- [x] Technology stack selection
-- [x] Architecture approach (microservices)
-- [x] Multi-tenancy strategy (shared database)
-- [x] External service selection (Azure, MarineTraffic, Twilio)
-- [x] Document all decisions in decision log
+- [x] Technology stack: Clojure + ClojureScript + Datomic
+- [x] Architecture: Monolith (not microservices)
+- [x] Deployment: Fly.io (simple, affordable)
+- [x] MVP scope: PDF parsing only, no OCR
+- [x] Payment: Manual bank transfer initially
+- [x] Multi-tenant: Defer to phase 2
 
 **Phase 1 Completion Criteria:**
-- [ ] All planning documents reviewed and approved
-- [ ] Stakeholders aligned on scope and timeline
-- [ ] Team assembled and roles defined
-- [ ] Budget approved
-- [ ] Ready to proceed to Requirements phase
+- [x] All planning documents completed and reviewed
+- [x] Solo founder realistic about scope and timeline
+- [x] Budget confirmed as affordable
+- [x] Tech stack decided
+- [ ] Development environment setup guide ready
+- [ ] Ready to start Sprint 1
 
 ---
 
 ## Phase 2: Requirements Analysis (Week 1)
 
-### Functional Requirements
-- [x] Document core functional requirements (18 identified)
-- [x] Assign requirement IDs (REQ-FUNC-001 to REQ-FUNC-018)
-- [x] Define acceptance criteria for each requirement
+### Functional Requirements (MVP Focus)
+- [x] Document core functional requirements untuk MVP
+- [x] Focus: PDF upload, parsing, data extraction, Excel generation, credit system
+- [x] Defer: OCR, WhatsApp, vessel tracking, multi-tenant
 - [x] Prioritize requirements (MoSCoW method)
-- [ ] Review requirements with stakeholders
-- [ ] Obtain approval on requirements document
+- [x] Define acceptance criteria for each requirement
+- [ ] Validate requirements dengan potential beta users
 
-### Non-Functional Requirements
-- [x] Define performance requirements (3 identified)
-- [x] Define scalability requirements (3 identified)
-- [x] Define availability requirements (2 identified)
-- [x] Define security requirements (6 identified)
-- [x] Define reliability requirements (2 identified)
-- [x] Define usability requirements (2 identified)
-- [x] Define maintainability requirements (3 identified)
-- [x] Define compliance requirements (2 identified)
+### Non-Functional Requirements (Realistic for Solo Founder)
+- [x] Performance: Support 10-20 concurrent users
+- [x] Scalability: Start small, design untuk scale later
+- [x] Availability: Target 99% uptime (acceptable downtime untuk maintenance)
+- [x] Security: JWT auth, HTTPS, basic security best practices
+- [x] Usability: Simple, intuitive UI - no fancy design needed
+- [x] Maintainability: Clean code, good documentation, comprehensive tests
 
 ### User Stories
 - [x] Convert features to user stories (12 created)
@@ -198,106 +191,335 @@ This checklist serves as the single source of truth for project progress trackin
 
 ---
 
-## Phase 4: Implementation (Weeks 2-7)
+## Phase 4: Implementation (Weeks 1-24 / Sprints 1-8)
 
-### Development Environment Setup (Week 2)
-- [ ] 🔴 Setup version control (GitHub repo)
-- [ ] 🔴 Create .NET 8.0 solution structure
-- [ ] 🔴 Configure Docker Compose for local development
-- [ ] Setup SQL Server 2022 container
-- [ ] Setup Redis container (caching)
-- [ ] Setup message queue (RabbitMQ or Azure Service Bus)
-- [ ] Configure development environment documentation
+### Sprint 0: Development Environment Setup (Weeks -2 to 0)
+- [ ] 🔴 Setup version control (GitHub repo already exists)
+- [ ] 🔴 Setup Clojure development environment
+  - [ ] Install Clojure CLI tools (deps.edn)
+  - [ ] Install Java 21 (for Clojure runtime)
+  - [ ] Setup IDE: VS Code + Calva OR Emacs + CIDER
+  - [ ] Configure REPL workflow
+- [ ] 🔴 Create project structure
+  - [ ] Initialize deps.edn with dependencies
+  - [ ] Setup backend namespace structure
+  - [ ] Setup frontend (ClojureScript) structure
+  - [ ] Configure shadow-cljs for frontend build
+- [ ] Database setup
+  - [ ] Decision: Datomic Pro (local) OR PostgreSQL
+  - [ ] Setup local database instance
+  - [ ] Create initial schema (Datomic) or migrations (PostgreSQL)
+- [ ] Development documentation
+  - [ ] Document REPL workflow
+  - [ ] Document how to run locally
+  - [ ] Document database setup
 
-### CI/CD Pipeline Setup (Week 2)
-- [ ] 🔴 Setup GitHub Actions for CI
-- [ ] Configure automated build on commit
-- [ ] Setup automated unit test execution
-- [ ] Configure code coverage reporting (target >80%)
-- [ ] Setup static code analysis (linting)
-- [ ] Configure security scanning (Snyk/OWASP)
-- [ ] Setup automated deployment to staging
+### Sprint 1: Foundation & Authentication (Weeks 1-3)
+**Goal**: Basic app structure + user authentication working
 
-### Phase 4.1: Foundation & Infrastructure (Weeks 2-3)
+#### Backend Foundation
+- [ ] 🔴 Setup Ring + Reitit HTTP server
+- [ ] 🔴 Create core namespaces:
+  - [ ] `pesisir.core` (main entry point)
+  - [ ] `pesisir.server` (HTTP server)
+  - [ ] `pesisir.routes` (API routes)
+  - [ ] `pesisir.db` (database connection)
+- [ ] Configure environment variables (port, db config, etc.)
+- [ ] Health check endpoint: GET /health
+- [ ] CORS configuration
 
-#### Shared Domain & Infrastructure
-- [ ] Create Pesisir.Domain project
-  - [ ] Define core entities (Tenant, User, Shipment, etc.)
-  - [ ] Create value objects
-  - [ ] Define domain interfaces
-- [ ] Create Pesisir.Infrastructure project
-  - [ ] Setup DbContext with multi-tenant query filters
-  - [ ] Configure Entity Framework migrations
-  - [ ] Implement repository pattern (if used)
-  - [ ] Setup Azure Blob Storage client
-- [ ] Create database migrations
-  - [ ] Tenants table
-  - [ ] Users table
-  - [ ] Shipments table
-  - [ ] BillsOfLading table
-  - [ ] Documents table
-  - [ ] Notifications table
-- [ ] Test database setup locally
+#### Database Schema (Datomic or PostgreSQL)
+- [ ] Define user schema
+  - [ ] User ID, email, hashed password
+  - [ ] Created at, updated at
+  - [ ] Credit balance
+- [ ] Define document schema (for later sprints)
+- [ ] Implement database connection pooling (if PostgreSQL)
+- [ ] Write helper functions untuk CRUD operations
 
-#### Authentication Infrastructure
-- [ ] Implement JWT token generation
-- [ ] Implement JWT token validation middleware
-- [ ] Create refresh token mechanism
-- [ ] Implement password hashing (bcrypt)
-- [ ] Create tenant context resolver
-- [ ] Implement authorization policies
-
-**Phase 4.1 Completion Criteria:**
-- [ ] Solution structure created and building
-- [ ] Database migrations working
-- [ ] Authentication infrastructure tested
-- [ ] All unit tests passing (>80% coverage)
-- [ ] Code review completed
-
-### Phase 4.2: Identity & Tenant Management (Weeks 3-4)
-
-#### Pesisir.Identity.API Development
-- [ ] 🔴 Setup API project with Swagger
-- [ ] Implement tenant registration endpoint
-  - [ ] POST /api/tenants/register
+#### Authentication with Buddy
+- [ ] 🔴 Implement user registration
+  - [ ] POST /api/auth/register
   - [ ] Email validation
-  - [ ] Tenant provisioning logic
-  - [ ] Unit tests
-- [ ] Implement user authentication endpoints
+  - [ ] Password hashing (bcrypt via Buddy)
+  - [ ] Create user in database
+  - [ ] Send verification email (simple SMTP)
+- [ ] 🔴 Implement user login
   - [ ] POST /api/auth/login
-  - [ ] POST /api/auth/refresh
-  - [ ] POST /api/auth/logout
-  - [ ] Unit and integration tests
-- [ ] Implement user management endpoints
-  - [ ] GET /api/users
-  - [ ] POST /api/users
-  - [ ] PUT /api/users/{id}
-  - [ ] DELETE /api/users/{id}
-  - [ ] Authorization checks
-  - [ ] Unit and integration tests
-- [ ] Implement tenant settings endpoints
-  - [ ] GET /api/tenants/settings
-  - [ ] PUT /api/tenants/settings
-- [ ] Update API documentation (Swagger)
+  - [ ] Validate credentials
+  - [ ] Generate JWT token with Buddy
+  - [ ] Return token + user info
+- [ ] JWT middleware untuk protected routes
+- [ ] Implement token refresh (optional untuk MVP)
 
-#### Testing & Validation
-- [ ] Unit tests for Identity service (>80% coverage)
-- [ ] Integration tests for all endpoints
-- [ ] Tenant isolation tests (critical)
-- [ ] Security testing (auth bypass attempts)
-- [ ] Manual API testing with Postman
+#### Testing
+- [ ] Setup kaocha (test runner)
+- [ ] Write unit tests untuk auth functions
+- [ ] Test database operations
+- [ ] Manual API testing dengan curl/Postman
 
-**Phase 4.2 Completion Criteria:**
-- [ ] Identity API fully functional
-- [ ] All endpoints tested and documented
-- [ ] Security review passed
-- [ ] Code review completed
-- [ ] Merged to main branch
+**Sprint 1 Done Criteria:**
+- [ ] App runs locally
+- [ ] User can register and login
+- [ ] JWT authentication working
+- [ ] Tests passing (>70% coverage)
+- [ ] Deployed to Fly.io staging
 
-### Phase 4.3: Shipment Service & BOL OCR (Weeks 4-5)
+### Sprint 2: PDF Upload & Storage (Weeks 4-6)
+**Goal**: Users can upload PDF files
 
-#### Pesisir.Shipment.API Development
-- [ ] 🔴 Setup API project with Swagger
+#### File Upload
+- [ ] 🔴 Implement file upload endpoint
+  - [ ] POST /api/documents/upload
+  - [ ] Multipart form data handling
+  - [ ] File size validation (max 10MB)
+  - [ ] File type validation (PDF only)
+- [ ] Store uploaded files
+  - [ ] Save to local disk initially (/uploads directory)
+  - [ ] Generate unique filename (UUID)
+  - [ ] Store file metadata in database
+- [ ] File listing endpoint
+  - [ ] GET /api/documents
+  - [ ] Return user's uploaded documents
+  - [ ] Filter by date, status
+
+#### Frontend: ClojureScript + Re-frame
+- [ ] 🔴 Setup Re-frame project structure
+- [ ] Basic UI components dengan Reagent:
+  - [ ] Login page
+  - [ ] Registration page
+  - [ ] Dashboard page
+  - [ ] File upload component (drag & drop)
+- [ ] State management dengan Re-frame
+  - [ ] Events for login, register, upload
+  - [ ] Subscriptions for user state, documents list
+- [ ] HTTP requests dengan cljs-ajax
+- [ ] Styling dengan Tailwind CSS
+
+#### Testing
+- [ ] Test file upload dengan berbagai file types
+- [ ] Test file size limits
+- [ ] Frontend integration testing (manual)
+
+**Sprint 2 Done Criteria:**
+- [ ] Users can login via web UI
+- [ ] Users can upload PDF files
+- [ ] Files stored and listed correctly
+- [ ] Basic UI working (doesn't need to be pretty)
+
+### Sprint 3: PDF Parsing & Data Extraction (Weeks 7-9)
+**Goal**: Extract data from uploaded PDFs
+
+#### PDF Parsing dengan PDFBox
+- [ ] 🔴 Setup Apache PDFBox (Java interop)
+- [ ] Parse PDF text content
+  - [ ] Extract all text from PDF
+  - [ ] Handle multi-page PDFs
+  - [ ] Handle different encodings
+- [ ] Implement data extraction logic
+  - [ ] Regex patterns untuk common fields:
+    - [ ] Shipper name & address
+    - [ ] Consignee name & address
+    - [ ] B/L number
+    - [ ] Vessel name
+    - [ ] Port of loading & discharge
+    - [ ] Cargo description, quantity, weight
+    - [ ] Container numbers
+  - [ ] Confidence scoring untuk extracted fields
+- [ ] Store extracted data in database
+- [ ] Endpoint untuk process document
+  - [ ] POST /api/documents/{id}/process
+  - [ ] Return extracted data + confidence scores
+
+#### Background Processing
+- [ ] Implement async processing dengan core.async
+- [ ] Status tracking: pending, processing, completed, failed
+- [ ] Endpoint untuk check processing status
+  - [ ] GET /api/documents/{id}/status
+
+#### Testing
+- [ ] Test dengan sample BOL PDFs
+- [ ] Validate extraction accuracy
+- [ ] Test edge cases (empty PDFs, corrupted files)
+- [ ] Measure processing time
+
+**Sprint 3 Done Criteria:**
+- [ ] PDF text extraction working
+- [ ] Data extraction logic implemented
+- [ ] Accuracy tested dengan real documents (target >80%)
+- [ ] Processing happens asynchronously
+
+### Sprint 4: Data Review & Edit UI (Weeks 10-12)
+**Goal**: Users can review and edit extracted data
+
+#### Review Page UI
+- [ ] 🔴 Create review/edit page component
+- [ ] Split view: Original PDF (left) + Extracted data form (right)
+- [ ] PDF viewer component (use pdf.js via JS interop)
+- [ ] Form fields dengan inline editing
+- [ ] Confidence indicators (color-coded)
+- [ ] Auto-save edited data
+- [ ] Validation untuk required fields
+
+#### Backend Support
+- [ ] Endpoint untuk update extracted data
+  - [ ] PUT /api/documents/{id}/data
+  - [ ] Validate and save edits
+- [ ] Endpoint untuk retrieve document + data
+  - [ ] GET /api/documents/{id}/review
+
+#### Mobile Responsiveness
+- [ ] Make review page responsive
+- [ ] Test pada mobile devices
+- [ ] Adjust layout untuk small screens
+
+**Sprint 4 Done Criteria:**
+- [ ] Users can see extracted data
+- [ ] Users can edit any field
+- [ ] Changes auto-save
+- [ ] Mobile-friendly layout
+
+### Sprint 5: Excel Document Generation (Weeks 13-15)
+**Goal**: Generate BC 1.1, BC 2.3, BC 3.0 Excel files
+
+#### Excel Generation dengan Apache POI
+- [ ] 🔴 Setup Apache POI (Java interop)
+- [ ] Create CEISA templates
+  - [ ] BC 1.1 (Manifest) template
+  - [ ] BC 2.3 template  
+  - [ ] BC 3.0 template
+  - [ ] Store templates as resources atau config
+- [ ] Implement generation functions
+  - [ ] Populate Excel dari extracted data
+  - [ ] Handle formatting, formulas
+  - [ ] Generate unique filename
+- [ ] Endpoint untuk generate document
+  - [ ] POST /api/documents/{id}/generate
+  - [ ] Parameter: template type
+  - [ ] Return download URL
+
+#### File Download
+- [ ] Endpoint untuk download generated file
+  - [ ] GET /api/documents/{id}/download
+  - [ ] Stream file to browser
+  - [ ] Proper content-type headers
+- [ ] Store generated files (30 day retention)
+- [ ] Clean up old files (background job)
+
+#### Testing
+- [ ] Test each template type
+- [ ] Validate generated Excel format
+- [ ] Test dengan real data
+- [ ] Manual review of generated documents
+
+**Sprint 5 Done Criteria:**
+- [ ] Can generate all 3 document types
+- [ ] Generated files downloadable
+- [ ] Format matches CEISA requirements
+- [ ] End-to-end flow working (upload → extract → edit → generate → download)
+
+### Sprint 6: Credit System & Payment (Weeks 16-18)
+**Goal**: Monetization - users can buy credits
+
+#### Credit System
+- [ ] Add initial balance on registration (Rp 50,000)
+- [ ] Deduct credits on document processing
+- [ ] Credit balance display on dashboard
+- [ ] Transaction history
+  - [ ] Database schema untuk transactions
+  - [ ] Endpoint: GET /api/transactions
+- [ ] Low balance warning
+
+#### Payment (Manual Initially)
+- [ ] Top-up page dengan pricing tiers
+- [ ] Manual bank transfer instructions
+- [ ] Admin interface untuk confirm payment (simple)
+  - [ ] List pending payments
+  - [ ] Button untuk approve → add credits
+- [ ] Email notification setelah payment confirmed
+
+**Sprint 6 Done Criteria:**
+- [ ] Credits deducted correctly
+- [ ] Users can request top-up
+- [ ] Admin can manually confirm payments
+- [ ] Transaction history visible
+
+### Sprint 7: Polish & UX Improvements (Weeks 19-21)
+**Goal**: Make app polished and user-friendly
+
+#### UI/UX Improvements
+- [ ] Improve visual design (Tailwind components)
+- [ ] Add loading states dan spinners
+- [ ] Better error messages (user-friendly)
+- [ ] Success notifications
+- [ ] Onboarding wizard untuk new users
+- [ ] Help text dan tooltips
+- [ ] Document history page
+
+#### Performance Optimization
+- [ ] Optimize PDF parsing speed
+- [ ] Add caching where appropriate
+- [ ] Optimize frontend bundle size
+- [ ] Lazy loading components
+
+#### Bug Fixes
+- [ ] Fix known bugs from previous sprints
+- [ ] Edge case handling
+- [ ] Error handling improvements
+
+**Sprint 7 Done Criteria:**
+- [ ] App feels polished
+- [ ] No critical bugs
+- [ ] Good user experience
+- [ ] Performance acceptable
+
+### Sprint 8: Testing, Documentation & Launch (Weeks 22-24)
+**Goal**: Production-ready MVP
+
+#### Testing
+- [ ] Comprehensive manual testing
+- [ ] Test all user flows end-to-end
+- [ ] Security review (basic)
+- [ ] Performance testing
+- [ ] Cross-browser testing
+- [ ] Mobile testing
+- [ ] Beta user testing (5-10 users)
+
+#### Documentation
+- [ ] User guide / FAQ
+- [ ] API documentation (if needed)
+- [ ] Deployment documentation
+- [ ] Troubleshooting guide
+
+#### Production Deployment
+- [ ] Setup production Fly.io instance
+- [ ] Configure production database
+- [ ] Setup production domain & SSL
+- [ ] Configure email (production SMTP)
+- [ ] Setup monitoring (Sentry)
+- [ ] Setup logging
+- [ ] Backup strategy
+- [ ] Deploy to production
+
+#### Launch Preparation
+- [ ] Prepare launch announcement
+- [ ] Prepare onboarding emails
+- [ ] Test payment flow in production
+- [ ] Monitor for issues
+
+**Sprint 8 Done Criteria:**
+- [ ] All tests passing
+- [ ] Production deployment successful
+- [ ] Documentation complete
+- [ ] Beta users onboarded
+- [ ] 🎉 MVP LAUNCH 🎉
+
+**Phase 4 Completion Criteria:**
+- [ ] MVP fully functional in production
+- [ ] All core features working
+- [ ] No critical bugs
+- [ ] Beta users successfully using the app
+- [ ] Ready for gradual user acquisition
 - [ ] Implement shipment CRUD endpoints
   - [ ] GET /api/shipments (list with filtering/sorting)
   - [ ] GET /api/shipments/{id}
