@@ -468,6 +468,27 @@ PESISIR akan dibangun menggunakan **Scrum framework** dengan pendekatan iterativ
 
 ### 9.4 Sprint Breakdown (6 Sprints = 12 Minggu)
 
+**Sprint Timeline Overview**:
+```
+Sprint 0 (Pre-Dev)    Sprint 1         Sprint 2         Sprint 3
+[====Setup====]     [==Auth/Core==]  [==Upload/OCR==] [==Review/Edit==]
+  Week -1-0          Week 1-2          Week 3-4          Week 5-6
+  
+Sprint 4            Sprint 5          Sprint 6
+[==Generation==]   [==Payment====]   [==Polish/Test==]
+  Week 7-8          Week 9-10         Week 11-12
+                                      
+                                      MVP LAUNCH ⭐
+```
+
+**Key Milestones**:
+- **End of Sprint 2**: Users dapat upload dan extract data (Core value prop working)
+- **End of Sprint 4**: End-to-end flow complete (Upload → Extract → Edit → Generate → Download)
+- **End of Sprint 5**: Monetization working (Payment integration complete)
+- **End of Sprint 6**: Production-ready MVP dengan polish dan testing
+
+---
+
 #### Sprint 0: Pre-Development Setup (Week -1 to 0)
 
 **Focus**: Foundation dan environment setup
@@ -715,6 +736,59 @@ Setiap user story considered "Done" ketika:
 - Regular risk review dalam Sprint Planning
 - Escalate blockers immediately dalam Daily Standups
 - Adapt sprint goals jika risk materialized
+
+### 9.9 Continuous Integration & Continuous Delivery (CI/CD)
+
+**CI/CD Pipeline** (Essential untuk Agile velocity):
+- **Continuous Integration**:
+  - Code commit triggers automated build
+  - Unit tests run automatically (must pass)
+  - Code quality checks (linting, static analysis)
+  - Build artifacts created
+  - Fast feedback: <5 minutes untuk build + unit tests
+  
+- **Continuous Delivery**:
+  - Automated deployment ke Staging setelah CI pass
+  - Integration tests run di Staging
+  - Manual approval gate untuk Production
+  - One-click deployment ke Production
+  - Rollback capability dalam <5 minutes
+
+**Deployment Strategy**:
+- **Sprint 1-3**: Deploy to Staging setiap end of sprint
+- **Sprint 4+**: Deploy to Staging setiap merged PR (continuous)
+- **Production**: Deploy at end of each sprint (bi-weekly releases)
+- **Hotfixes**: Deploy immediately via fast-track pipeline
+
+**Quality Gates** (Must pass sebelum merge):
+- All unit tests passing (>80% coverage)
+- No critical security vulnerabilities (Snyk scan)
+- Code review approved (minimum 1 reviewer)
+- No merge conflicts
+- Branch up to date dengan main
+
+### 9.10 Agile Tools & Collaboration
+
+**Project Management Tools**:
+- **Primary**: Jira atau Azure DevOps untuk backlog management
+  - Sprint boards (Kanban style)
+  - Burndown charts untuk track velocity
+  - Story point tracking
+  - Release planning roadmap
+  
+**Communication & Collaboration**:
+- **Daily Communication**: Slack/Microsoft Teams
+- **Code Repository**: GitHub dengan PR reviews
+- **Documentation**: Confluence atau Notion
+- **Design**: Figma untuk UI/UX collaboration
+- **Video Calls**: Zoom/Teams untuk remote ceremonies
+
+**Metrics Dashboard**:
+- Real-time sprint progress (burndown)
+- Team velocity trends
+- Defect trends
+- Code quality metrics (coverage, technical debt)
+- Production health metrics (uptime, performance)
 
 ## 10. Product Backlog & User Stories
 
