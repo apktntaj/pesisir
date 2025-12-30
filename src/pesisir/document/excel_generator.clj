@@ -71,7 +71,7 @@
       
       ;; Header Section
       (let [row0 (create-row sheet 0)]
-        (create-cell row0 0 "BC 1.1 - MANIFES")
+        (create-cell row0 0 "BC 1.1 - MANIFEST")
         (.setHeight row0 (short 600)))
       
       (let [row1 (create-row sheet 1)]
