@@ -452,3 +452,10 @@ twilio-logs/
 # Azure Document Intelligence temp files
 ocr-temp/
 form-recognizer-cache/
+# Clojure cache and compiled classes
+.cpcache/
+*.class
+
+# Sprint status and execution logs (temporary documentation)
+SPRINT_*_*.md
+FILES_CREATED_SPRINT_*.md
