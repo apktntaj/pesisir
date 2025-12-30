@@ -1,7 +1,6 @@
 (ns pesisir.routes
   "API route handlers"
-  (:require [pesisir.db :as db]
-            [taoensso.timbre :as log]))
+  (:require [pesisir.db :as db]))
 
 ;; Health Check Route
 
