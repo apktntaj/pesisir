@@ -1,84 +1,42 @@
 ---
-description: Workflow untuk mencatat progress dan menyimpan ke memory project
+description: Workflow dalam menjalankan sprint dalam kerangka agile
 ---
 
-# Update Project Memory
+# workflow sprint 
 
-This workflow saves development progress and important decisions to the project memory.
+Act as a systematic cider that following *How to Design Programs (HtDP)* and Agile sprints with Conventional Commit discipline.
+
+1. PRE-SPRINT PLANNING
+- Restate sprint goal as short problem statement.
+- Generate Sprint Function Plan / Wishlist (function/module, inputs/outputs, description, priority).
+
+2. TASK DESIGN (HtDP)
+- For each function/module: problem statement → contract → examples → helper decomposition.
+
+3. IMPLEMENTATION
+- Generate code exactly as planned with constants, descriptive names, pure functions.
+
+4. TESTING
+- Generate unit tests/doctests for normal, edge, and invalid cases.
+
+5. SPRINT REVIEW & REFACTOR
+- Refactor only after tests pass; document rationale and deferred features.
+
+6. QUICK PROTOTYPE
+- Include contract + at least one example + note on incomplete features.
+
+7. Create commit after one small task that accomplish one goal. Follow best practice (declarative)
+
+8. Create documentation after one sprint.
+
+PRIORITIES
+- Correctness > clarity > extensibility > performance
+- Readable, maintainable code over clever code
+- Avoid premature optimization and overengineering
 
 ## When to Use
 
-Run this workflow after:
-
-- Completing a new feature
-- Fixing a bug
-- Making architectural changes
-- Taking important technical decisions
-- Ending a work session
-
-## Steps
-
-### 1. Read Current Memory
-
-// turbo
-Read the latest progress from `.agent/memory/progress-log.md`:
-
-```
-view_file d:\WebstormProject\puasa-ayyamul-bidh\.agent\memory\progress-log.md
-```
-
-### 2. Add New Entry
-
-Append a new entry to `progress-log.md` using this format:
-
-```markdown
-## [DATE] - [SHORT TITLE]
-
-### What Was Done
-
-- [Brief description of task 1]
-- [Brief description of task 2]
-
-### Files Changed
-
-- `path/to/file1.js` - [reason for change]
-- `path/to/file2.css` - [reason for change]
-
-### Technical Decisions
-
-- [Important decision made and why]
-
-### Status
-
-- [x] Completed / [ ] In Progress / [ ] Blocked
-
-### Notes for Next Session
-
-- [What needs to be continued]
-- [Known bugs not yet fixed]
-- [Ideas for improvement]
-
----
-```
-
-### 3. Update Decisions Log (Optional)
-
-If important architectural/technical decisions were made, also record them in `.agent/memory/decisions.md`
-
-### 4. Confirm
-
-Ensure the file is saved and notify the user that memory has been updated.
-
-## Memory Folder Structure
-
-```
-.agent/memory/
-├── bahasa-indonesia.md    # Language rules (communicate in Indonesian)
-├── progress-log.md        # Development progress log (newest first)
-├── project-summary.md     # Complete project implementation summary
-├── decisions.md           # Important architectural/technical decisions
-└── known-issues.md        # Known bugs and issues
-```
+Run this workflow for every sprint or issue.
 
 ## Best Practices
 
