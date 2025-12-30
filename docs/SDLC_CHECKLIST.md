@@ -194,22 +194,22 @@ This checklist serves as the single source of truth for project progress trackin
 ## Phase 4: Implementation (Weeks 1-24 / Sprints 1-8)
 
 ### Sprint 0: Development Environment Setup (Weeks -2 to 0)
-**Status:** ✅ CODEBASE SETUP COMPLETE (Manual environment setup pending)
+**Status:** ✅ CODEBASE SETUP + ENVIRONMENT COMPLETE
 
 - [x] 🔴 Setup version control (GitHub repo already exists)
-- [ ] 🔴 Setup Clojure development environment
-  - [ ] Install Clojure CLI tools (deps.edn) ← READY TO INSTALL
-  - [ ] Install Java 21 (for Clojure runtime) ← READY TO INSTALL
-  - [ ] Setup IDE: VS Code + Calva OR Emacs + CIDER
-  - [ ] Configure REPL workflow
+- [x] 🔴 Setup Clojure development environment
+  - [x] Install Clojure CLI tools ✅ DONE
+  - [x] Install Java 21 ✅ DONE
+  - [x] Setup IDE: VS Code + Calva ✅ DONE
+  - [x] Configure REPL workflow ✅ DONE
 - [x] 🔴 Create project structure
   - [x] Initialize deps.edn with dependencies
   - [x] Setup backend namespace structure (core, server, routes, db)
   - [x] Setup frontend (ClojureScript) structure (placeholder)
   - [x] Configure shadow-cljs for frontend build (placeholder)
 - [x] Database setup
-  - [x] Decision: PostgreSQL selected ← READY TO SETUP
-  - [ ] Setup local database instance ← MANUAL STEP
+  - [x] Decision: PostgreSQL selected
+  - [x] Setup local database instance ✅ DONE
   - [x] Create initial schema (migrations created)
 - [x] Development documentation
   - [x] Document REPL workflow
@@ -217,6 +217,8 @@ This checklist serves as the single source of truth for project progress trackin
   - [x] Document database setup
   - [x] Document architecture decisions
   - [x] Document project structure
+
+**✅ SPRINT 0 COMPLETE - READY FOR SPRINT 1**
 
 ### Sprint 1: Foundation & Authentication (Weeks 1-3)
 **Goal**: Basic app structure + user authentication working

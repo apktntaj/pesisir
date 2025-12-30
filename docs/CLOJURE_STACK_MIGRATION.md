@@ -1,7 +1,7 @@
 # Clojure Full-Stack Migration Rationale
 
 **Project:** Pesisir - Platform Otomasi Dokumen Pabean  
-**Version:** 3.0 (Solo Founder Edition)  
+**Version:** 3.0 (Solo Founder Edition) 
 **Date:** December 29, 2025  
 **Author:** Solo Founder
 
