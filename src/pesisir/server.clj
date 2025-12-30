@@ -5,6 +5,7 @@
             [ring.middleware.cors :as cors]
             [taoensso.timbre :as log]
             [pesisir.routes :as routes]
+            [pesisir.auth.middleware :as auth-mw]
             [pesisir.db :as db]
             [cheshire.core :as json]))
 
@@ -34,7 +35,8 @@
                        :body {:message "Pesisir API"
                               :version "0.1.0"}})}]
    ["/health" {:get routes/health}]
-   ["/api/auth" routes/auth-routes]])
+   ["/api" routes/auth-routes]
+   ["/api" routes/user-routes]])
 
 (defn create-app
   "Create Ring application with middleware"
@@ -45,6 +47,7 @@
           (ring/redirect-trailing-slash-handler)
           (ring/create-default-handler)))
       wrap-json-response
+      auth-mw/wrap-auth
       cors-middleware))
 
 (defonce ^:private server (atom nil))
