@@ -1,0 +1,7 @@
+#kaocha/v1
+{:tests [{:id :unit
+          :type :kaocha.type/clojure
+          :source-paths ["src"]
+          :test-paths ["test"]}]
+ :plugins [:kaocha.plugin/junit-xml]
+ :junit-xml-file "target/junit.xml"}

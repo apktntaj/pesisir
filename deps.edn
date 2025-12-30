@@ -1,0 +1,71 @@
+{:paths ["src" "resources"]
+
+ :deps
+ {; HTTP Server & Routing
+  ring/ring {:mvn/version "1.9.6"}
+  ring-cors/ring-cors {:mvn/version "0.1.13"}
+  metosin/reitit {:mvn/version "0.7.0"}
+  metosin/reitit-ring {:mvn/version "0.7.0"}
+
+  ; Authentication & Security
+  buddy/buddy-core {:mvn/version "1.10.413"}
+  buddy/buddy-auth {:mvn/version "0.13.0"}
+  buddy/buddy-sign {:mvn/version "3.4.1"}
+
+  ; Database
+  org.clojure/java.jdbc {:mvn/version "0.7.12"}
+  org.postgresql/postgresql {:mvn/version "42.7.1"}
+  migratus/migratus {:mvn/version "1.4.9"}
+
+  ; Configuration
+  aero/aero {:mvn/version "1.1.6"}
+  environ/environ {:mvn/version "1.2.0"}
+
+  ; Logging
+  com.taoensso/timbre {:mvn/version "6.2.0"}
+
+  ; Utilities
+  org.clojure/core.async {:mvn/version "1.6.681"}
+
+  ; Email (simple SMTP)
+  com.draines/postal {:mvn/version "2.0.5"}
+
+  ; JSON
+  cheshire/cheshire {:mvn/version "5.12.0"}
+
+  ; Clojure stdlib
+  org.clojure/clojure {:mvn/version "1.11.1"}}
+
+ :aliases
+ {:test
+  {:extra-paths ["test"]
+   :extra-deps
+   {lambdaisland/kaocha {:mvn/version "1.87.1366"}
+    lambdaisland/kaocha-cljs {:mvn/version "0.0-71"}
+    lambdaisland/kaocha-cloverage {:mvn/version "1.1.89"}
+    ring/ring-mock {:mvn/version "0.4.0"}}
+   :exec-fn kaocha.cli/main
+   :exec-args {}}
+
+  :test-watch
+  {:extra-paths ["test"]
+   :extra-deps
+   {lambdaisland/kaocha {:mvn/version "1.87.1366"}
+    lambdaisland/kaocha-cljs {:mvn/version "0.0-71"}
+    lambdaisland/kaocha-cloverage {:mvn/version "1.1.89"}
+    ring/ring-mock {:mvn/version "0.4.0"}}
+   :exec-fn kaocha.cli/main
+   :exec-args {:watch? true}}
+
+  :dev
+  {:extra-paths ["dev"]
+   :extra-deps
+   {hashp/hashp {:mvn/version "0.2.2"}}}
+
+  :repl
+  {:exec-fn clojure.main/repl}
+
+  :server
+  {:extra-paths ["dev"]
+   :exec-fn pesisir.core/-main
+   :exec-args {}}}}
