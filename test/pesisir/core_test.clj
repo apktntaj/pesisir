@@ -15,10 +15,10 @@
     (is (= 200 (:status response)))
     (is (contains? (:body response) :message))))
 
-(deftest auth-register-not-impl
-  (let [response (routes/register-handler {})]
-    (is (= 501 (:status response)))))
+(deftest auth-register-test
+  (let [response (routes/register {})]
+    (is (= 400 (:status response)))))
 
-(deftest auth-login-not-impl
-  (let [response (routes/login-handler {})]
-    (is (= 501 (:status response)))))
+(deftest auth-login-test
+  (let [response (routes/login {})]
+    (is (= 400 (:status response)))))
