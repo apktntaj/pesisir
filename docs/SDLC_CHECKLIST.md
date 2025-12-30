@@ -194,25 +194,29 @@ This checklist serves as the single source of truth for project progress trackin
 ## Phase 4: Implementation (Weeks 1-24 / Sprints 1-8)
 
 ### Sprint 0: Development Environment Setup (Weeks -2 to 0)
-- [ ] 🔴 Setup version control (GitHub repo already exists)
+**Status:** ✅ CODEBASE SETUP COMPLETE (Manual environment setup pending)
+
+- [x] 🔴 Setup version control (GitHub repo already exists)
 - [ ] 🔴 Setup Clojure development environment
-  - [ ] Install Clojure CLI tools (deps.edn)
-  - [ ] Install Java 21 (for Clojure runtime)
+  - [ ] Install Clojure CLI tools (deps.edn) ← READY TO INSTALL
+  - [ ] Install Java 21 (for Clojure runtime) ← READY TO INSTALL
   - [ ] Setup IDE: VS Code + Calva OR Emacs + CIDER
   - [ ] Configure REPL workflow
-- [ ] 🔴 Create project structure
-  - [ ] Initialize deps.edn with dependencies
-  - [ ] Setup backend namespace structure
-  - [ ] Setup frontend (ClojureScript) structure
-  - [ ] Configure shadow-cljs for frontend build
-- [ ] Database setup
-  - [ ] Decision: Datomic Pro (local) OR PostgreSQL
-  - [ ] Setup local database instance
-  - [ ] Create initial schema (Datomic) or migrations (PostgreSQL)
-- [ ] Development documentation
-  - [ ] Document REPL workflow
-  - [ ] Document how to run locally
-  - [ ] Document database setup
+- [x] 🔴 Create project structure
+  - [x] Initialize deps.edn with dependencies
+  - [x] Setup backend namespace structure (core, server, routes, db)
+  - [x] Setup frontend (ClojureScript) structure (placeholder)
+  - [x] Configure shadow-cljs for frontend build (placeholder)
+- [x] Database setup
+  - [x] Decision: PostgreSQL selected ← READY TO SETUP
+  - [ ] Setup local database instance ← MANUAL STEP
+  - [x] Create initial schema (migrations created)
+- [x] Development documentation
+  - [x] Document REPL workflow
+  - [x] Document how to run locally
+  - [x] Document database setup
+  - [x] Document architecture decisions
+  - [x] Document project structure
 
 ### Sprint 1: Foundation & Authentication (Weeks 1-3)
 **Goal**: Basic app structure + user authentication working
