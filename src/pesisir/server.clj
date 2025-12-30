@@ -36,7 +36,8 @@
                               :version "0.1.0"}})}]
    ["/health" {:get routes/health}]
    ["/api" routes/auth-routes]
-   ["/api" routes/user-routes]])
+   ["/api" routes/user-routes]
+   ["/api" routes/document-routes]])
 
 (defn create-app
   "Create Ring application with middleware"
