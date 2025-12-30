@@ -51,14 +51,20 @@
       (throw e))))
 
 (defn query
-  "Execute SELECT query"
-  [sql & params]
-  (try
-    (let [db (get-db-spec)]
-      (apply jdbc/query db sql params))
-    (catch Exception e
-      (log/error "Database query error:" e)
-      (throw e))))
+  "Execute SELECT query
+   Usage: (query \"SELECT * FROM users WHERE id = ?\" [1])
+   Or: (query [\"SELECT * FROM users WHERE id = ?\" 1])"
+  ([sql-params]
+   ;; sql-params is already a vector like [\"SELECT...\" param1 param2]
+   (try
+     (let [db (get-db-spec)]
+       (jdbc/query db sql-params))
+     (catch Exception e
+       (log/error "Database query error:" e)
+       (throw e))))
+  ([sql params]
+   ;; sql is string, params is vector of parameters
+   (query (into [sql] params))))
 
 (defn insert!
   "Insert a row into table"
@@ -83,14 +89,14 @@
 (defn get-by-id
   "Get single record by ID"
   [table id]
-  (first (query (str "SELECT * FROM " (name table) " WHERE id = ?") id)))
+  (first (query (str "SELECT * FROM " (name table) " WHERE id = ?") [id])))
 
 (defn health-check
   "Check database connectivity"
   []
   (try
     (let [start (System/currentTimeMillis)
-          _ (query "SELECT 1")
+          _ (query ["SELECT 1"])
           elapsed (- (System/currentTimeMillis) start)]
       {:status :healthy
        :timestamp (java.time.Instant/now)
