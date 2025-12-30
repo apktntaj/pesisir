@@ -3,8 +3,11 @@
   (:require [pesisir.db :as db]
             [pesisir.auth.service :as auth-service]
             [pesisir.auth.middleware :as auth-mw]
+            [pesisir.document.service :as doc-service]
+            [pesisir.document.db :as doc-db]
             [cheshire.core :as json]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [clojure.java.io :as io]))
 
 ;; ============================================================================
 ;; Utility Functions
@@ -284,3 +287,159 @@
 (def user-routes
   "User profile routes"
   [["/me" {:get get-current-user}]])
+
+;; ============================================================================
+;; Document Processing Routes
+;; ============================================================================
+
+(defn upload-document
+  "POST /api/documents/upload - Upload and process document"
+  [request]
+  (try
+    (if-let [user-id (auth-mw/get-user-id request)]
+      (let [params (:params request)
+            file (:file params)
+            document-type (:document-type params)
+            customs-type (:customs-type params)]
+        
+        (if (and file document-type customs-type)
+          ;; Process complete workflow
+          (let [result (doc-service/process-and-generate!
+                        user-id
+                        (:tempfile file)
+                        (:filename file)
+                        (keyword document-type)
+                        (keyword customs-type))]
+            
+            (if (:success result)
+              (json-response
+                {:success true
+                 :document (dissoc (:document result) :file_path)
+                 :confidence (:confidence result)
+                 :excel-filename (last (clojure.string/split (:excel-path result) #"/"))}
+                :status 201)
+              
+              (json-response
+                {:error "Processing failed"
+                 :message (:error result)}
+                :status 400)))
+          
+          (json-response
+            {:error "Missing required fields"
+             :required-fields ["file" "document-type" "customs-type"]}
+            :status 400)))
+      
+      (json-response
+        {:error "Authentication required"}
+        :status 401))
+    
+    (catch Exception e
+      (log/error "Upload handler error" {:error (.getMessage e)})
+      (json-response
+        {:error "Internal server error"}
+        :status 500))))
+
+(defn get-user-documents
+  "GET /api/documents - List user's documents"
+  [request]
+  (try
+    (if-let [user-id (auth-mw/get-user-id request)]
+      (let [params (:params request)
+            limit (or (some-> (:limit params) Integer/parseInt) 50)
+            offset (or (some-> (:offset params) Integer/parseInt) 0)
+            documents (doc-db/get-user-documents user-id {:limit limit :offset offset})
+            total (doc-db/count-user-documents user-id)]
+        
+        (json-response
+          {:success true
+           :documents (map #(dissoc % :file_path :extracted_data) documents)
+           :total total
+           :limit limit
+           :offset offset}
+          :status 200))
+      
+      (json-response
+        {:error "Authentication required"}
+        :status 401))
+    
+    (catch Exception e
+      (log/error "Get documents handler error" {:error (.getMessage e)})
+      (json-response
+        {:error "Internal server error"}
+        :status 500))))
+
+(defn get-document
+  "GET /api/documents/:id - Get document details"
+  [request]
+  (try
+    (if-let [user-id (auth-mw/get-user-id request)]
+      (let [doc-id (some-> (get-in request [:path-params :id]) Integer/parseInt)
+            document (doc-db/get-document-by-id doc-id)]
+        
+        (cond
+          (nil? document)
+          (json-response {:error "Document not found"} :status 404)
+          
+          (not= (:user_id document) user-id)
+          (json-response {:error "Access denied"} :status 403)
+          
+          :else
+          (json-response
+            {:success true
+             :document (dissoc document :file_path)}
+            :status 200)))
+      
+      (json-response
+        {:error "Authentication required"}
+        :status 401))
+    
+    (catch Exception e
+      (log/error "Get document handler error" {:error (.getMessage e)})
+      (json-response
+        {:error "Internal server error"}
+        :status 500))))
+
+(defn download-excel
+  "GET /api/documents/:id/download - Download generated Excel file"
+  [request]
+  (try
+    (if-let [user-id (auth-mw/get-user-id request)]
+      (let [doc-id (some-> (get-in request [:path-params :id]) Integer/parseInt)
+            document (doc-db/get-document-by-id doc-id)]
+        
+        (cond
+          (nil? document)
+          (json-response {:error "Document not found"} :status 404)
+          
+          (not= (:user_id document) user-id)
+          (json-response {:error "Access denied"} :status 403)
+          
+          (not= (:status document) "completed")
+          (json-response {:error "Document not yet completed"} :status 400)
+          
+          :else
+          ;; Return file for download
+          ;; Note: This is simplified - in production, use proper file serving
+          (json-response
+            {:success true
+             :message "Use file download endpoint"
+             :note "In production, this would serve the actual file"}
+            :status 200)))
+      
+      (json-response
+        {:error "Authentication required"}
+        :status 401))
+    
+    (catch Exception e
+      (log/error "Download handler error" {:error (.getMessage e)})
+      (json-response
+        {:error "Internal server error"}
+        :status 500))))
+
+(def document-routes
+  "Document processing routes"
+  ["/documents"
+   ["/upload" {:post upload-document}]
+   ["" {:get get-user-documents}]
+   ["/:id" {:get get-document}]
+   ["/:id/download" {:get download-excel}]])

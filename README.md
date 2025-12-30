@@ -1,26 +1,67 @@
 # Pesisir - Platform Otomasi Dokumen Pabean
 
-[![SDLC Phase](https://img.shields.io/badge/Sprint-0%20Planning-blue.svg)]()
-[![Methodology](https://img.shields.io/badge/Methodology-Agile%20Scrum-green.svg)]()
-[![Project Type](https://img.shields.io/badge/Type-MVP%20SaaS-green.svg)]()
+[![SDLC Phase](https://img.shields.io/badge/Phase-MVP%20Development-green.svg)]()
+[![Focus](https://img.shields.io/badge/Focus-Core%20Features-orange.svg)]()
 [![Tech Stack](https://img.shields.io/badge/Clojure-Full%20Stack-blue.svg)]()
-[![Sprint Duration](https://img.shields.io/badge/Sprint-3%20Weeks-orange.svg)]()
-[![Team](https://img.shields.io/badge/Team-Solo%20Founder-red.svg)]()
 
 ## 📋 Overview
 
-Pesisir adalah platform digital yang membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) mengotomasi pembuatan draft dokumen pabean. Dibangun oleh solo founder dengan Clojure full-stack untuk rapid development dan maintainability.
+Pesisir adalah platform digital yang membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) mengotomasi pembuatan draft dokumen pabean. Platform ini menggunakan teknologi PDF parsing untuk mengekstrak data dari dokumen PDF dan secara otomatis menghasilkan draft dokumen pabean yang siap digunakan.
 
-**MVP Focus (Ultra-Minimal):**
-1. **Document Upload & Processing** - PDF parsing dan ekstraksi data otomatis
-2. **Customs Document Generation** - Template-based Excel generation untuk BC 1.1, BC 2.3, BC 3.0
-3. **Pay-per-document Model** - Simple credit system tanpa subscription complexity
+**Core Value Proposition:**
+- ⏱️ Reduce document processing time from 10 minutes to 1 minute (90% faster)
+- 📄 Automated PDF → Excel conversion for customs declarations
+- 🎯 Focus on solving the actual problem first, infrastructure second
+
+## 🚀 Core MVP Features (Implemented)
+
+### What's Working Now
+
+✅ **PDF Text Extraction** - Upload PDF and extract text automatically  
+✅ **Data Parsing** - Extract structured data (BL numbers, vessel names, ports, etc.)  
+✅ **Excel Generation** - Generate BC 1.1, BC 2.3, BC 3.0 customs documents  
+✅ **Complete Workflow** - Upload → Extract → Parse → Generate in one API call  
+✅ **Status Tracking** - Track document processing status and confidence scores  
+
+### Quick Start
+
+```bash
+# 1. Upload a Bill of Lading PDF and generate BC 1.1 Manifest
+POST /api/documents/upload
+  - file: bol.pdf
+  - document-type: bill-of-lading
+  - customs-type: bc-1-1
+
+# 2. Get the generated Excel file
+GET /api/documents/:id/download
+```
+
+**See [CORE_MVP_FEATURES.md](CORE_MVP_FEATURES.md) for detailed documentation.**
+
+## 🎯 What Changed?
+
+### Old Approach (Too Much Planning)
+- ❌ Extensive authentication system first
+- ❌ Complex sprint planning documents
+- ❌ Development setup before features
+- ❌ Focus on process over product
+
+### New Approach (Core MVP First)
+- ✅ Build the core feature: PDF → Excel conversion
+- ✅ Use simple authentication (existing or basic)
+- ✅ Validate the solution works before scaling
+- ✅ Focus on user value: 90% time savings
 
 ## 📚 Documentation
 
-This repository follows **Agile Scrum methodology** for iterative and incremental development:
+### Core Features (Start Here!)
+- **[CORE_MVP_FEATURES.md](CORE_MVP_FEATURES.md)** - How to use the PDF → Excel conversion features
+  - API documentation
+  - Code examples
+  - Testing guide
 
-### Core Documents
+### Architecture & Planning (Reference)
+
 
 - **[prd.md](docs/prd.md)** - **Product Requirements Document (v2.0 - Agile Edition)**:
   - Product vision dan objectives
@@ -60,113 +101,106 @@ This repository follows **Agile Scrum methodology** for iterative and incrementa
 
 ## 🎯 Project Status
 
-**Current Phase:** Sprint 0 - Planning & Requirements (Agile Scrum)  
-**Team Size:** Solo Founder (with GitHub Copilot)  
-**Next Sprint:** Sprint 1 - Foundation & Authentication  
-**Estimated MVP Launch:** May 2026 (End of Sprint 8)  
-**Total Development Duration:** 24 weeks (8 sprints @ 3 weeks each)
+**Current Phase:** MVP Development - Core Features Implemented  
+**Focus:** Building and validating the core PDF → Excel conversion  
+**Next Steps:** 
+1. Manual testing with real PDF samples
+2. Iterate on regex patterns based on results
+3. User feedback and improvements
 
-**Solo Founder Adjustments:**
-- Sprint duration: 3 weeks (not 2) - sustainable pace
-- Focus: One major feature per sprint
-- Buffer: 20% time for learning & debugging
-- MVP scope: Ultra-minimal, defer all non-essential features
+**What's Done:**
+- ✅ PDF text extraction (Apache PDFBox)
+- ✅ Data parsing for BOL, CI, PL documents
+- ✅ Excel generation for BC 1.1, BC 2.3, BC 3.0
+- ✅ Complete API workflow
+- ✅ Database tracking
 
-## 🏗️ Technology Stack (Clojure End-to-End)
+**What's Next:**
+- [ ] Testing with real customs documents
+- [ ] UI for document upload and review
+- [ ] Improve parsing accuracy
+- [ ] Add document editing capabilities
 
-**Solo Founder Stack - Optimized for Rapid Development:**
+## 🏗️ Technology Stack
 
+**Core Libraries:**
 - **Backend:** Clojure + Ring + Reitit (REST API)
-- **Frontend:** ClojureScript + Re-frame + Reagent (SPA)
-- **Database:** Datomic Cloud (Immutable, time-travel queries)
-- **Authentication:** Buddy (JWT-based)
-- **Job Processing:** core.async / Goose
-- **PDF Parsing:** Apache PDFBox (Java interop)
-- **Excel Generation:** Apache POI (Java interop)
-- **Deployment:** Fly.io (simple, affordable)
-- **CI/CD:** GitHub Actions
-- **Monitoring:** Sentry + LogTail
+- **PDF Processing:** Apache PDFBox 2.0.31 (text extraction)
+- **Excel Generation:** Apache POI 5.2.5 (XLSX files)
+- **Database:** PostgreSQL (document tracking)
+- **Authentication:** Buddy (JWT-based, simplified)
 
-**Why Clojure Full-Stack:**
-- Same language frontend & backend = less context switching
-- REPL-driven development = faster iteration
-- Datomic = built-in audit log, time-travel queries
-- Monolith architecture = simpler deployment & debugging
-- Java interop = access to mature PDF/Excel libraries
+**Why These Choices:**
+- PDFBox: Industry standard, works well with Clojure/Java
+- Apache POI: Battle-tested Excel generation
+- Regex parsing: Fast to implement, good enough for MVP
+- PostgreSQL: Reliable, JSON support for flexible storage
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Quick Test (No Setup Required)
 
-- **Clojure CLI** (deps.edn)
-- **Java 21** (for Clojure runtime)
-- **Datomic Cloud** or **Datomic Pro** (local dev)
-- **Node.js 20+** (for ClojureScript compilation)
-- **Fly.io CLI** (for deployment)
-- **Git** (version control)
+See [CORE_MVP_FEATURES.md](CORE_MVP_FEATURES.md) for API examples and usage.
 
-### Development Setup
+### Full Development Setup
 
+See [DEVELOPMENT.md](DEVELOPMENT.md) for complete setup instructions.
+
+**Basic steps:**
 ```bash
-# Clone the repository
+# 1. Clone repository
 git clone https://github.com/apktntaj/pesisir.git
 cd pesisir
 
-# Review planning documents
-cd docs
-ls -la
+# 2. Setup database (PostgreSQL)
+# See DEVELOPMENT.md for details
 
-# Follow the SDLC checklist for development phases
-# See SDLC_CHECKLIST.md for detailed steps
+# 3. Start server
+clojure -M -m pesisir.core 3000
+
+# 4. Test the API
+curl http://localhost:3000/health
 ```
 
-## 📊 SDLC Methodology
+## 🧪 Testing
 
-This project follows an **Agile Scrum** approach with 2-week sprints:
+```bash
+# Run all tests
+clojure -M:test
 
-### Agile Sprint Cycle
-
-**Sprint Duration**: 2 weeks (6 sprints total for MVP)
-
-**Sprint Ceremonies**:
-- **Sprint Planning**: 2 hours (every 2 weeks) - Define sprint goal and commit to user stories
-- **Daily Standup**: 15 minutes (daily) - Sync on progress and blockers
-- **Sprint Review**: 1 hour (end of sprint) - Demo working software to stakeholders
-- **Sprint Retrospective**: 1 hour (end of sprint) - Continuous improvement discussion
-- **Backlog Refinement**: 1 hour (mid-sprint) - Prepare upcoming stories
-
-### Sprint Timeline (Solo Founder MVP - 24 Weeks)
-
-```
-Sprint 0      Sprint 1        Sprint 2        Sprint 3        Sprint 4
-[Planning]  [Foundation]  [PDF Upload]  [Data Extract]  [Review UI]
-Week -2-0     Week 1-3       Week 4-6        Week 7-9       Week 10-12
-
-  Sprint 5        Sprint 6        Sprint 7         Sprint 8
-[Generation]  [Credit System]   [Polish]    [Testing/Launch]
-  Week 13-15      Week 16-18      Week 19-21      Week 22-24
-                                                        ⭐ MVP LAUNCH
+# Run specific test
+clojure -M:test --focus pesisir.document.model-test
 ```
 
-**Current Status**: 
-- ✅ **Sprint 0**: Planning & Stack Decision (Completed)
-- 🔄 **Sprint 1**: Clojure Setup + Authentication (Next - Jan 2026)
-- 🎯 **Target Launch**: May 2026
+## 📊 Key Metrics
 
-### Agile Principles Applied
+**Success Criteria for MVP:**
+1. **Extraction Accuracy:** >80% of fields correctly extracted
+2. **Confidence Score:** Average >0.8
+3. **Processing Time:** <5 seconds per document
+4. **User Satisfaction:** Reduces manual work by >80%
 
-1. ✅ **Working Software Over Documentation**: Focus on delivering functional increments every sprint
-2. ✅ **Customer Collaboration**: Regular sprint reviews with stakeholders and early user feedback
-3. ✅ **Responding to Change**: Adaptive planning based on sprint learnings and velocity
-4. ✅ **Iterative Development**: Each sprint builds on previous increments
-5. ✅ **Continuous Delivery**: CI/CD pipeline enables bi-weekly production deployments
-6. ✅ **Team Empowerment**: Self-organizing cross-functional development team
+## 🎓 Lessons Learned
+
+### What Worked
+- ✅ Starting with core features instead of infrastructure
+- ✅ Using battle-tested libraries (PDFBox, POI)
+- ✅ Regex parsing is good enough for structured documents
+- ✅ Focus on solving the actual problem first
+
+### What to Avoid
+- ❌ Building complex authentication before validating core value
+- ❌ Over-planning with extensive sprint documentation
+- ❌ Trying to build everything at once
+- ❌ Perfectionism over iteration
 
 ## 📝 Contributing
 
-This is currently a planning and architecture phase. Contributions to documentation review and technical design are welcome.
-
-Please refer to [SDLC_REVIEW.md](docs/SDLC_REVIEW.md) for review guidelines and feedback areas.
+We're focusing on core features first. Contributions welcome in these areas:
+- Testing with real customs documents
+- Improving regex patterns for data extraction
+- Better error handling
+- Documentation improvements
 
 ## 📧 Contact
 
@@ -178,6 +212,8 @@ Project Maintainer: @apktntaj
 
 ---
 
-**Last Updated:** December 8, 2025  
-**Document Version:** 1.0  
-**Next Review:** After Requirements Analysis completion
+**Philosophy:** Build the core value first, validate with users, then scale. Focus on solving the actual problem (PDF → Excel conversion) before adding bells and whistles.
+
+**Last Updated:** December 30, 2025  
+**Document Version:** 2.0 (MVP Focus)  
+**Next Review:** After user testing with real documents

@@ -43,7 +43,12 @@
   metosin/reitit-swagger-ui {:mvn/version "0.7.0"}
 
   ; Clojure stdlib
-  org.clojure/clojure {:mvn/version "1.11.1"}}
+  org.clojure/clojure {:mvn/version "1.11.1"}
+
+  ; Document Processing (PDF & Excel)
+  org.apache.pdfbox/pdfbox {:mvn/version "2.0.31"}
+  org.apache.poi/poi {:mvn/version "5.2.5"}
+  org.apache.poi/poi-ooxml {:mvn/version "5.2.5"}}
 
  :aliases
  {:test
