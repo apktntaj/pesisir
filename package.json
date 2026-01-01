@@ -1,0 +1,47 @@
+{
+  "name": "pesisir",
+  "version": "1.0.0",
+  "description": "[![SDLC Phase](https://img.shields.io/badge/Sprint-0%20Planning-blue.svg)]() [![Methodology](https://img.shields.io/badge/Methodology-Agile%20Scrum-green.svg)]() [![Project Type](https://img.shields.io/badge/Type-MVP%20SaaS-green.svg)]() [![Tech Stack](https://img.shields.io/badge/Clojure-Full%20Stack-blue.svg)]() [![Sprint Duration](https://img.shields.io/badge/Sprint-3%20Weeks-orange.svg)]() [![Team](https://img.shields.io/badge/Team-Solo%20Founder-red.svg)]()",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apktntaj/pesisir.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apktntaj/pesisir/issues"
+  },
+  "homepage": "https://github.com/apktntaj/pesisir#readme",
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.89.0",
+    "clsx": "^2.1.1",
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  }
+}
