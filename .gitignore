@@ -1,69 +1,61 @@
-## Clojure / Leiningen / CLI
-## -------------------------------------
-
-# Clojure compiled classes and caches
-.cpcache/
-*.class
-target/
-
-# Calva + REPL
-.calva/
-.nrepl-port
-.clj-kondo/
-
-# Leiningen (if used)
-.lein-failures
-.lein-repl-history
-
-# ClojureScript build artifacts
-resources/public/js/compiled/
-out/
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+.yarn/
 
-## Next.js
-## -------------------------------------
+# Next.js
 .next/
 out/
 build/
 dist/
 
-## VS Code Settings
-## Keep these synced across team
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing
+coverage/
+
+# Production
+build/
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Vercel
+.vercel
+
+# Editor
 .vscode/*
 !.vscode/settings.json
 !.vscode/extensions.json
-*.code-workspace
-.history/
-
-## Environment & Secrets
-## Never commit sensitive data
-.env
-.env.local
-.env.*.local
-secrets.edn
-
-## Database (Local Development)
-## PostgreSQL local instance files
-db/*.log
-pgdata/
-
-## Logs
-logs/
-*.log
-
-## OS Specific Files
-.DS_Store
-Thumbs.db
+!.vscode/launch.json
+.idea/
 *.swp
 *.swo
 *~
 
-## Temporary/Build
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
 *.tmp
 *.temp
 *.bak
-target/
-
-## Sprint status and execution logs (temporary documentation)
-SPRINT_*_*.md
-FILES_CREATED_SPRINT_*.md
