@@ -1,6 +1,6 @@
 # Pesisir API
 
-Lightweight Bun backend service that acts as a gateway for LarTas/government API communication. Decouples token management from the Next.js frontend deployment lifecycle.
+Lightweight Bun backend service that acts as a gateway for the **INSW** (Indonesia National Single Window) API. Decouples token management from the Next.js frontend deployment lifecycle.
 
 ## Architecture
 
@@ -12,15 +12,16 @@ Next.js on Vercel
     │  POST /lartas { method, path, body }
     ▼
 Pesisir API (VPS)
-    │  GET/POST with Bearer token
+    │  GET/POST with Basic token + INSW headers
     ▼
-LarTas Government API
+api.insw.go.id
 ```
 
 - Token is stored in `token.txt` (never committed).
 - Service reads the token dynamically on each request.
 - Token file updates take effect immediately — no restart needed.
 - Frontend never needs redeployment when the token changes.
+- Sends INSW-required headers: `Origin: https://insw.go.id`, `Referer`, `Accept-Language`.
 
 ## API Endpoints
 
@@ -58,15 +59,15 @@ Returns whether a token is loaded (never exposes the full token).
 
 ### `POST /lartas`
 
-Proxies a request to the LarTas API using the stored bearer token.
+Proxies a request to the INSW API using the stored Basic token.
 
 **Request body:**
 
 ```json
 {
   "method": "GET",
-  "path": "/api/shipments",
-  "params": { "page": "1", "limit": "10" },
+  "path": "/api/cms/detail-komoditas",
+  "params": { "hsCode": "12345678" },
   "body": null
 }
 ```
@@ -74,7 +75,7 @@ Proxies a request to the LarTas API using the stored bearer token.
 | Field    | Type     | Required | Description                         |
 |----------|----------|----------|-------------------------------------|
 | method   | string   | yes      | HTTP method (GET, POST, PUT, PATCH, DELETE) |
-| path     | string   | yes      | Path on the LarTas API              |
+| path     | string   | yes      | Path on the INSW API                |
 | params   | object   | no       | URL query parameters                |
 | body     | any      | no       | Request body for POST/PUT/PATCH     |
 
@@ -91,6 +92,16 @@ Proxies a request to the LarTas API using the stored bearer token.
   "timestamp": "2025-01-01T00:00:00.000Z"
 }
 ```
+
+**Example INSW paths:**
+
+| Endpoint | Path |
+|---|---|
+| CMS Detail | `/api/cms/detail-komoditas` |
+| CMS Search | `/api/cms/hscode` |
+| Public HS Code | `/api-prod/ref/hscode` |
+| Public Detail (BA) | `/api-prod-ba/ref/hscode/komoditas` |
+| Public Detail | `/api-prod/ref/hscode/komoditas` |
 
 ## Setup
 
@@ -115,8 +126,8 @@ Edit `.env`:
 |---------------------|-----------------------------|----------------------------------------------|
 | PORT                | 3001                        | Server port                                  |
 | HOST                | 0.0.0.0                     | Server bind address                          |
-| LARTAS_BASE_URL     | https://api.insw.go.id    | Government API base URL (INSW)               |
-| TOKEN_FILE_PATH     | ./token.txt                 | Path to the bearer token file                |
+| LARTAS_BASE_URL     | https://api.insw.go.id    | INSW API base URL                            |
+| TOKEN_FILE_PATH     | ./token.txt                 | Path to the token file                       |
 | REQUEST_TIMEOUT_MS  | 30000                       | Timeout in ms for external requests          |
 | MAX_RETRIES         | 3                           | Number of retries for failed requests        |
 | LOG_LEVEL           | info                        | Log level (debug, info, warn, error)         |
@@ -124,13 +135,13 @@ Edit `.env`:
 
 ### Token File
 
-Create `token.txt` in the project root with your LarTas bearer token:
+Create `token.txt` in the project root with your INSW JWT token (the raw JWT after the `Basic ` prefix):
 
 ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+eyJhbGciOiJSUzI1NiIsInR5cCI6ImJzYStqd3QiLCJraWQiOiJYU1N0SFVmeGI1...
 ```
 
-The service reads this file on every request. Changes take effect immediately — no restart needed.
+The service reads this file on every request and sends it as `Authorization: Basic <token>`. Changes take effect immediately — no restart needed.
 
 **Never commit `token.txt`** (it's already in `.gitignore`).
 
@@ -224,12 +235,12 @@ jobs:
 
 ## Updating the Token
 
-1. Extract the new token from browser devtools (Network tab → any LarTas request → Authorization header).
+1. Extract the new token from browser devtools (Network tab → any INSW request → `authorization` header → copy value after `Basic `).
 2. SSH into your VPS or edit the file directly:
 ```bash
-echo "new-token-value" > /opt/pesisir-api/token.txt
+echo "new-jwt-token" > /opt/pesisir-api/token.txt
 ```
-3. Done. No restart needed. The next request will pick up the new token.
+3. Done. No restart needed. The next request picks up the new token.
 
 Verify with:
 ```bash
