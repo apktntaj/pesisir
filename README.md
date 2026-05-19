@@ -1,183 +1,269 @@
-# Pesisir - Platform Otomasi Dokumen Pabean
+# Pesisir API
 
-[![SDLC Phase](https://img.shields.io/badge/Sprint-0%20Planning-blue.svg)]()
-[![Methodology](https://img.shields.io/badge/Methodology-Agile%20Scrum-green.svg)]()
-[![Project Type](https://img.shields.io/badge/Type-MVP%20SaaS-green.svg)]()
-[![Tech Stack](https://img.shields.io/badge/Clojure-Full%20Stack-blue.svg)]()
-[![Sprint Duration](https://img.shields.io/badge/Sprint-3%20Weeks-orange.svg)]()
-[![Team](https://img.shields.io/badge/Team-Solo%20Founder-red.svg)]()
+Lightweight Bun backend service that acts as a gateway for LarTas/government API communication. Decouples token management from the Next.js frontend deployment lifecycle.
 
-## 📋 Overview
+## Architecture
 
-Pesisir adalah platform digital yang membantu staff PPJK (Perusahaan Pengurusan Jasa Kepabeanan) mengotomasi pembuatan draft dokumen pabean. Dibangun oleh solo founder dengan Clojure full-stack untuk rapid development dan maintainability.
+```
+Client (Browser)
+    │
+    ▼
+Next.js on Vercel
+    │  POST /lartas { method, path, body }
+    ▼
+Pesisir API (VPS)
+    │  GET/POST with Bearer token
+    ▼
+LarTas Government API
+```
 
-**MVP Focus (Ultra-Minimal):**
-1. **Document Upload & Processing** - PDF parsing dan ekstraksi data otomatis
-2. **Customs Document Generation** - Template-based Excel generation untuk BC 1.1, BC 2.3, BC 3.0
-3. **Pay-per-document Model** - Simple credit system tanpa subscription complexity
+- Token is stored in `token.txt` (never committed).
+- Service reads the token dynamically on each request.
+- Token file updates take effect immediately — no restart needed.
+- Frontend never needs redeployment when the token changes.
 
-## 📚 Documentation
+## API Endpoints
 
-This repository follows **Agile Scrum methodology** for iterative and incremental development:
+### `GET /health`
 
-### Core Documents
+Returns service health status.
 
-- **[prd.md](docs/prd.md)** - **Product Requirements Document (v2.0 - Agile Edition)**:
-  - Product vision dan objectives
-  - User personas dan user goals
-  - Functional requirements dengan acceptance criteria
-  - **NEW: Agile Sprint Planning (6 sprints)**
-  - **NEW: Product Backlog dengan MoSCoW prioritization**
-  - **NEW: Story points estimation untuk semua user stories**
-  - **NEW: Agile ceremonies dan team structure**
-  - **NEW: Definition of Done dan CI/CD strategy**
-  - **NEW: Agile team metrics (velocity, cycle time, etc)**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "uptime": 123456,
+    "uptimeHuman": "1d 2h 3m 4s",
+    "version": "1.0.0"
+  },
+  "timestamp": "2025-01-01T00:00:00.000Z"
+}
+```
 
-- **[PRD_AGILE_REVISION_SUMMARY.md](docs/PRD_AGILE_REVISION_SUMMARY.md)** - **Agile Revision Summary**:
-  - Overview perubahan dari waterfall ke Agile
-  - Key additions dan improvements
-  - Sprint breakdown details
-  - Benefits of Agile approach
-  - Migration guide dan next steps
+### `GET /token-status`
 
-- **[REQUIREMENTS.md](docs/REQUIREMENTS.md)** - Formal requirements specification:
-  - Functional requirements
-  - Non-functional requirements
-  - User stories and acceptance criteria
-  - Requirements traceability matrix
+Returns whether a token is loaded (never exposes the full token).
 
-- **[RISK_ASSESSMENT.md](docs/RISK_ASSESSMENT.md)** - Detailed risk analysis:
-  - Risk identification and categorization
-  - Impact and probability assessment
-  - Mitigation strategies
-  - Contingency plans
+```json
+{
+  "success": true,
+  "data": {
+    "exists": true,
+    "maskedToken": "abc4****7890"
+  },
+  "timestamp": "2025-01-01T00:00:00.000Z"
+}
+```
 
-- **[SDLC_CHECKLIST.md](docs/SDLC_CHECKLIST.md)** - Phase tracking checklist:
-  - Planning phase items
-  - Development phase gates
-  - Testing checkpoints
-  - Deployment readiness criteria
+### `POST /lartas`
 
-## 🎯 Project Status
+Proxies a request to the LarTas API using the stored bearer token.
 
-**Current Phase:** Sprint 0 - Planning & Requirements (Agile Scrum)  
-**Team Size:** Solo Founder (with GitHub Copilot)  
-**Next Sprint:** Sprint 1 - Foundation & Authentication  
-**Estimated MVP Launch:** May 2026 (End of Sprint 8)  
-**Total Development Duration:** 24 weeks (8 sprints @ 3 weeks each)
+**Request body:**
 
-**Solo Founder Adjustments:**
-- Sprint duration: 3 weeks (not 2) - sustainable pace
-- Focus: One major feature per sprint
-- Buffer: 20% time for learning & debugging
-- MVP scope: Ultra-minimal, defer all non-essential features
+```json
+{
+  "method": "GET",
+  "path": "/api/shipments",
+  "params": { "page": "1", "limit": "10" },
+  "body": null
+}
+```
 
-## 🏗️ Technology Stack (Clojure End-to-End)
+| Field    | Type     | Required | Description                         |
+|----------|----------|----------|-------------------------------------|
+| method   | string   | yes      | HTTP method (GET, POST, PUT, PATCH, DELETE) |
+| path     | string   | yes      | Path on the LarTas API              |
+| params   | object   | no       | URL query parameters                |
+| body     | any      | no       | Request body for POST/PUT/PATCH     |
 
-**Solo Founder Stack - Optimized for Rapid Development:**
+**Response:**
 
-- **Backend:** Clojure + Ring + Reitit (REST API)
-- **Frontend:** ClojureScript + Re-frame + Reagent (SPA)
-- **Database:** Datomic Cloud (Immutable, time-travel queries)
-- **Authentication:** Buddy (JWT-based)
-- **Job Processing:** core.async / Goose
-- **PDF Parsing:** Apache PDFBox (Java interop)
-- **Excel Generation:** Apache POI (Java interop)
-- **Deployment:** Fly.io (simple, affordable)
-- **CI/CD:** GitHub Actions
-- **Monitoring:** Sentry + LogTail
+```json
+{
+  "success": true,
+  "data": {
+    "status": 200,
+    "headers": { "content-type": "application/json" },
+    "data": { ... }
+  },
+  "timestamp": "2025-01-01T00:00:00.000Z"
+}
+```
 
-**Why Clojure Full-Stack:**
-- Same language frontend & backend = less context switching
-- REPL-driven development = faster iteration
-- Datomic = built-in audit log, time-travel queries
-- Monolith architecture = simpler deployment & debugging
-- Java interop = access to mature PDF/Excel libraries
-
-## 🚀 Getting Started
+## Setup
 
 ### Prerequisites
 
-- **Clojure CLI** (deps.edn)
-- **Java 21** (for Clojure runtime)
-- **Datomic Cloud** or **Datomic Pro** (local dev)
-- **Node.js 20+** (for ClojureScript compilation)
-- **Fly.io CLI** (for deployment)
-- **Git** (version control)
+- [Bun](https://bun.sh) v1.2 or later
 
-### Development Setup
+### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/apktntaj/pesisir.git
-cd pesisir
-
-# Review planning documents
-cd docs
-ls -la
-
-# Follow the SDLC checklist for development phases
-# See SDLC_CHECKLIST.md for detailed steps
+git clone <repo-url>
+cd pesisir-api
+bun install
+cp .env.example .env
 ```
 
-## 📊 SDLC Methodology
+### Configuration
 
-This project follows an **Agile Scrum** approach with 2-week sprints:
+Edit `.env`:
 
-### Agile Sprint Cycle
+| Variable            | Default                     | Description                                  |
+|---------------------|-----------------------------|----------------------------------------------|
+| PORT                | 3001                        | Server port                                  |
+| HOST                | 0.0.0.0                     | Server bind address                          |
+| LARTAS_BASE_URL     | https://api.lartas.go.id    | Government API base URL                      |
+| TOKEN_FILE_PATH     | ./token.txt                 | Path to the bearer token file                |
+| REQUEST_TIMEOUT_MS  | 30000                       | Timeout in ms for external requests          |
+| MAX_RETRIES         | 3                           | Number of retries for failed requests        |
+| LOG_LEVEL           | info                        | Log level (debug, info, warn, error)         |
+| API_KEY             | (empty)                     | Optional shared secret for /lartas auth      |
 
-**Sprint Duration**: 2 weeks (6 sprints total for MVP)
+### Token File
 
-**Sprint Ceremonies**:
-- **Sprint Planning**: 2 hours (every 2 weeks) - Define sprint goal and commit to user stories
-- **Daily Standup**: 15 minutes (daily) - Sync on progress and blockers
-- **Sprint Review**: 1 hour (end of sprint) - Demo working software to stakeholders
-- **Sprint Retrospective**: 1 hour (end of sprint) - Continuous improvement discussion
-- **Backlog Refinement**: 1 hour (mid-sprint) - Prepare upcoming stories
-
-### Sprint Timeline (Solo Founder MVP - 24 Weeks)
+Create `token.txt` in the project root with your LarTas bearer token:
 
 ```
-Sprint 0      Sprint 1        Sprint 2        Sprint 3        Sprint 4
-[Planning]  [Foundation]  [PDF Upload]  [Data Extract]  [Review UI]
-Week -2-0     Week 1-3       Week 4-6        Week 7-9       Week 10-12
-
-  Sprint 5        Sprint 6        Sprint 7         Sprint 8
-[Generation]  [Credit System]   [Polish]    [Testing/Launch]
-  Week 13-15      Week 16-18      Week 19-21      Week 22-24
-                                                        ⭐ MVP LAUNCH
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-**Current Status**: 
-- ✅ **Sprint 0**: Planning & Stack Decision (Completed)
-- 🔄 **Sprint 1**: Clojure Setup + Authentication (Next - Jan 2026)
-- 🎯 **Target Launch**: May 2026
+The service reads this file on every request. Changes take effect immediately — no restart needed.
 
-### Agile Principles Applied
+**Never commit `token.txt`** (it's already in `.gitignore`).
 
-1. ✅ **Working Software Over Documentation**: Focus on delivering functional increments every sprint
-2. ✅ **Customer Collaboration**: Regular sprint reviews with stakeholders and early user feedback
-3. ✅ **Responding to Change**: Adaptive planning based on sprint learnings and velocity
-4. ✅ **Iterative Development**: Each sprint builds on previous increments
-5. ✅ **Continuous Delivery**: CI/CD pipeline enables bi-weekly production deployments
-6. ✅ **Team Empowerment**: Self-organizing cross-functional development team
+### Development
 
-## 📝 Contributing
+```bash
+bun run dev
+```
 
-This is currently a planning and architecture phase. Contributions to documentation review and technical design are welcome.
+Starts the server with hot-reload via `bun --watch`.
 
-Please refer to [SDLC_REVIEW.md](docs/SDLC_REVIEW.md) for review guidelines and feedback areas.
+### Production
 
-## 📧 Contact
+```bash
+bun run start
+```
 
-Project Maintainer: @apktntaj
+## Deployment
 
-## 📄 License
+### Systemd (Recommended)
 
-[Add appropriate license]
+1. Copy the service file:
+```bash
+sudo cp pesisir-api.service /etc/systemd/system/
+```
 
----
+2. Edit the service file to match your paths:
+   - `WorkingDirectory` — path to your project
+   - `EnvironmentFile` — path to your `.env`
+   - `ExecStart` — path to bun binary and server.ts
 
-**Last Updated:** December 8, 2025  
-**Document Version:** 1.0  
-**Next Review:** After Requirements Analysis completion
+3. Enable and start:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable pesisir-api
+sudo systemctl start pesisir-api
+```
+
+4. Check status:
+```bash
+sudo systemctl status pesisir-api
+sudo journalctl -u pesisir-api -f
+```
+
+### PM2
+
+1. Install PM2 globally:
+```bash
+npm install -g pm2
+```
+
+2. Create log and pid directories:
+```bash
+mkdir -p logs pids
+```
+
+3. Start:
+```bash
+pm2 start pm2.config.js
+pm2 save
+pm2 startup
+```
+
+### GitHub Auto-Deploy
+
+Add a GitHub Actions workflow to SSH into your VPS and pull/restart:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/pesisir-api
+            git pull origin main
+            bun install
+            sudo systemctl restart pesisir-api
+```
+
+## Updating the Token
+
+1. Extract the new token from browser devtools (Network tab → any LarTas request → Authorization header).
+2. SSH into your VPS or edit the file directly:
+```bash
+echo "new-token-value" > /opt/pesisir-api/token.txt
+```
+3. Done. No restart needed. The next request will pick up the new token.
+
+Verify with:
+```bash
+curl http://localhost:3001/token-status
+```
+
+## Security
+
+- `token.txt` is in `.gitignore` and must never be committed.
+- The full token is never logged.
+- `GET /token-status` only returns a masked version.
+- Optional `API_KEY` env var protects the `/lartas` endpoint.
+- Run behind a reverse proxy (nginx/Caddy) for TLS termination in production.
+
+## Project Structure
+
+```
+src/
+├── server.ts          # Entry point — starts Bun HTTP server
+├── config/
+│   └── index.ts       # Environment configuration loader
+├── routes/
+│   ├── index.ts       # Router — matches URLs to handlers, auth
+│   ├── health.ts      # GET /health handler
+│   ├── token-status.ts# GET /token-status handler
+│   └── lartas.ts      # POST /lartas handler + validation
+├── services/
+│   └── lartas.ts      # LarTas API proxy logic
+├── clients/
+│   └── http.ts        # HTTP client with timeout + retry
+├── utils/
+│   ├── logger.ts      # Structured JSON logger
+│   ├── token.ts       # Token file reader with hot-reload
+│   └── errors.ts      # Error types and response helpers
+└── types/
+    └── index.ts       # Shared TypeScript types
+```

@@ -1,0 +1,25 @@
+[Unit]
+Description=Pesisir API Service
+Documentation=https://github.com/your-org/pesisir-api
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/opt/pesisir-api
+EnvironmentFile=/opt/pesisir-api/.env
+ExecStart=/usr/local/bin/bun src/server.ts
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/pesisir-api/output.log
+StandardError=append:/var/log/pesisir-api/error.log
+SyslogIdentifier=pesisir-api
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

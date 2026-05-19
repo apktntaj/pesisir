@@ -1,0 +1,7 @@
+[install]
+# Use frozen lockfile in CI
+frozenLockfile = false
+
+[test]
+# Default test configuration
+preload = []
