@@ -115,7 +115,7 @@ Edit `.env`:
 |---------------------|-----------------------------|----------------------------------------------|
 | PORT                | 3001                        | Server port                                  |
 | HOST                | 0.0.0.0                     | Server bind address                          |
-| LARTAS_BASE_URL     | https://api.lartas.go.id    | Government API base URL                      |
+| LARTAS_BASE_URL     | https://api.insw.go.id    | Government API base URL (INSW)               |
 | TOKEN_FILE_PATH     | ./token.txt                 | Path to the bearer token file                |
 | REQUEST_TIMEOUT_MS  | 30000                       | Timeout in ms for external requests          |
 | MAX_RETRIES         | 3                           | Number of retries for failed requests        |

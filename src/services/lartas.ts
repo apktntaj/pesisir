@@ -32,9 +32,12 @@ export function createLartasService(
     }
 
     const headers: Record<string, string> = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Basic ${token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: 'application/json, text/plain, */*',
+      'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+      Origin: 'https://insw.go.id',
+      Referer: 'https://insw.go.id/',
     };
 
     logger.info('Proxying request to LarTas API', {
