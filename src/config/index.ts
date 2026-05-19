@@ -9,8 +9,9 @@ export interface Config {
   apiKey: string | null;
 }
 
-function envInt(key: string, fallback: number): number {
+function envToInt(key: string, fallback: number): number {
   const val = Bun.env[key];
+
   if (!val) return fallback;
   const parsed = parseInt(val, 10);
   if (isNaN(parsed)) return fallback;
@@ -19,12 +20,12 @@ function envInt(key: string, fallback: number): number {
 
 export function loadConfig(): Config {
   return {
-    port: envInt('PORT', 3001),
+    port: envToInt('PORT', 3001),
     host: Bun.env.HOST || '0.0.0.0',
     lartasBaseUrl: Bun.env.LARTAS_BASE_URL || 'https://api.lartas.go.id',
     tokenFilePath: Bun.env.TOKEN_FILE_PATH || './token.txt',
-    requestTimeoutMs: envInt('REQUEST_TIMEOUT_MS', 30000),
-    maxRetries: envInt('MAX_RETRIES', 3),
+    requestTimeoutMs: envToInt('REQUEST_TIMEOUT_MS', 30000),
+    maxRetries: envToInt('MAX_RETRIES', 3),
     logLevel: Bun.env.LOG_LEVEL || 'info',
     apiKey: Bun.env.API_KEY || null,
   };

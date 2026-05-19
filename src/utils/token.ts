@@ -3,7 +3,7 @@ import { logger } from './logger';
 
 export class TokenManager {
   private token: string | null = null;
-  private lastLoaded: string | null = null;
+  private prevToken: string | null = null;
   private filePath: string;
 
   constructor(filePath: string) {
@@ -15,25 +15,25 @@ export class TokenManager {
     try {
       if (!existsSync(this.filePath)) {
         this.token = null;
-        this.lastLoaded = null;
+        this.prevToken = null;
         logger.warn('Token file not found', { path: this.filePath });
         return;
       }
       const content = readFileSync(this.filePath, 'utf-8').trim();
       if (content.length === 0) {
         this.token = null;
-        this.lastLoaded = null;
+        this.prevToken = null;
         logger.warn('Token file is empty', { path: this.filePath });
         return;
       }
-      if (content !== this.lastLoaded) {
+      if (content !== this.prevToken) {
         this.token = content;
-        this.lastLoaded = content;
+        this.prevToken = content;
         logger.info('Token loaded successfully');
       }
     } catch (error) {
       this.token = null;
-      this.lastLoaded = null;
+      this.prevToken = null;
       logger.error('Failed to read token file', {
         path: this.filePath,
         error: String(error),
@@ -58,7 +58,7 @@ export class TokenManager {
   }
 
   reload(): boolean {
-    this.lastLoaded = null;
+    this.prevToken = null;
     this.load();
     return this.token !== null;
   }
