@@ -7,6 +7,7 @@ import { createLartasService } from '../services/lartas';
 import { setStartTime, handleHealth } from './health';
 import { handleTokenStatus } from './token-status';
 import { handleLartas } from './lartas';
+import { handleUpdateToken } from './admin';
 import { successResponse, errorResponse, AppError } from '../utils/errors';
 import { logger } from '../utils/logger';
 
@@ -18,6 +19,12 @@ export function createRouter(c: Config, t: TokenManager, h: HttpClient) {
         if (!c.apiKey) return true;
         const key = request.headers.get('x-api-key');
         return key === c.apiKey;
+    }
+
+    function authenticateAdmin(request: Request): boolean {
+        if (!c.adminKey) return true;
+        const key = request.headers.get('x-admin-key');
+        return key === c.adminKey;
     }
 
     async function route(request: Request): Promise<Response> {
@@ -56,6 +63,17 @@ export function createRouter(c: Config, t: TokenManager, h: HttpClient) {
                     return errorResponse(401, 'Unauthorized. Provide valid x-api-key header');
                 }
                 const response = await handleLartas(request, lartasService);
+                logger.info('Request completed', { ...logMeta, status: 200, duration: Math.round(performance.now() - startTime) });
+                return response;
+            }
+
+            // Admin: update token
+            if (method === 'POST' && url.pathname === '/admin/token') {
+                if (!authenticateAdmin(request)) {
+                    logger.warn('Admin authentication failed', logMeta);
+                    return errorResponse(401, 'Unauthorized. Provide valid x-admin-key header');
+                }
+                const response = await handleUpdateToken(request, t);
                 logger.info('Request completed', { ...logMeta, status: 200, duration: Math.round(performance.now() - startTime) });
                 return response;
             }

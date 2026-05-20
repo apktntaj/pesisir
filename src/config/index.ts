@@ -7,6 +7,7 @@ export interface Config {
   maxRetries: number;
   logLevel: string;
   apiKey: string | null;
+  adminKey: string | null;
 }
 
 function envToInt(key: string, fallback: number): number {
@@ -28,5 +29,6 @@ export function loadConfig(): Config {
     maxRetries: envToInt('MAX_RETRIES', 3),
     logLevel: Bun.env.LOG_LEVEL || 'info',
     apiKey: Bun.env.API_KEY || null,
+    adminKey: Bun.env.ADMIN_KEY || null,
   };
 }

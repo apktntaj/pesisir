@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { logger } from './logger';
 
 export class TokenManager {
@@ -64,6 +64,20 @@ export class TokenManager {
     if (!t) return null;
     if (t.length <= 8) return t.slice(0, 2) + '****';
     return t.slice(0, 4) + '****' + t.slice(-4);
+  }
+
+  set(token: string): void {
+    this.token = token;
+    this.prevToken = token;
+    try {
+      writeFileSync(this.filePath, token, 'utf-8');
+      logger.info('Token updated and written to file');
+    } catch (error) {
+      logger.warn('Token updated in memory but failed to write file', {
+        path: this.filePath,
+        error: String(error),
+      });
+    }
   }
 
   reload(): boolean {
