@@ -5,6 +5,7 @@ import { createLartasService } from './services/lartas';
 import { handleHealth } from './routes/health';
 import { handleTokenStatus } from './routes/token-status';
 import { handleLartas } from './routes/lartas';
+import { handleUpdateToken } from './routes/admin';
 import { successResponse, errorResponse, AppError } from './utils/errors';
 import { logger } from './utils/logger';
 import { version } from '../package.json';
@@ -17,6 +18,11 @@ const lartasService = createLartasService(httpClient, tokenManager, cfg);
 function authenticate(request: Request): boolean {
     if (!cfg.apiKey) return true;
     return request.headers.get('x-api-key') === cfg.apiKey;
+}
+
+function authenticateAdmin(request: Request): boolean {
+    if (!cfg.adminKey) return true;
+    return request.headers.get('x-admin-key') === cfg.adminKey;
 }
 
 function withRequestLogging(handler: (request: Request) => Promise<Response> | Response) {
@@ -74,6 +80,14 @@ const server = Bun.serve({
                     return errorResponse(401, 'Unauthorized. Provide valid x-api-key header');
                 }
                 return handleLartas(request, lartasService);
+            }),
+        },
+        '/admin/token': {
+            POST: withRequestLogging(async (request: Request) => {
+                if (!authenticateAdmin(request)) {
+                    return errorResponse(401, 'Unauthorized. Provide valid x-admin-key header');
+                }
+                return handleUpdateToken(request, tokenManager);
             }),
         },
     },
