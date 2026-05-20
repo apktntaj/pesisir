@@ -14,9 +14,18 @@ export class TokenManager {
   private load(): void {
     try {
       if (!existsSync(this.filePath)) {
-        this.token = null;
-        this.prevToken = null;
-        logger.warn('Token file not found', { path: this.filePath });
+        const envToken = Bun.env.TOKEN ?? null;
+        if (envToken) {
+          if (envToken !== this.prevToken) {
+            this.token = envToken;
+            this.prevToken = envToken;
+            logger.info('Token loaded from TOKEN env var');
+          }
+        } else {
+          this.token = null;
+          this.prevToken = null;
+          logger.warn('Token file not found and TOKEN env var not set', { path: this.filePath });
+        }
         return;
       }
       const content = readFileSync(this.filePath, 'utf-8').trim();
@@ -29,7 +38,7 @@ export class TokenManager {
       if (content !== this.prevToken) {
         this.token = content;
         this.prevToken = content;
-        logger.info('Token loaded successfully');
+        logger.info('Token loaded from file');
       }
     } catch (error) {
       this.token = null;

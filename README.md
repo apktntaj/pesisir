@@ -128,6 +128,7 @@ Edit `.env`:
 | HOST                | 0.0.0.0                     | Server bind address                          |
 | LARTAS_BASE_URL     | https://api.insw.go.id    | INSW API base URL                            |
 | TOKEN_FILE_PATH     | ./token.txt                 | Path to the token file                       |
+| TOKEN               | (empty)                     | Fallback token value (used when file missing) |
 | REQUEST_TIMEOUT_MS  | 30000                       | Timeout in ms for external requests          |
 | MAX_RETRIES         | 3                           | Number of retries for failed requests        |
 | LOG_LEVEL           | info                        | Log level (debug, info, warn, error)         |
@@ -260,6 +261,28 @@ services:
       - ./.env:/app/.env
     restart: unless-stopped
 ```
+
+### Railway
+
+[Railway](https://railway.app) supports Dockerfiles natively.
+
+1. Push your repo to GitHub.
+2. In Railway dashboard, click **New Project** → **Deploy from GitHub repo**.
+3. Railway auto-detects the `Dockerfile`.
+4. Set these environment variables in Railway dashboard:
+
+| Variable | Value |
+|---|---|
+| `PORT` | `3001` |
+| `LARTAS_BASE_URL` | `https://api.insw.go.id` |
+| `TOKEN` | *(your INSW JWT token)* |
+| `API_KEY` | *(optional shared secret)* |
+
+> Railway uses the `PORT` env var to route traffic — make sure it matches `3001`.
+
+The service will use the `TOKEN` env var since `token.txt` doesn't exist in Railway's filesystem.
+
+No `railway.json` needed — the existing `Dockerfile` handles everything.
 
 ## Updating the Token
 
