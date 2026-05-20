@@ -5,3 +5,4 @@ token.txt
 data/
 *.log
 .DS_Store
+template-post-token.txt
