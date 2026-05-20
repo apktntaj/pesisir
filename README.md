@@ -233,6 +233,34 @@ jobs:
             sudo systemctl restart pesisir-api
 ```
 
+### Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t pesisir-api .
+docker run -d \
+  --name pesisir-api \
+  -p 3001:3001 \
+  -v $(pwd)/token.txt:/app/token.txt \
+  -v $(pwd)/.env:/app/.env \
+  pesisir-api
+```
+
+Or with Docker Compose (`compose.yml`):
+
+```yaml
+services:
+  pesisir-api:
+    build: .
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./token.txt:/app/token.txt
+      - ./.env:/app/.env
+    restart: unless-stopped
+```
+
 ## Updating the Token
 
 1. Extract the new token from browser devtools (Network tab → any INSW request → `authorization` header → copy value after `Basic `).

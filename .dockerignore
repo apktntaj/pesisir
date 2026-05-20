@@ -1,0 +1,11 @@
+.git
+.gitignore
+node_modules
+token.txt
+.env
+README.md
+prev-insw-service.js
+data/
+logs/
+pids/
+dist/
