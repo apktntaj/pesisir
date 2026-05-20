@@ -11,15 +11,14 @@ Client (Browser)
 Next.js on Vercel
     │  POST /lartas { method, path, body }
     ▼
-Pesisir API (VPS)
+Pesisir API (Docker container)
     │  GET/POST with Basic token + INSW headers
     ▼
 api.insw.go.id
 ```
 
-- Token is stored in `token.txt` (never committed).
-- Service reads the token dynamically on each request.
-- Token file updates take effect immediately — no restart needed.
+- Token can be passed via `TOKEN` env var (Railway) or `token.txt` file (VPS).
+- Service reads the token on each request — no restart needed.
 - Frontend never needs redeployment when the token changes.
 - Sends INSW-required headers: `Origin: https://insw.go.id`, `Referer`, `Accept-Language`.
 
@@ -103,140 +102,47 @@ Proxies a request to the INSW API using the stored Basic token.
 | Public Detail (BA) | `/api-prod-ba/ref/hscode/komoditas` |
 | Public Detail | `/api-prod/ref/hscode/komoditas` |
 
-## Setup
+## Prerequisites
 
-### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/)
+- [Bun](https://bun.sh) (for local development only)
 
-- [Bun](https://bun.sh) v1.2 or later
-
-### Installation
+## Quick Start
 
 ```bash
 git clone <repo-url>
 cd pesisir-api
-bun install
-cp .env.example .env
 ```
 
-### Configuration
+### 1. Set up the token
 
-Edit `.env`:
-
-| Variable            | Default                     | Description                                  |
-|---------------------|-----------------------------|----------------------------------------------|
-| PORT                | 3001                        | Server port                                  |
-| HOST                | 0.0.0.0                     | Server bind address                          |
-| LARTAS_BASE_URL     | https://api.insw.go.id    | INSW API base URL                            |
-| TOKEN_FILE_PATH     | ./token.txt                 | Path to the token file                       |
-| TOKEN               | (empty)                     | Fallback token value (used when file missing) |
-| REQUEST_TIMEOUT_MS  | 30000                       | Timeout in ms for external requests          |
-| MAX_RETRIES         | 3                           | Number of retries for failed requests        |
-| LOG_LEVEL           | info                        | Log level (debug, info, warn, error)         |
-| API_KEY             | (empty)                     | Optional shared secret for /lartas auth      |
-
-### Token File
-
-Create `token.txt` in the project root with your INSW JWT token (the raw JWT after the `Basic ` prefix):
+Create `token.txt` with your INSW JWT (the raw JWT after the `Basic ` prefix):
 
 ```
 eyJhbGciOiJSUzI1NiIsInR5cCI6ImJzYStqd3QiLCJraWQiOiJYU1N0SFVmeGI1...
 ```
 
-The service reads this file on every request and sends it as `Authorization: Basic <token>`. Changes take effect immediately — no restart needed.
+**Never commit `token.txt`** — it's already in `.gitignore`.
 
-**Never commit `token.txt`** (it's already in `.gitignore`).
+### 2. Configure environment
 
-### Development
-
-```bash
-bun run dev
-```
-
-Starts the server with hot-reload via `bun --watch`.
-
-### Production
+Copy and edit `.env`:
 
 ```bash
-bun run start
+cp .env.example .env
 ```
 
-## Deployment
+| Variable            | Default                     | Description                                  |
+|---------------------|-----------------------------|----------------------------------------------|
+| PORT                | 3001                        | Server port                                  |
+| LARTAS_BASE_URL     | https://api.insw.go.id    | INSW API base URL                            |
+| TOKEN               | (empty)                     | Token value (fallback if `token.txt` missing) |
+| TOKEN_FILE_PATH     | ./token.txt                 | Path to token file                           |
+| API_KEY             | (empty)                     | Optional shared secret for `/lartas` auth    |
+| REQUEST_TIMEOUT_MS  | 30000                       | Upstream request timeout                     |
+| MAX_RETRIES         | 3                           | Upstream retry count                         |
 
-### Systemd (Recommended)
-
-1. Copy the service file:
-```bash
-sudo cp pesisir-api.service /etc/systemd/system/
-```
-
-2. Edit the service file to match your paths:
-   - `WorkingDirectory` — path to your project
-   - `EnvironmentFile` — path to your `.env`
-   - `ExecStart` — path to bun binary and server.ts
-
-3. Enable and start:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable pesisir-api
-sudo systemctl start pesisir-api
-```
-
-4. Check status:
-```bash
-sudo systemctl status pesisir-api
-sudo journalctl -u pesisir-api -f
-```
-
-### PM2
-
-1. Install PM2 globally:
-```bash
-npm install -g pm2
-```
-
-2. Create log and pid directories:
-```bash
-mkdir -p logs pids
-```
-
-3. Start:
-```bash
-pm2 start pm2.config.js
-pm2 save
-pm2 startup
-```
-
-### GitHub Auto-Deploy
-
-Add a GitHub Actions workflow to SSH into your VPS and pull/restart:
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/pesisir-api
-            git pull origin main
-            bun install
-            sudo systemctl restart pesisir-api
-```
-
-### Docker
-
-Build and run with Docker:
+### 3. Run with Docker
 
 ```bash
 docker build -t pesisir-api .
@@ -262,70 +168,95 @@ services:
     restart: unless-stopped
 ```
 
-### Railway
+### 4. Verify
 
-[Railway](https://railway.app) supports Dockerfiles natively.
+```bash
+curl http://localhost:3001/health
+curl http://localhost:3001/token-status
+```
 
-1. Push your repo to GitHub.
-2. In Railway dashboard, click **New Project** → **Deploy from GitHub repo**.
-3. Railway auto-detects the `Dockerfile`.
-4. Set these environment variables in Railway dashboard:
+## Development (without Docker)
+
+```bash
+bun install
+bun run dev
+```
+
+Starts with hot-reload via `bun --watch`.
+
+## Deployment
+
+### Railway (recommended for cloud)
+
+[Railway](https://railway.app) auto-detects the `Dockerfile`.
+
+1. Push repo to GitHub → **New Project** → **Deploy from GitHub repo**.
+2. Set env vars in Railway dashboard:
 
 | Variable | Value |
 |---|---|
 | `PORT` | `3001` |
 | `LARTAS_BASE_URL` | `https://api.insw.go.id` |
-| `TOKEN` | *(your INSW JWT token)* |
-| `API_KEY` | *(optional shared secret)* |
+| `TOKEN` | *(your INSW JWT)* |
+| `API_KEY` | *(optional)* |
 
-> Railway uses the `PORT` env var to route traffic — make sure it matches `3001`.
+The service uses the `TOKEN` env var automatically since `token.txt` doesn't exist on Railway.
 
-The service will use the `TOKEN` env var since `token.txt` doesn't exist in Railway's filesystem.
+### Any Docker host
 
-No `railway.json` needed — the existing `Dockerfile` handles everything.
+```bash
+docker build -t pesisir-api .
+docker run -d -p 3001:3001 \
+  -e PORT=3001 \
+  -e LARTAS_BASE_URL=https://api.insw.go.id \
+  -e TOKEN=your-jwt-here \
+  pesisir-api
+```
+
+Pass `TOKEN` as env var — no file mount needed.
 
 ## Updating the Token
 
-1. Extract the new token from browser devtools (Network tab → any INSW request → `authorization` header → copy value after `Basic `).
-2. SSH into your VPS or edit the file directly:
-```bash
-echo "new-jwt-token" > /opt/pesisir-api/token.txt
-```
-3. Done. No restart needed. The next request picks up the new token.
+**On Railway** — update the `TOKEN` env var in dashboard → redeploy.
 
-Verify with:
+**On a VPS** — edit `token.txt` and wait ~1s for hot-reload:
+
+```bash
+echo "new-jwt-token" > /app/token.txt
+```
+
+Verify:
+
 ```bash
 curl http://localhost:3001/token-status
 ```
 
 ## Security
 
-- `token.txt` is in `.gitignore` and must never be committed.
-- The full token is never logged.
+- `token.txt` is in `.gitignore` — never committed.
+- Full token is never logged.
 - `GET /token-status` only returns a masked version.
-- Optional `API_KEY` env var protects the `/lartas` endpoint.
-- Run behind a reverse proxy (nginx/Caddy) for TLS termination in production.
+- Optional `API_KEY` env var protects `/lartas`.
+- Run behind a reverse proxy (nginx/Caddy) for TLS in production.
 
 ## Project Structure
 
 ```
 src/
-├── server.ts          # Entry point — starts Bun HTTP server
-├── config/
-│   └── index.ts       # Environment configuration loader
+├── server.ts          # Entry point
+├── config/index.ts    # Env config loader
 ├── routes/
-│   ├── index.ts       # Router — matches URLs to handlers, auth
-│   ├── health.ts      # GET /health handler
-│   ├── token-status.ts# GET /token-status handler
-│   └── lartas.ts      # POST /lartas handler + validation
+│   ├── index.ts       # Router + auth middleware
+│   ├── health.ts      # GET /health
+│   ├── token-status.ts# GET /token-status
+│   └── lartas.ts      # POST /lartas + validation
 ├── services/
-│   └── lartas.ts      # LarTas API proxy logic
+│   └── lartas.ts      # INSW API proxy logic
 ├── clients/
 │   └── http.ts        # HTTP client with timeout + retry
 ├── utils/
 │   ├── logger.ts      # Structured JSON logger
-│   ├── token.ts       # Token file reader with hot-reload
-│   └── errors.ts      # Error types and response helpers
-└── types/
-    └── index.ts       # Shared TypeScript types
+│   ├── token.ts       # Token reader (file + env fallback)
+│   └── errors.ts      # AppError + response helpers
+└── types/index.ts     # Shared TypeScript types
 ```
