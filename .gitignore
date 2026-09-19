@@ -8,3 +8,4 @@ data/
 template-post-token.txt
 *.xlsx
 *.xls
+/vss-project-management/
