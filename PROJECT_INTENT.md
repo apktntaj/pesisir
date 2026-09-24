@@ -67,7 +67,7 @@ It should evolve into a client of the shared backend rather than remain a separa
 
 ### Pesisir/INSW integration
 
-The existing root Pesisir service provides INSW/LARTAS integration capabilities. It is a supporting service or integration boundary within the larger assistant, not the primary product.
+The existing `apps/insw-gateway/` service provides INSW/LARTAS integration capabilities. It is a supporting service or integration boundary within the larger assistant, not the primary product.
 
 ## Safety and authority model
 
@@ -96,7 +96,7 @@ The repository currently contains components at different maturity levels:
 
 - `apps/project-management/` contains the earlier web-first implementation and substantial domain/workflow knowledge.
 - `apps/api/` is the beginning of the on-premise backend and system of record.
-- the root Pesisir code contains the earlier INSW/LARTAS gateway.
+- `apps/insw-gateway/` contains the earlier INSW/LARTAS gateway.
 - the OpenClaw/WhatsApp tool layer still needs to be designed and connected to the API.
 
 Development should converge these pieces around one canonical domain and API. Avoid expanding independent data models or adding new embedded AI extraction paths that make that convergence harder.

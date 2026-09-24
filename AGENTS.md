@@ -13,7 +13,7 @@ The product helps Indonesian customs-brokerage (PPJK) teams turn conversations a
 - **OpenClaw agent:** primary conversational interface and orchestration layer. It receives WhatsApp messages and files, understands user intent, extracts information from PDFs and spreadsheets, asks clarifying questions, and calls application tools/APIs.
 - **`apps/api/`:** on-premise system of record and deterministic business API. It owns persisted operational data, validation, relationships, lifecycle rules, authorization boundaries, and auditability.
 - **`apps/project-management/`:** web-based operational workspace and domain reference. It is the richer interface for supervisors and staff to inspect, correct, approve, and manage events, exhibitors, documents, shipments, customs jobs, and coordination work.
-- **Legacy root Pesisir API:** existing INSW/LARTAS gateway code. Treat it as a supporting integration, not the overall product identity.
+- **`apps/insw-gateway/`:** existing INSW/LARTAS gateway. Treat it as a supporting integration, not the overall product identity.
 
 Do not reintroduce Gemini or another embedded cloud document-extraction dependency into the upgraded architecture. Document interpretation belongs to the OpenClaw agent. The backend and web app should accept structured results, preserve source-document lineage, validate inputs, and expose corrections and approvals.
 
