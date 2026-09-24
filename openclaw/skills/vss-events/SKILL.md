@@ -1,45 +1,44 @@
 ---
 name: vss-events
-description: Use the on-premise VSS event API through its three MCP tools whenever the user asks to list events, view one event, or create an event.
+description: Use the on-premise VSS tools for event, organizer, venue, exhibitor-company, agent-company, and event-participation operations.
 ---
 
 # VSS Events
 
-Use only the VSS MCP tools for VSS event operations:
+Use VSS MCP tools instead of inventing IDs or retaining event data only in conversation.
 
-- `list_events` lists stored events.
-- `get_event` retrieves one event by UUID.
-- `create_event` creates one event using the configured default organizer and venue.
+## Read operations
 
-## Listing and detail
+- Resolve organizers and venues with `list_event_organizers` and `list_venues`.
+- Resolve reusable companies with `list_exhibitors` and `list_agents`.
+- Use `list_events`, `get_event`, and `list_event_exhibitors` for event context.
+- Never infer that similarly named companies are the same record.
 
-- Use `list_events` when the user asks what events exist or asks for upcoming event records.
-- Use `get_event` when the user supplies an event UUID or selects an unambiguous event from a list.
-- Never invent an event UUID.
+## Write protocol
 
-## Creating an event
+Before every create, update, cancellation, withdrawal, or reactivation:
 
-Before calling `create_event`, obtain all three fields:
+1. Obtain every required business value without guessing.
+2. Resolve referenced records and show their names, not only UUIDs.
+3. Display a concise summary of the exact write.
+4. Call the tool only after explicit confirmation of that summary.
 
-- official event name;
-- start date;
-- end date.
+Derive `actorRef` from the authenticated OpenClaw sender and `sourceMessageId` from the originating message when available. Generate one UUID `idempotencyKey` for the confirmed operation and reuse it for retries. Never ask the user to provide these technical fields. Do not automatically retry a failed write with a new key.
 
-Normalize dates to `YYYY-MM-DD`. Never guess a missing date or silently resolve an ambiguous date.
+## Events
 
-Always show this short confirmation before writing:
+Creating an event requires its official name, `YYYY-MM-DD` start and end dates, one organizer, and one venue. Do not use configured defaults. Optional alias and notes remain `null` when unknown.
 
-```text
-Create this event?
-- Name: ...
-- Start: YYYY-MM-DD
-- End: YYYY-MM-DD
-```
+Cancellation and reactivation require an explicit reason and confirmation. Do not represent cancellation by deleting an event.
 
-Call `create_event` only after the user explicitly confirms the displayed values. A request to create an event is not itself confirmation; confirmation must follow the summary. If the user changes a value, show the revised summary and ask again.
+## Exhibitors and agents
 
-After a successful write, reply with the event name, dates, and returned UUID. If the tool returns an error, explain it without claiming the event was created and do not retry a write automatically.
+An exhibitor company is reusable across events. Create a new master only when the user confirms that an existing record is not the same company.
 
-## Scope
+- A `LOCAL` exhibitor is Indonesian, may have an NPWP, and must never receive an agent.
+- An `INTERNATIONAL` exhibitor may have zero or one agent and must not receive an Indonesian NPWP or country code `ID`.
+- Agent companies are reusable and may coordinate several international exhibitors.
 
-Organizer and venue are configured defaults for this initial test. Do not ask for them and do not imply that the user selected them. Do not perform event updates or deletions; those tools are intentionally unavailable.
+Adding an exhibitor to an event creates participation, not another exhibitor master. Confirm event, exhibitor, optional agent, primary contact, hall, booth, and notes. Use withdrawal/reactivation commands instead of deletion or duplicate participation.
+
+After success, report the affected name, lifecycle status, and returned UUID. On error, report the API message and do not claim that the write succeeded.

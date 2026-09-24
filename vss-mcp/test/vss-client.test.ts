@@ -5,12 +5,11 @@ import { VssApiError, VssClient, type Fetcher } from '../src/vss-client'
 const config: Config = {
   VSS_API_BASE_URL: 'https://vss.example.test',
   VSS_API_TOKEN: 'secret',
-  VSS_DEFAULT_EVENT_ORGANIZER_ID: '00000000-0000-4000-8000-000000000001',
-  VSS_DEFAULT_VENUE_ID: '00000000-0000-4000-8000-000000000002',
 }
+const mutation = { actorRef: 'whatsapp:+628123', sourceMessageId: 'wamid.1', idempotencyKey: '00000000-0000-4000-8000-000000000099' }
 
 describe('VssClient', () => {
-  test('creates an event using configured organizer and venue defaults', async () => {
+  test('creates an event with explicit organizer, venue, and audit headers', async () => {
     const requests: Request[] = []
     const fetcher: Fetcher = async (input, init) => {
       const request = new Request(input, init)
@@ -19,17 +18,23 @@ describe('VssClient', () => {
     }
     const client = new VssClient(config, fetcher)
 
-    const event = await client.createEvent({ name: 'Test Expo', startOn: '2026-10-10', endOn: '2026-10-12' })
+    const event = await client.createEvent({
+      name: 'Test Expo', startOn: '2026-10-10', endOn: '2026-10-12',
+      eventOrganizerId: '00000000-0000-4000-8000-000000000001', venueId: '00000000-0000-4000-8000-000000000002',
+    }, mutation)
 
     expect(event.id).toBe('event-1')
     expect(await requests[0]!.json()).toEqual({
       name: 'Test Expo',
       startOn: '2026-10-10',
       endOn: '2026-10-12',
-      eventOrganizerId: config.VSS_DEFAULT_EVENT_ORGANIZER_ID,
-      venueId: config.VSS_DEFAULT_VENUE_ID,
+      eventOrganizerId: '00000000-0000-4000-8000-000000000001',
+      venueId: '00000000-0000-4000-8000-000000000002',
     })
     expect(requests[0]!.headers.get('authorization')).toBe('Bearer secret')
+    expect(requests[0]!.headers.get('x-actor-ref')).toBe(mutation.actorRef)
+    expect(requests[0]!.headers.get('x-source-message-id')).toBe(mutation.sourceMessageId)
+    expect(requests[0]!.headers.get('idempotency-key')).toBe(mutation.idempotencyKey)
   })
 
   test('lists events with pagination', async () => {
