@@ -1,5 +1,5 @@
 {
-  "name": "2026-08-30-ceisa",
+  "name": "@pesisir/ceisa-sdk",
   "description": "CEISA 4.0 SDK and Pi tools for local BC 2.3 drafts and read-only status/kurs checks.",
   "keywords": ["pi-package"],
   "pi": {

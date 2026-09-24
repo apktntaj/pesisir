@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "2026-08-30-ceisa",
+      "name": "@pesisir/ceisa-sdk",
       "devDependencies": {
         "@types/bun": "latest",
       },

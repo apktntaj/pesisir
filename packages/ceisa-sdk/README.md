@@ -64,7 +64,7 @@ Tool baca memakai kredensial dari environment atau file `.env` di root package. 
 Instal sebagai package lokal lalu muat ulang Pi:
 
 ```bash
-pi install /path/ke/2026-08-30-ceisa
+pi install /path/ke/pesisir/packages/ceisa-sdk
 ```
 
 Validasi draft bersifat lokal dan bukan persetujuan CEISA. Tool extension ini tidak menyediakan operasi kirim/finalisasi dokumen.
