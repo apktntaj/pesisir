@@ -97,6 +97,6 @@ The repository currently contains components at different maturity levels:
 - `apps/project-management/` contains the earlier web-first implementation and substantial domain/workflow knowledge.
 - `apps/api/` is the beginning of the on-premise backend and system of record.
 - `apps/insw-gateway/` contains the earlier INSW/LARTAS gateway.
-- the OpenClaw/WhatsApp tool layer still needs to be designed and connected to the API.
+- `apps/mcp-server/` and `agents/openclaw/` provide the initial tool bridge and event skill; production WhatsApp deployment, trusted identity, and broader PPJK workflows remain incomplete.
 
 Development should converge these pieces around one canonical domain and API. Avoid expanding independent data models or adding new embedded AI extraction paths that make that convergence harder.
