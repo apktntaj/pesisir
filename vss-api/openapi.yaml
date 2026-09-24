@@ -1,52 +1,27 @@
 openapi: 3.1.0
 info:
   title: VSS Operations API
-  version: 0.1.0
-  description: REST API awal untuk Event Organizer, Venue, Contact, dan Event.
+  version: 0.2.0
+  description: Canonical on-premise event-management API for VSS/OpenClaw.
 servers:
   - url: http://127.0.0.1:3001
-paths:
-  /health:
-    get:
-      summary: Check API and PostgreSQL health
-      responses:
-        '200': { description: API and database are available }
-        '503': { description: Database is unavailable }
-  /api/v1/event-organizers:
-    get: { summary: List event organizers }
-    post: { summary: Create an event organizer }
-  /api/v1/event-organizers/{id}:
-    get: { summary: Get event organizer with contacts }
-    patch: { summary: Update event organizer }
-    delete: { summary: Delete unused event organizer }
-  /api/v1/event-organizers/{id}/contacts:
-    post: { summary: Create and attach a contact }
-  /api/v1/venues:
-    get: { summary: List venues }
-    post: { summary: Create a venue }
-  /api/v1/venues/{id}:
-    get: { summary: Get venue with contacts }
-    patch: { summary: Update venue }
-    delete: { summary: Delete unused venue }
-  /api/v1/venues/{id}/contacts:
-    post: { summary: Create and attach a contact }
-  /api/v1/contacts/{id}:
-    patch: { summary: Update contact }
-    delete: { summary: Delete contact and its links }
-  /api/v1/events:
-    get:
-      summary: List events
-      parameters:
-        - { name: eventOrganizerId, in: query, schema: { type: string, format: uuid } }
-        - { name: venueId, in: query, schema: { type: string, format: uuid } }
-        - { name: startsFrom, in: query, schema: { type: string, format: date } }
-        - { name: startsUntil, in: query, schema: { type: string, format: date } }
-    post: { summary: Create event }
-  /api/v1/events/{id}:
-    get: { summary: Get event with venue and organizer }
-    patch: { summary: Update event }
-    delete: { summary: Delete event }
 components:
+  parameters:
+    ActorRef:
+      name: X-Actor-Ref
+      in: header
+      required: true
+      schema: { type: string, minLength: 1 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 8 }
+    SourceMessageId:
+      name: X-Source-Message-Id
+      in: header
+      required: false
+      schema: { type: string }
   schemas:
     Error:
       type: object
@@ -59,3 +34,150 @@ components:
             code: { type: string }
             message: { type: string }
             details: {}
+    EventInput:
+      type: object
+      required: [name, startOn, endOn, eventOrganizerId, venueId]
+      properties:
+        name: { type: string }
+        alias: { type: [string, 'null'] }
+        notes: { type: [string, 'null'] }
+        startOn: { type: string, format: date }
+        endOn: { type: string, format: date }
+        eventOrganizerId: { type: string, format: uuid }
+        venueId: { type: string, format: uuid }
+    ExhibitorInput:
+      type: object
+      required: [legalName, kind]
+      properties:
+        legalName: { type: string }
+        alias: { type: [string, 'null'] }
+        kind: { enum: [LOCAL, INTERNATIONAL] }
+        npwp: { type: [string, 'null'], description: Allowed only for LOCAL exhibitors. }
+        countryCode: { type: [string, 'null'], pattern: '^[A-Z]{2}$' }
+        address: { type: [string, 'null'] }
+        website: { type: [string, 'null'], format: uri }
+    AgentInput:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        countryCode: { type: [string, 'null'], pattern: '^[A-Z]{2}$' }
+        address: { type: [string, 'null'] }
+        website: { type: [string, 'null'], format: uri }
+    ParticipationInput:
+      type: object
+      required: [exhibitorId]
+      properties:
+        exhibitorId: { type: string, format: uuid }
+        agentId: { type: [string, 'null'], format: uuid, description: Forbidden for LOCAL exhibitors. }
+        primaryContactId: { type: [string, 'null'], format: uuid }
+        hall: { type: [string, 'null'] }
+        booth: { type: [string, 'null'] }
+        notes: { type: [string, 'null'] }
+    Reason:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1 }
+paths:
+  /health:
+    get:
+      summary: Check API and PostgreSQL health
+      responses:
+        '200': { description: Healthy }
+        '503': { description: Database unavailable }
+  /api/v1/event-organizers:
+    get: { summary: List active event organizers }
+    post:
+      summary: Create event organizer
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/SourceMessageId' }]
+      responses: { '201': { description: Created } }
+  /api/v1/event-organizers/{id}:
+    get: { summary: Get organizer with contacts }
+    patch: { summary: Update organizer }
+    delete: { summary: Deprecated; use archive command, responses: { '405': { description: Archive required } } }
+  /api/v1/event-organizers/{id}/archive:
+    post: { summary: Archive organizer }
+  /api/v1/event-organizers/{id}/contacts:
+    post: { summary: Add organizer contact }
+  /api/v1/venues:
+    get: { summary: List active venues }
+    post: { summary: Create venue with optional NPWP }
+  /api/v1/venues/{id}:
+    get: { summary: Get venue with contacts }
+    patch: { summary: Update venue }
+    delete: { summary: Deprecated; use archive command, responses: { '405': { description: Archive required } } }
+  /api/v1/venues/{id}/archive:
+    post: { summary: Archive venue }
+  /api/v1/venues/{id}/contacts:
+    post: { summary: Add venue contact }
+  /api/v1/contacts/{id}:
+    patch: { summary: Update structured contact }
+    delete: { summary: Deprecated; use archive command, responses: { '405': { description: Archive required } } }
+  /api/v1/contacts/{id}/archive:
+    post: { summary: Archive contact }
+  /api/v1/events:
+    get:
+      summary: List events
+      parameters:
+        - { name: eventOrganizerId, in: query, schema: { type: string, format: uuid } }
+        - { name: venueId, in: query, schema: { type: string, format: uuid } }
+        - { name: startsFrom, in: query, schema: { type: string, format: date } }
+        - { name: startsUntil, in: query, schema: { type: string, format: date } }
+        - { name: status, in: query, schema: { enum: [ACTIVE, CANCELLED] } }
+      responses: { '200': { description: Paginated event list } }
+    post:
+      summary: Create event
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/EventInput' } } }
+      responses: { '201': { description: Created } }
+  /api/v1/events/{id}:
+    get: { summary: Get event with organizer, venue, and participation counts }
+    patch: { summary: Update event metadata }
+    delete: { summary: Deprecated; use cancel command, responses: { '405': { description: Cancellation required } } }
+  /api/v1/events/{id}/cancel:
+    post: { summary: Cancel active event, requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/Reason' } } } } }
+  /api/v1/events/{id}/reactivate:
+    post: { summary: Reactivate cancelled event }
+  /api/v1/exhibitors:
+    get:
+      summary: List reusable exhibitor companies
+      parameters:
+        - { name: kind, in: query, schema: { enum: [LOCAL, INTERNATIONAL] } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: includeArchived, in: query, schema: { type: boolean, default: false } }
+    post:
+      summary: Create exhibitor company
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/ExhibitorInput' } } } }
+  /api/v1/exhibitors/{id}:
+    get: { summary: Get exhibitor with contacts }
+    patch: { summary: Update exhibitor company }
+  /api/v1/exhibitors/{id}/archive:
+    post: { summary: Archive exhibitor company }
+  /api/v1/exhibitors/{id}/contacts:
+    post: { summary: Add exhibitor contact }
+  /api/v1/agents:
+    get: { summary: List reusable agent companies }
+    post:
+      summary: Create agent company
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/AgentInput' } } } }
+  /api/v1/agents/{id}:
+    get: { summary: Get agent with contacts }
+    patch: { summary: Update agent company }
+  /api/v1/agents/{id}/archive:
+    post: { summary: Archive agent company }
+  /api/v1/agents/{id}/contacts:
+    post: { summary: Add agent contact }
+  /api/v1/events/{eventId}/exhibitors:
+    get: { summary: List event participations with exhibitor and agent summaries }
+    post:
+      summary: Add exhibitor to active event
+      requestBody: { content: { application/json: { schema: { $ref: '#/components/schemas/ParticipationInput' } } } }
+  /api/v1/event-exhibitors/{id}:
+    get: { summary: Get event participation }
+    patch: { summary: Update active event participation }
+  /api/v1/event-exhibitors/{id}/withdraw:
+    post: { summary: Withdraw active participation }
+  /api/v1/event-exhibitors/{id}/reactivate:
+    post: { summary: Reactivate withdrawn participation }

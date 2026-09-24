@@ -6,8 +6,9 @@ COPY package.json bun.lock ./
 RUN bun install --production --frozen-lockfile
 
 COPY src ./src
+COPY migrations ./migrations
 
 ENV HOST=0.0.0.0
 EXPOSE 3001
 USER bun
-CMD ["bun", "src/server.ts"]
+CMD ["sh", "-c", "bun src/db/migrate.ts && exec bun src/server.ts"]

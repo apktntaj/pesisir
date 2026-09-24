@@ -1,8 +1,8 @@
 # VSS Operations API
 
-REST API awal untuk Event Organizer, Venue, Contact, dan Event. Tidak ada UI, WhatsApp, OpenClaw, MCP, atau LLM dalam service ini.
+Canonical on-premise API for event organizers, venues, events, reusable exhibitor and agent companies, and their event participation. OpenClaw and future web clients use this service instead of owning independent event data.
 
-## Jalankan lokal
+## Run locally
 
 ```bash
 docker compose up -d postgres
@@ -11,27 +11,46 @@ bun run db:migrate
 bun run dev
 ```
 
-API tersedia pada `http://127.0.0.1:3001`; kontrak endpoint ada di [`openapi.yaml`](./openapi.yaml).
+The API listens on `http://127.0.0.1:3001`.
 
-## Data awal
+- See [`docs/EVENT_MANAGEMENT_API.md`](./docs/EVENT_MANAGEMENT_API.md) for the complete usage guide and end-to-end examples.
+- See [`openapi.yaml`](./openapi.yaml) for the machine-readable contract.
 
-Database pengembangan diisi dengan empat Event Organizer dan empat Venue. Setiap record memiliki satu Contact dummy. Event sengaja tidak di-seed dan dibuat melalui API.
+## Mutation metadata
 
-Lihat identifier yang tersedia:
+Every `POST` and `PATCH` requires:
 
-```bash
-curl http://127.0.0.1:3001/api/v1/event-organizers
-curl http://127.0.0.1:3001/api/v1/venues
-curl http://127.0.0.1:3001/api/v1/events
+- `X-Actor-Ref`: stable OpenClaw sender or trusted caller reference;
+- `Idempotency-Key`: stable operation key of at least eight characters;
+- `X-Source-Message-Id`: optional WhatsApp/OpenClaw source message.
+
+An identical retry returns the stored response. Reusing the key for a different request returns `409 IDEMPOTENCY_CONFLICT`. Each successful mutation and its audit event are committed together.
+
+## Domain
+
+```text
+Event Organizer ──< Event >── Venue
+                         │
+                         └──< Event Exhibitor >── Exhibitor company
+                                      │
+                                      └── optional Agent company
 ```
 
-## Membuat Event
+- An exhibitor company is reusable across events but can participate only once in a given event.
+- `LOCAL` exhibitors are normalized to country `ID` and cannot have agents.
+- `INTERNATIONAL` exhibitors can have zero or one reusable agent and cannot carry an Indonesian NPWP.
+- Venue NPWP is optional.
+- Event cancellation and exhibitor withdrawal are explicit, reversible lifecycle commands.
+- Referenced master data is archived rather than deleted; archived records remain readable historically and cannot receive new references.
 
-Gunakan UUID Event Organizer dan Venue dari endpoint daftar. Kedua UUID wajib ada, dan `endOn` tidak boleh lebih awal dari `startOn`.
+Example event creation:
 
 ```bash
 curl -X POST http://127.0.0.1:3001/api/v1/events \
   -H 'Content-Type: application/json' \
+  -H 'X-Actor-Ref: whatsapp:+628123456789' \
+  -H 'X-Source-Message-Id: wamid.example' \
+  -H 'Idempotency-Key: 5ba2c843-d5d6-4fee-9b25-83da704cd95e' \
   -d '{
     "name": "Manufacturing Indonesia 2026",
     "startOn": "2026-12-02",
@@ -41,36 +60,11 @@ curl -X POST http://127.0.0.1:3001/api/v1/events \
   }'
 ```
 
-Contoh mengambil daftar Event:
+## Verify
 
 ```bash
-curl http://127.0.0.1:3001/api/v1/events
-```
-
-Filter berdasarkan Event Organizer, Venue, atau tanggal mulai:
-
-```bash
-curl 'http://127.0.0.1:3001/api/v1/events?eventOrganizerId=<UUID>'
-curl 'http://127.0.0.1:3001/api/v1/events?venueId=<UUID>'
-curl 'http://127.0.0.1:3001/api/v1/events?startsFrom=2026-01-01&startsUntil=2026-12-31'
-```
-
-UUID harus memiliki format `8-4-4-4-12`. Jika API mengembalikan `Invalid UUID`, salin ulang nilai `id` lengkap dari endpoint daftar.
-
-## Verifikasi singkat
-
-```bash
-curl http://127.0.0.1:3001/health
 bun run typecheck
 bun test
 ```
 
-## Data model
-
-```text
-Event Organizer ──< Event >── Venue
-       │                         │
-       └──< Contact              └──< Contact
-```
-
-`events` menolak `endOn` yang lebih awal dari `startOn`. Event Organizer dan Venue tidak dapat dihapus selama masih dirujuk oleh Event.
+The integration suite requires the local PostgreSQL service and migrated schema.
