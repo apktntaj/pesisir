@@ -1,5 +1,5 @@
 {
-  "name": "ppjk-pi-package",
+  "name": "@pesisir/ppjk-tools",
   "version": "0.4.0",
   "type": "module",
   "private": true,
