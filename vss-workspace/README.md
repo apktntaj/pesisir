@@ -4,7 +4,7 @@ Frontend Svelte untuk VSS API. Workspace ini melengkapi operasi WhatsApp/OpenCla
 
 ## Jalankan lokal
 
-Mulai API dan PostgreSQL terlebih dahulu dari `../vss-api/`:
+Mulai API dan PostgreSQL terlebih dahulu dari `../apps/api/`:
 
 ```bash
 docker compose up -d postgres

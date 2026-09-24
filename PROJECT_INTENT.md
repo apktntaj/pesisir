@@ -46,7 +46,7 @@ In the upgraded system, OpenClaw replaces the document-understanding role previo
 
 ### VSS API
 
-`vss-api/` is the authoritative on-premise backend. It should eventually own:
+`apps/api/` is the authoritative on-premise backend. It should eventually own:
 
 - users, roles, permissions, and agent identity;
 - events, organizers, venues, exhibitors, and contacts;
@@ -95,7 +95,7 @@ The assistant should reduce repeated data entry and context loss without weakeni
 The repository currently contains components at different maturity levels:
 
 - `vss-project-management/` contains the earlier web-first implementation and substantial domain/workflow knowledge.
-- `vss-api/` is the beginning of the on-premise backend and system of record.
+- `apps/api/` is the beginning of the on-premise backend and system of record.
 - the root Pesisir code contains the earlier INSW/LARTAS gateway.
 - the OpenClaw/WhatsApp tool layer still needs to be designed and connected to the API.
 

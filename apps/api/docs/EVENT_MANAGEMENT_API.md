@@ -4,7 +4,7 @@ This guide explains how OpenClaw, scripts, and future web clients use the VSS ev
 
 ## 1. Start the API
 
-From `vss-api/`:
+From `apps/api/`:
 
 ```bash
 docker compose up -d
@@ -501,4 +501,4 @@ Use `?includeArchived=true` on organizer, venue, exhibitor, and agent lists when
 | Participation | `GET/POST /api/v1/events/{eventId}/exhibitors`, `GET/PATCH /api/v1/event-exhibitors/{id}`, withdraw, reactivate |
 | Contacts | `PATCH /api/v1/contacts/{id}`, archive through `POST /api/v1/contacts/{id}/archive` |
 
-The machine-readable contract is [`../openapi.yaml`](../openapi.yaml). OpenClaw-specific tool and confirmation behavior is documented in [`../../openclaw/skills/vss-events/SKILL.md`](../../openclaw/skills/vss-events/SKILL.md).
+The machine-readable contract is [`../openapi.yaml`](../openapi.yaml). OpenClaw-specific tool and confirmation behavior is documented in [`../../../openclaw/skills/vss-events/SKILL.md`](../../../openclaw/skills/vss-events/SKILL.md).
