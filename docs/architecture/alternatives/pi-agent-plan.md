@@ -1,5 +1,7 @@
 # Rencana: Agent PPJK On-Premise Berbasis Pi
 
+> **Status:** alternatif historis. Arsitektur kanonik menggunakan OpenClaw sebagai runtime agent dan `apps/api/` sebagai system of record sesuai [`PROJECT_INTENT.md`](../../../PROJECT_INTENT.md). Tool deterministik Pi tetap dipertahankan di `agents/pi/ppjk-tools/`.
+
 ## 1. Tujuan
 
 Membangun asisten PPJK yang berjalan di infrastruktur kantor (*on-premise*) untuk membantu komunikasi, pengumpulan data, pengecekan awal, dan penyusunan ringkasan kasus kepabeanan.
