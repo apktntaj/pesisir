@@ -1,0 +1,892 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schema Kirim Dokumen PPFTZ-01-2",
+  "description": "JSON Schema untuk Kirim Dokumen PPFTZ-01 ke LDP v.01 (512). berdasarkan format pada lampiran PMK nomor 42/PMK.04/2020",
+  "type": "object",
+  "properties": {
+    "asalData": {
+      "type": "string",
+      "description": "untuk identifikasi asal data dokumen pabean",
+      "const": "S",
+      "message": "untuk Host-to-Host gunakan S"
+    },
+    "asuransi": {
+      "type": "number",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai asuransi maksimal 18 digit dengan dua angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 8. Asuransi LN/DN"
+    },
+    "bruto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP- Berat Kotor (kg)",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai bruto maksimal 24 digit dengan empat angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 25. Berat Kotor Total"
+    },
+    "cif": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC PPFTZ-01 KE LDP - Nilai Pabean",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai cif maksimal 18 digit dengan dua angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 5. CIF"
+    },
+    "kodeJenisProsedur": {
+      "type": "string",
+      "description": "B. DOKUMEN 2. Kategori Pemberitahuan",
+      "enum": [
+        "1",
+        "2"
+      ],
+      "message": "Kode jenis prosedur (kategori pemberitahuan): 1) biasa; 2) berkala"
+    },
+    "flagCurah": {
+      "type": "string",
+      "description": "Barang Curah",
+      "enum": [
+        "1",
+        "2"
+      ],
+      "message": "Barang Curah: 1) Curah; 2) Non-Curah"
+    },
+    "fob": {
+      "type": "number",
+      "description": "Free on Board",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai FOB maksimal 18 digit dengan dua angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 6. FOB"
+    },
+    "freight": {
+      "type": "number",
+      "description": "Freight",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai Freight maksimal 18 digit dengan dua angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 7. Freight"
+    },
+    "hargaPenyerahan": {
+      "type": "number",
+      "description": "Harga Penyerahan"
+    },
+    "jabatanTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP",
+      "message": "Jabatan Pengusaha"
+    },
+    "jumlahKontainer": {
+      "type": "integer",
+      "description": "jumlah peti kemas yang digunakan untuk mengangkut barang",
+      "message": "Jumlah kontainer atau peti kemas. DATA PEMASUKAN/PENGELUARAN 32. Jumlah Peti Kemas"
+    },
+    "jumlahTandaPengaman": {
+      "type": "number"
+    },
+    "kodeAsalBarangFtz": {
+      "type": "string",
+      "description": "Kode asal barang",
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "message": "Lihat referensi F. PEMBERITAHUAN BARANG 1. Asal Barang"
+    },
+    "kodeAsuransi": {
+      "type": "string",
+      "description": "kode asuransi yang dibayar di [LN] luar negeri atau [DN] dalam negeri",
+      "enum": [
+        "LN",
+        "DN"
+      ],
+      "message": "Kode asuransi yang dibayar: LN untuk luar negeri atau DN untuk dalam negeri. DATA PEMASUKAN/PENGELUARAN 8. Asuransi LN/DN"
+    },
+    "kodeCaraBayar": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Cara Pembayaran. Lihat Referensi Cara Bayar",
+      "message": "Format kode sesuai Referensi G.PEMBAYARAN BEA MASUK/BEA KELUAR 1. Cara Pembayaran"
+    },
+    "kodeCaraDagang": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP",
+      "enum": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15"
+      ],
+      "message": "Format kode sesuai Referensi DATA PEMASUKAN/PENGELUARAN 1. Transaksi"
+    },
+    "kodeDokumen": {
+      "type": "string",
+      "description": "Lihat Referensi Dokumen",
+      "const": "512",
+      "message": "Format kode sesuai Referensi Dokumen. Untuk PPFTZ-01 KE LDP gunakan 512"
+    },
+    "kodeIncoterm": {
+      "type": "string",
+      "description": "Lihat Referensi Incoterm",
+      "message": "Format kode sesuai Referensi Cara Penyerahan Barang. F. PEMBERITAHUAN BARANG 3. Cara Penyerahan Barang"
+    },
+    "kodeKantor": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Kantor Pabean. Lihat Referensi Kantor",
+      "message": "Format kode sesuai Referensi Kantor. C. KANTOR PABEAN 1. Kantor Pabean Asal"
+    },
+    "kodeKategoriKeluarFtz": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Kategori Pengeluaran. Lihat Referensi Kategori Pengeluaran",
+      "message": "Lihat Referensi E. PENGELUARAN 2. Kategori Pengeluaran",
+      "enum": [
+        "001",
+        "002",
+        "003",
+        "004",
+        "005",
+        "006",
+        "007",
+        "008",
+        "009",
+        "010",
+        "011",
+        "012"
+      ]
+    },
+    "kodeNegaraTujuan": {
+      "type": "string",
+      "description": "Negara Tujuan. Lihat Referensi Negara"
+    },
+    "kodePelMuat": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Pelabuhan Muat. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan muat sesuai Referensi Pelabuhan. DATA PEMASUKAN/PENGELUARAN 27. Pelabuhan Muat"
+    },
+    "kodePelTransit": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Pelabuhan Transit. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan muat sesuai Referensi Pelabuhan. DATA PEMASUKAN/PENGELUARAN 29. Pelabuhan Transit"
+    },
+    "kodePelTujuan": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Pelabuhan Tujuan. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan tujuan sesuai Referensi Pelabuhan. DATA PEMASUKAN/PENGELUARAN 28. Pelabuhan Tujuan"
+    },
+    "kodeTps": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Tempat Penimbunan. Kode tps sesuai dengan yang dibuat oleh Kantor Pabean masing-masing",
+      "message": "Format kode tps sesuai dengan yang dibuat oleh Kantor Pabean masing-masing. DATA PEMASUKAN/PENGELUARAN 36. Tempat Penimbunan"
+    },
+    "kodeTujuanPengiriman": {
+      "type": "string",
+      "description": "Kode Tujuan Pengiriman. Lihat Referensi Tujuan Pengiriman",
+      "message": "Format kode sesuai Referensi Tujuan Pengiriman"
+    },
+    "kodeValuta": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Valuta. Lihat Referensi Valuta",
+      "message": "Format kode sesuai Referensi Valuta. DATA PEMASUKAN/PENGELUARAN 2. Valuta"
+    },
+    "kotaTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Kota tempat pengguna membuat dokumen pabean",
+      "message": "Kota tempat pengguna membuat dokumen pabean"
+    },
+    "namaTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Nama pengguna yang membuat dokumen pabean",
+      "message": "Nama pengguna yang membuat dokumen pabean"
+    },
+    "ndpbm": {
+      "type": "number",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - NDPBM",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Ndpbm maksimal 18 digit dengan empat angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 3. NDPBM/Kurs"
+    },
+    "netto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Berat Bersih (Kg)",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai netto/berat bersih maksimal 18 digit dengan empat angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 24. Berat Bersih Total"
+    },
+    "nilaiBarang": {
+      "type": "number",
+      "description": "Nilai barang"
+    },
+    "nilaiIncoterm": {
+      "type": "number",
+      "description": "Nilai Incoterm"
+    },
+    "nilaiMaklon": {
+      "type": "number",
+      "description": "Nilai Maklon",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai Maklon maksimal 18 digit dengan dua angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 10. Nilai Maklon"
+    },
+    "nomorAju": {
+      "type": "string",
+      "description": "nomor pengajuan dokumen pabean 26 digit dengan format 6 digit kode kantor, 3 digit kode dokumen pabean,  H, 2 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen pabean",
+      "pattern": "^[A-Za-z0-9]{26}$",
+      "message": "kodeKantor-kodeDokumenHUrut-tanggalAju-urutDokumenPabean eg: 020400-512H01-20221231-000001"
+    },
+    "seri": {
+      "type": "integer",
+      "description": "seri dokumen pabean",
+      "message": "seri dokumen pabean"
+    },
+    "tanggalBerangkat": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP- Perkiraan Tanggal Tiba dengan format YYYY-MM-DD",
+      "message": "Sesuaikan format tanggal perkiraan tiba: YYYY-MM-DD. DATA PEMASUKAN/PENGELUARAN 30. Perkiraan Tanggal Pemasukan"
+    },
+    "tanggalTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Tanggal penandatanganan dokumen pabean dengan format YYYY-MM-DD",
+      "message": "Sesuaikan format tanggal penandatanganan dokumen: YYYY-MM-DD"
+    },
+    "totalDanaSawit": {
+      "type": "number",
+      "description": "Total dana sawit"
+    },
+    "volume": {
+      "type": "number",
+      "description": "total volume",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Total volume maksimal 18 digit dengan empat angka dibelakang koma. DATA PEMASUKAN/PENGELUARAN 26. Volume"
+    },
+    "biayaTambahan": {
+      "type": "number",
+      "description": "biaya tambahan yang dikenakan",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Biaya tambahan maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "biayaPengurang": {
+      "type": "number",
+      "description": "biaya pengurang yang dikenakan",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Biaya pengurang maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "barang": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "idBarang": {
+            "type": "string",
+            "description": "Identitas barang"
+          },
+          "asuransi": {
+            "type": "number",
+            "description": "nilai asuransi"
+          },
+          "bruto": {
+            "type": "number",
+            "description": "berat kotor/bruto dalam kilogram",
+            "maxlength": 24,
+            "multipleOf": 0.0001,
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 41. Berat Kotor (Kg)"
+          },
+          "cif": {
+            "type": "number",
+            "description": "harga cif",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 42. Nilai Pabean"
+          },
+          "diskon": {
+            "type": "number",
+            "description": "diskon"
+          },
+          "fob": {
+            "type": "number",
+            "description": "free on board"
+          },
+          "freight": {
+            "type": "number",
+            "description": "freight"
+          },
+          "hargaEkspor": {
+            "type": "number",
+            "description": "harga ekspor"
+          },
+          "hargaPatokan": {
+            "type": "number",
+            "description": "Harga patokan"
+          },
+          "hargaPenyerahan": {
+            "type": "number",
+            "description": "Harga penyerahan"
+          },
+          "hargaSatuan": {
+            "type": "number",
+            "description": "harga satuan barang"
+          },
+          "hjeCukai": {
+            "type": "number",
+            "description": "harga jual eceran"
+          },
+          "isiPerKemasan": {
+            "type": "integer",
+            "description": "isi per kemasan"
+          },
+          "jumlahDilekatkan": {
+            "type": "number",
+            "description": "jumlah dilekatkan"
+          },
+          "jumlahKemasan": {
+            "type": "number",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Jumlah Kemasan",
+            "maxlength": 18,
+            "multipleOf": 0.01
+          },
+          "jumlahPitaCukai": {
+            "type": "integer",
+            "description": "jumlah pita cukai"
+          },
+          "jumlahRealisasi": {
+            "type": "number",
+            "description": "jumlah realisasi"
+          },
+          "jumlahSatuan": {
+            "type": "number",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Jumlah Satuan Barang",
+            "maxlength": 18,
+            "multipleOf": 0.0001,
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 41. Jumlah Satuan"
+          },
+          "kapasitasSilinder": {
+            "type": "number",
+            "description": "kapasitas silinder"
+          },
+          "kodeBarang": {
+            "type": "string",
+            "description": "Kode barang"
+          },
+          "kodeDaerahAsal": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Daerah Asal Barang. Lihat Referensi Daerah Asal Barang",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Daerah Asal Barang"
+          },
+          "kodeJenisKemasan": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP- Jenis Kemasan. Lihat Referensi Jenis Kemasan"
+          },
+          "kodeNegaraAsal": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Negara Asal Barang. Lihat Referensi Negara",
+            "pattern": "^[A-Z]{2}$",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Negara Asal Barang"
+          },
+          "kodeSatuanBarang": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Jenis Satuan. Lihat Referensi Satuan Barang",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 41. Jenis Satuan"
+          },
+          "merk": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Merk",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Merek"
+          },
+          "netto": {
+            "type": "number",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Berat Bersih (kg)",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 41. Berat Bersih (Kg)"
+          },
+          "nilaiBarang": {
+            "type": "number",
+            "description": "nilai barang"
+          },
+          "nilaiDanaSawit": {
+            "type": "number",
+            "description": "nilai dana sawit"
+          },
+          "nilaiDevisa": {
+            "type": "number",
+            "description": "nilai devisa"
+          },
+          "nilaiTambah": {
+            "type": "number",
+            "description": "nilai tambah"
+          },
+          "pernyataanLartas": {
+            "type": "string",
+            "description": "pernyataan barang lartas: [Y] Ya atau [T] Tidak",
+            "enum": [
+              "Y",
+              "T"
+            ]
+          },
+          "persentaseImpor": {
+            "type": "number",
+            "description": "persentase impor"
+          },
+          "posTarif": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Pos Tarif HS",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Pos Tarif/HS"
+          },
+          "saldoAkhir": {
+            "type": "number",
+            "description": "saldo akhir"
+          },
+          "saldoAwal": {
+            "type": "number",
+            "description": "saldo awal"
+          },
+          "seriBarang": {
+            "type": "integer",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - No. Seri data barang",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 37. Nomor"
+          },
+          "seriBarangDokAsal": {
+            "type": "number",
+            "description": "seri barang dokumen asal"
+          },
+          "seriIjin": {
+            "type": "number",
+            "description": "Nomor seri ijin"
+          },
+          "spesifikasiLain": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Spesifikasi lain",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Spesifikasi lainnya"
+          },
+          "tahunPembuatan": {
+            "type": "number",
+            "description": "tahun pembuatan"
+          },
+          "tarifCukai": {
+            "type": "number",
+            "description": "tarif cukai"
+          },
+          "tipe": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Tipe",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Tipe"
+          },
+          "ukuran": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Ukuran",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Ukuran"
+          },
+          "uraian": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Uraian barang",
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 38. Uraian Jenis secara lengkap"
+          },
+          "volume": {
+            "type": "number",
+            "description": "volume barang",
+            "maxlength": 18,
+            "multipleOf": 0.0001,
+            "message": "DATA PEMASUKAN/PENGELUARAN - Data Barang - 41. Volume (m3)"
+          },
+          "ndpbm": {
+            "type": "number",
+            "description": "nilai dasar penghitungan bea masuk"
+          },
+          "cifRupiah": {
+            "type": "number",
+            "description": "harga cif rupiah"
+          },
+          "hargaPerolehan": {
+            "type": "number",
+            "description": "harga perolehan"
+          }
+        },
+        "required": [
+          "idBarang",
+          "asuransi",
+          "bruto",
+          "cif",
+          "diskon",
+          "fob",
+          "freight",
+          "hargaEkspor",
+          "hargaPatokan",
+          "hargaPenyerahan",
+          "hargaSatuan",
+          "hjeCukai",
+          "isiPerKemasan",
+          "jumlahDilekatkan",
+          "jumlahKemasan",
+          "jumlahPitaCukai",
+          "jumlahRealisasi",
+          "jumlahSatuan",
+          "kapasitasSilinder",
+          "kodeBarang",
+          "kodeDaerahAsal",
+          "kodeJenisKemasan",
+          "kodeNegaraAsal",
+          "kodeSatuanBarang",
+          "merk",
+          "netto",
+          "nilaiBarang",
+          "nilaiDanaSawit",
+          "nilaiDevisa",
+          "nilaiTambah",
+          "pernyataanLartas",
+          "persentaseImpor",
+          "posTarif",
+          "saldoAkhir",
+          "saldoAwal",
+          "seriBarang",
+          "seriBarangDokAsal",
+          "seriIjin",
+          "spesifikasiLain",
+          "tahunPembuatan",
+          "tarifCukai",
+          "tipe",
+          "ukuran",
+          "uraian",
+          "volume",
+          "ndpbm",
+          "cifRupiah",
+          "hargaPerolehan"
+        ]
+      }
+    },
+    "entitas": {
+      "type": "array",
+      "description": "data entitas dalam pengajuan dokumen pabean",
+      "message": "IDENTITAS PENGIRIM/PENERIMA/PEMBELI/PENJUAL/PPJK",
+      "items": {
+        "type": "object",
+        "properties": {
+          "alamatEntitas": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP"
+          },
+          "kodeEntitas": {
+            "type": "string",
+            "description": "Set kode entitas mengacu pada Referensi Entitas",
+            "const": "6"
+          },
+          "kodeJenisIdentitas": {
+            "type": "string",
+            "description": "Referensi Jenis Identitas: [0] NPWP 12 Digit, [1] NPWP 10 Digit, [2] Paspor, [3] KTP, [4] Lainnya, [5] NPWP 15 Digit",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ]
+          },
+          "kodeNegara": {
+            "type": "string",
+            "description": "Lihat referensi kode negara"
+          },
+          "namaEntitas": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP"
+          },
+          "nomorIdentitas": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP"
+          },
+          "seriEntitas": {
+            "type": "integer",
+            "description": "seri entitas"
+          },
+          "kodeJenisApi": {
+            "type": "string",
+            "description": "Referensi Jenis Api entitas: [01] APIU atau [02] APIP",
+            "enum": [
+              "01",
+              "02"
+            ]
+          },
+          "kodeStatus": {
+            "type": "string",
+            "desription": "Lihat referensi status pengusaha"
+          },
+          "nibEntitas": {
+            "type": "string",
+            "description": "nib entitas"
+          },
+          "nomorIjinEntitas": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP. 3. Ijin Badan Pengusahaan"
+          },
+          "tanggalIjinEntitas": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP. 3. Tanggal Ijin Badan Pengusahaan"
+          }
+        },
+        "required": [
+          "alamatEntitas",
+          "kodeEntitas",
+          "kodeJenisIdentitas",
+          "kodeNegara",
+          "namaEntitas",
+          "nomorIdentitas",
+          "seriEntitas"
+        ]
+      }
+    },
+    "kemasan": {
+      "type": "array",
+      "description": "data kemasan dalam pengajuan dokumen pabean",
+      "items": {
+        "type": "object",
+        "properties": {
+          "jumlahKemasan": {
+            "type": "integer",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Jumlah Kemasan"
+          },
+          "kodeJenisKemasan": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Jenis Kemasan. Lihat Referensi Jenis Kemasan"
+          },
+          "merkKemasan": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Merek Kemasan"
+          },
+          "seriKemasan": {
+            "type": "integer",
+            "description": "seri data kemasan berdasarkan data yang dimasukkan"
+          }
+        },
+        "required": [
+          "jumlahKemasan",
+          "kodeJenisKemasan",
+          "merkKemasan",
+          "seriKemasan"
+        ]
+      }
+    },
+    "kontainer": {
+      "type": "array",
+      "description": "data kontainer dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "kodeTipeKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Tipe Peti Kemas. Referensi Tipe Kontainer: [1] General/Dry Cargo, [2] Tunnel, [3] Open Top Steel, [4] Flat Rack, [5] Reefer/Refregete, [6] Barge Container, [7] Bulk Container, [8] Isotank, [99] Lain-lain ",
+              "enum": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "99"
+              ]
+            },
+            "kodeUkuranKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir PPFTZ-01 KE LDP. Referensi Ukuran Kontainer: [20] 20 feet, [40] 40 feet, [45] 45 feet, [60] 60 feet",
+              "enum": [
+                "20",
+                "40",
+                "45",
+                "60"
+              ],
+              "message": "DATA PEMASUKAN/PENGELUARAN 33. Ukuran Peti Kemas"
+            },
+            "nomorKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir PPFTZ-01 KE LDP",
+              "message": "DATA PEMASUKAN/PENGELUARAN 33. Nomor Peti Kemas"
+            },
+            "statusKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir PPFTZ-01 KE LDP",
+              "message": "DATA PEMASUKAN/PENGELUARAN 33. Status Peti Kemas"
+            },
+            "seriKontainer": {
+              "type": "integer",
+              "description": "seri data kontainer berdasarkan data yang dimasukkan"
+            }
+          },
+          "required": [
+            "kodeTipeKontainer",
+            "kodeUkuranKontainer",
+            "nomorKontainer",
+            "statusKontainer",
+            "seriKontainer"
+          ],
+          "message": {
+            "required": "Wajib mengisi kodeTipeKontainer, kodeUkuranKontainer, nomorKontainer, statusKontainer, dan seriKontainer"
+          }
+        }
+      ]
+    },
+    "dokumen": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "idDokumen": {
+            "type": "string",
+            "description": "ID Dokumen"
+          },
+          "kodeDokumen": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Surat Keputusan/Dokumen Lainnya. Lihat Referensi Dokumen"
+          },
+          "nomorDokumen": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Surat Keputusan/Dokumen Lainnya. Lihat Referensi Dokumen"
+          },
+          "seriDokumen": {
+            "type": "integer",
+            "description": "seri dokumen pelengkap pabean"
+          },
+          "tanggalDokumen": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Tanggal Surat Keputusan/Dokumen Lainnya dengan format YYYY-MM-DD"
+          }
+        },
+        "required": [
+          "idDokumen",
+          "kodeDokumen",
+          "nomorDokumen",
+          "seriDokumen",
+          "tanggalDokumen"
+        ]
+      }
+    },
+    "pengangkut": {
+      "type": "array",
+      "description": "data pengangkut dalam pengajuan dokumen pabean",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kodeBendera": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Bendera. Lihat Referensi Bendera",
+            "message": "DATA PEMASUKAN/PENGELUARAN 13. Bendera"
+          },
+          "namaPengangkut": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - Nama Sarana Pengangkutan",
+            "message": "DATA PEMASUKAN/PENGELUARAN 13. Nama Sarana Pengangkutan"
+          },
+          "nomorPengangkut": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - No. Voy/Flight",
+            "message": "DATA PEMASUKAN/PENGELUARAN 14. No. Voyage/Flight/No. Pol"
+          },
+          "kodeCaraAngkut": {
+            "type": "string",
+            "description": "Sesuai kolom formulir PPFTZ-01 KE LDP - D.9 Cara Pengangkutan. Referensi Cara Angkut: [1] Laut, [2] Kereta Api, [3] Darat, [4] Udara, [5] Pos, [6] Multimoda, [7] Instalasi/Pipa, [8] Perairan, [9] Lainnya",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9"
+            ],
+            "message": "DATA PEMASUKAN/PENGELUARAN 12. Cara Pengangkutan"
+          },
+          "seriPengangkut": {
+            "type": "integer",
+            "description": "seri data pengangkut"
+          }
+        },
+        "required": [
+          "kodeBendera",
+          "namaPengangkut",
+          "nomorPengangkut",
+          "kodeCaraAngkut",
+          "seriPengangkut"
+        ]
+      }
+    },
+    "bankDevisa": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kodeBank": {
+            "type": "string",
+            "description": "Kode Bank"
+          },
+          "namaBank": {
+            "type": "string",
+            "description": "Lihat referensi Nama Bank devisa"
+          },
+          "seriBank": {
+            "type": "number",
+            "description": "seri Bank"
+          }
+        },
+        "required": [
+          "kodeBank",
+          "namaBank",
+          "seriBank"
+        ]
+      }
+    }
+  },
+  "required": [
+    "asuransi",
+    "bruto",
+    "cif",
+    "kodeJenisProsedur",
+    "flagCurah",
+    "fob",
+    "freight",
+    "hargaPenyerahan",
+    "jabatanTtd",
+    "jumlahKontainer",
+    "jumlahTandaPengaman",
+    "kodeAsalBarangFtz",
+    "kodeAsuransi",
+    "kodeCaraBayar",
+    "kodeCaraDagang",
+    "kodeDokumen",
+    "kodeIncoterm",
+    "kodeKantor",
+    "kodeKategoriKeluarFtz",
+    "kodeNegaraTujuan",
+    "kodePelMuat",
+    "kodePelTransit",
+    "kodePelTujuan",
+    "kodeTps",
+    "kodeTujuanPengiriman",
+    "kodeValuta",
+    "kotaTtd",
+    "namaTtd",
+    "ndpbm",
+    "netto",
+    "nilaiBarang",
+    "nilaiIncoterm",
+    "nilaiMaklon",
+    "nomorAju",
+    "seri",
+    "tanggalBerangkat",
+    "tanggalTtd",
+    "volume",
+    "barang",
+    "entitas",
+    "kemasan",
+    "kontainer",
+    "dokumen",
+    "pengangkut"
+  ]
+}

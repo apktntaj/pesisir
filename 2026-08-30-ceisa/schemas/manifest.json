@@ -1,0 +1,121 @@
+[
+  {
+    "kind": "ekspor-bc30",
+    "title": "Kirim Dokumen Ekspor",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ekspor",
+    "capture": "https://web.archive.org/web/20251119064203id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ekspor",
+    "status": "parsed"
+  },
+  {
+    "kind": "impor-bc20",
+    "title": "Kirim Dokumen Impor",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-impor",
+    "capture": "https://web.archive.org/web/20250911175040id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-impor",
+    "status": "parsed"
+  },
+  {
+    "kind": "impor-tidak-berwujud",
+    "title": "Kirim Dokumen Impor Barang Tidak Berwujud*",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-impor/kirim-dokumen-impor-barang-tidak-berwujud",
+    "capture": "https://web.archive.org/web/20250911183701id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-impor/kirim-dokumen-impor-barang-tidak-berwujud",
+    "status": "parsed"
+  },
+  {
+    "kind": "ftz01-1",
+    "title": "Kirim Dokumen FTZ01-1",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-1",
+    "capture": "https://web.archive.org/web/20250911175112id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-1",
+    "status": "parsed"
+  },
+  {
+    "kind": "ftz01-2",
+    "title": "Kirim Dokumen FTZ01-2",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-2",
+    "capture": "https://web.archive.org/web/20251011215752id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-2",
+    "status": "parsed"
+  },
+  {
+    "kind": "ftz01-3",
+    "title": "Kirim Dokumen FTZ01-3",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-3",
+    "capture": "https://web.archive.org/web/20251011232036id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-ftz/kirim-dokumen-ftz01-3",
+    "status": "parsed"
+  },
+  {
+    "kind": "plb-bc16",
+    "title": "Kirim Dokumen PLB BC 1.6",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor",
+    "capture": "https://web.archive.org/web/20251206093436id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor",
+    "status": "parsed"
+  },
+  {
+    "kind": "plb-bc28",
+    "title": "Kirim Dokumen PLB BC 2.8",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-1",
+    "capture": "https://web.archive.org/web/20250812054940id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-1",
+    "status": "parsed"
+  },
+  {
+    "kind": "plb-bc33",
+    "title": "Kirim Dokumen PLB BC 3.3",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-2",
+    "capture": "https://web.archive.org/web/20250911181722id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-2",
+    "status": "parsed"
+  },
+  {
+    "kind": "plb-p3bet",
+    "title": "Kirim Dokumen PLB P3BET",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-3",
+    "capture": "https://web.archive.org/web/20251011230247id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-plb/kirim-dokumen-ekspor-3",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc23",
+    "title": "Kirim Dokumen TPB - BC 2.3",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.3",
+    "capture": "https://web.archive.org/web/20250911182552id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.3",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc25",
+    "title": "Kirim Dokumen TPB - BC 2.5",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.5",
+    "capture": "https://web.archive.org/web/20251206090602id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.5",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc261",
+    "title": "Kirim Dokumen TPB - BC 2.6.1",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.6.1",
+    "capture": "https://web.archive.org/web/20251119063350id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.6.1",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc262",
+    "title": "Kirim Dokumen TPB - BC 2.6.2",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.6.2",
+    "capture": "https://web.archive.org/web/20250911174314id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.6.2",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc27",
+    "title": "Kirim Dokumen TPB - BC 2.7",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.7",
+    "capture": "https://web.archive.org/web/20260124104321id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-2.7",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc40",
+    "title": "Kirim Dokumen TPB - BC 4.0",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-4.0",
+    "capture": "https://web.archive.org/web/20250911184418id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-4.0",
+    "status": "parsed"
+  },
+  {
+    "kind": "tpb-bc41",
+    "title": "Kirim Dokumen TPB - BC 4.1",
+    "original": "https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-4.1",
+    "capture": "https://web.archive.org/web/20250812052014id_/https://ceisa40.gitbook.io/pia-ceisa40/api-services-pabean/kirim-dokumen-tpb/kirim-dokumen-tpb-bc-4.1",
+    "status": "parsed"
+  }
+]

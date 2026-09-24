@@ -1,0 +1,785 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "Schema Kirim Dokumen BC 3.3.1 atau P3BET",
+  "description": "JSON Schema untuk Kirim Dokumen Pabean v.0.2. Terdiri atas data header dan data barang. Data header merupakan data umum dokumen pabean sedangkan data barang merupakan data detil atas barang pada dokumen pabean",
+  "properties": {
+    "asalData": {
+      "type": "string",
+      "description": "set value [S]",
+      "const": "S"
+    },
+    "asuransi": {
+      "type": "number",
+      "description": "Nilai Asuransi",
+      "maxlength": 24,
+      "multipleOf": 0.01,
+      "message": "Nilai asuransi maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "bruto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir P3BET - 28 Berat Kotor",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai bruto maksimal 24 digit dengan empat angka dibelakang koma"
+    },
+    "cif": {
+      "type": "number",
+      "description": "Nilai Barang - CIF",
+      "maxlength": 24,
+      "multipleOf": 0.01,
+      "message": "Nilai cif maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "disclaimer": {
+      "type": "string",
+      "description": "Persetujuan pengguna dalam kirim dokumen pabean: [1] Ya atau [0] Tidak",
+      "enum": [
+        "0",
+        "1"
+      ],
+      "message": "Persetujuan pengguna dalam kirim dokumen pabean: 1 untuk Ya atau 0 untuk Tidak"
+    },
+    "freight": {
+      "type": "number",
+      "description": "Nilai Freight",
+      "maxlength": 24,
+      "multipleOf": 0.01,
+      "message": "Nilai freight maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "jabatanTtd": {
+      "type": "string",
+      "description": "Jabatan pengguna yang mengajukan dokumen P3BET",
+      "message": "Jabatan pengguna yang mengajukan dokumen P3BET"
+    },
+    "jumlahKontainer": {
+      "type": "integer",
+      "description": "Jumlah Kontainer",
+      "message": "Jumlah kontainer atau peti kemas. Jika tidak ada kontainer dapat diisi 0"
+    },
+    "jumlahTandaPengaman": {
+      "type": "integer",
+      "description": "Sesuai kolom formulir P3BET - 23. Jumlah Tanda Pengaman. "
+    },
+    "kodeAsuransi": {
+      "type": "string",
+      "description": "kode asuransi yang dibayar di [LN] luar negeri atau [DN] dalam negeri",
+      "enum": [
+        "LN",
+        "DN"
+      ],
+      "message": "Kode asuransi yang dibayar: LN untuk luar negeri atau DN untuk dalam negeri"
+    },
+    "kodeDokumen": {
+      "type": "string",
+      "description": "set value [331]",
+      "const": "331",
+      "message": "Format kode sesuai Referensi Dokumen PLB BC 3.3.1: P3BET"
+    },
+    "kodeGudangAsal": {
+      "type": "string",
+      "description": "Kode Lokasi Gudang PLB"
+    },
+    "kodeJenisTandaPengaman": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 24 Jenis Tanda Pengaman. [1] Kabel [2] Kunci Logam [3] Kunci Plastik [4] Lainnya",
+      "message": "Jenis tanda pengaman yang digunakan",
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    "kodeKantor": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 9. Kantor Pengawas. Lihat Referensi Kantor",
+      "message": "Format kode sesuai Referensi Kantor"
+    },
+    "kodeKantorMuat": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 10. Kantor Pabean Pemuatan. Lihat Referensi Kantor",
+      "message": "Format kode sesuai Referensi Kantor"
+    },
+    "kodeNegaraTujuan": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 11 Negara Tujuan. Lihat Referensi Negara",
+      "message": "Format kode sesuai Referensi Negara",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "kodePelBongkar": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 20 Pelabuhan Bongkar. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan muat sesuai Referensi Pelabuhan"
+    },
+    "kodePelMuat": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 19 Pelabuhan Muat Asal. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan muat sesuai Referensi Pelabuhan"
+    },
+    "kodePelTujuan": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 21 Pelabuhan Tujuan. Lihat Referensi Pelabuhan",
+      "message": "Format kode pelabuhan tujuan sesuai Referensi Pelabuhan"
+    },
+    "kodeTps": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 18 Nama TPS. Kode Tempat Penimbunan Sementara"
+    },
+    "kotaTtd": {
+      "type": "string",
+      "description": "kota tempat pengguna membuat dokumen P3BET",
+      "message": "Kota tempat pengguna membuat dokumen P3BET"
+    },
+    "namaTtd": {
+      "type": "string",
+      "description": "nama pengguna yang membuat dokumen P3BET",
+      "message": "Nama pengguna yang membuat dokumen P3BET"
+    },
+    "netto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir P3BET - 33 Berat Bersih (kg)",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai netto/berat bersih maksimal 24 digit dengan empat angka dibelakang koma"
+    },
+    "nilaiBarang": {
+      "type": "number",
+      "description": "Nilai Barang",
+      "maxlength": 24,
+      "multipleOf": 0.01,
+      "message": "Nilai barang maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "nomorAju": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 1 Nomor Pengajuan. Nomor pengajuan dokumen pabean 26 digit dengan format 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen pabean",
+      "pattern": "^[A-Za-z0-9]{26}$",
+      "message": "Sesuaikan format nomor pengajuan dokumen ekspor terdiri 26 digit: 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen ekspor"
+    },
+    "seri": {
+      "type": "integer",
+      "description": "seri dokumen P3BET",
+      "message": "seri dokumen P3BET"
+    },
+    "tanggalMuat": {
+      "type": "string",
+      "format": "date",
+      "description": "Sesuai kolom formulir P3BET - 5 Tanggal Perkiraan Pemuatan. Dengan format YYYY-MM-DD"
+    },
+    "tanggalTtd": {
+      "type": "string",
+      "format": "date",
+      "description": "tanggal penandatanganan dokumen pabean dengan format YYYY-MM-DD",
+      "message": "Sesuaikan format tanggal penandatanganan dokumen: YYYY-MM-DD"
+    },
+    "tempatStuffing": {
+      "type": "string",
+      "description": "Sesuai kolom formulir P3BET - 3 Tempat Pelaksanaan Stuffing"
+    },
+    "barang": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "description": "detil data barang dalam satu pengajuan dokumen penggabungan dan pemecahan barang ekspor dan transhipment (P3BET)",
+          "properties": {
+            "cif": {
+              "type": "number",
+              "description": "Sesuai kolom formulir P3BET - 37 Nilai Barang dengan incoterm CIF",
+              "maxlength": 24,
+              "multipleOf": 0.01,
+              "message": "Nilai cif maksimal 24 digit dengan dua angka dibelakang koma"
+            },
+            "jumlahKemasan": {
+              "type": "number",
+              "description": "jumlah kemasan",
+              "maxlength": 24,
+              "multipleOf": 0.01
+            },
+            "jumlahSatuan": {
+              "type": "number",
+              "description": "Sesuai kolom formulir P3BET - 33 Jumlah Barang",
+              "maxlength": 24,
+              "multipleOf": 0.0001
+            },
+            "kodeBarang": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 34 Kode Barang"
+            },
+            "kodeDokumen": {
+              "type": "string",
+              "description": "set value [331]",
+              "const": "331"
+            },
+            "kodeJenisKemasan": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 25 Jenis Kemasan. Lihat Referensi Jenis Kemasan"
+            },
+            "kodeSatuanBarang": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 33 Jenis Satuan Barang. Lihat Referensi Satuan Barang"
+            },
+            "merk": {
+              "type": "string",
+              "description": "Uraian Jenis Barang (merek)"
+            },
+            "ndpbm": {
+              "type": "number",
+              "description": "Nilai Tukar"
+            },
+            "netto": {
+              "type": "number",
+              "description": "Berat Bersih (kg)",
+              "maxlength": 20,
+              "multipleOf": 0.0001
+            },
+            "nilaiBarang": {
+              "type": "number",
+              "description": "Sesuai kolom formulir P3BET - 37 Nilai Barang",
+              "maxlength": 24,
+              "multipleOf": 0.01
+            },
+            "nilaiDevisa": {
+              "type": "number",
+              "description": "Sesuai kolom formulir P3BET - 37 Nilai Devisa"
+            },
+            "posTarif": {
+              "type": "string",
+              "description": "Pos Tarif/HS"
+            },
+            "seriBarang": {
+              "type": "integer",
+              "description": "Sesuai kolom formulir P3BET - 29 Nomor Barang"
+            },
+            "spesifikasiLain": {
+              "type": "string",
+              "description": "Uraian Jenis Barang (Spesifikasi Wajib)"
+            },
+            "tipe": {
+              "type": "string",
+              "description": "Uraian Jenis Barang (Tipe Barang)"
+            },
+            "ukuran": {
+              "type": "string",
+              "description": "Uraian Jenis Barang (Ukuran Barang)"
+            },
+            "uraian": {
+              "type": "string",
+              "decription": " Uraian Barang"
+            },
+            "kodeKantorAsal": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 3.3 - Data Asal Barang. Lihat Referensi Kantor",
+              "message": "Format kode sesuai Referensi Kantor"
+            },
+            "kodeDokAsal": {
+              "type": "string",
+              "description": "Kode dokumen asal",
+              "maxlength": 2
+            },
+            "nomorDaftarDokAsal": {
+              "type": "string",
+              "description": "Nomor daftar dokumen asal"
+            },
+            "seriBarangDokAsal": {
+              "type": "string",
+              "description": "Seri barang dokumen asal"
+            },
+            "tanggalDaftarDokAsal": {
+              "type": "string",
+              "format": "date",
+              "description": "tanggal daftar dokumen asal dengan format YYYY-MM-DD"
+            },
+            "nomorAjuDokAsal": {
+              "type": "string",
+              "description": "Nomor aju dokumen asal",
+              "pattern": "^[A-Za-z0-9]{26}$"
+            },
+            "barangTarif": {
+              "type": "array",
+              "description": "data barang tarif per barang",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kodeJenisTarif": {
+                      "type": "string",
+                      "description": "Lihat Referensi Jenis Tarif"
+                    },
+                    "jumlahSatuan": {
+                      "type": "number",
+                      "description": "jumlah satuan barang tarif",
+                      "maxlength": 20,
+                      "multipleOf": 0.0001
+                    },
+                    "kodeFasilitasTarif": {
+                      "type": "string",
+                      "description": "Lihat Referensi Fasilitas Tarif"
+                    },
+                    "kodeSatuanBarang": {
+                      "type": "string",
+                      "description": "Lihat Referensi Satuan Barang"
+                    },
+                    "kodeJenisPungutan": {
+                      "type": "string",
+                      "description": "Lihat Referensi Jenis Pungutan"
+                    },
+                    "nilaiBayar": {
+                      "type": "number",
+                      "description": "nilai bayar barang tarif",
+                      "maxlength": 24,
+                      "multipleOf": 0.01
+                    },
+                    "seriBarang": {
+                      "type": "integer",
+                      "description": "seri barang"
+                    },
+                    "tarif": {
+                      "type": "number",
+                      "description": "tarif",
+                      "maxlength": 24,
+                      "multipleOf": 0.01
+                    },
+                    "tarifFasilitas": {
+                      "type": "number",
+                      "description": "tarif fasilitas",
+                      "maxlength": 5,
+                      "multipleOf": 0.01
+                    }
+                  },
+                  "required": [
+                    "jumlahSatuan"
+                  ]
+                }
+              ]
+            },
+            "barangDokumen": {
+              "type": "array",
+              "items": {
+                "seriDokumen": {
+                  "type": "integer",
+                  "description": "seri dokumen"
+                },
+                "seriIjin": {
+                  "type": "integer",
+                  "description": "seri ijin"
+                }
+              }
+            },
+            "barangPemilik": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "seriEntitas": {
+                      "type": "integer",
+                      "description": "seri entitas"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "fob",
+            "jumlahKemasan",
+            "kodeJenisKemasan",
+            "merk",
+            "posTarif",
+            "spesifikasiLain",
+            "tipe",
+            "uraian",
+            "kodeKantorAsal",
+            "kodeDokAsal",
+            "nomorDaftarDokAsal",
+            "seriBarangDokAsal",
+            "tanggalDaftarDokAsal",
+            "nomorAjuDokAsal"
+          ]
+        }
+      ]
+    },
+    "entitas": {
+      "type": "array",
+      "description": "Data entitas Pengusaha, Pemilik, Penerima dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "description": "Sesuai kolom formulir P3BET - Data Pengusaha PLB/PDPLB dalam pengajuan dokumen pabean",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 8 Alamat Pengusaha"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas pengusaha (3). Mengacu pada Referensi Entitas",
+              "const": "3"
+            },
+            "kodeJenisIdentitas": {
+              "type": "string",
+              "description": "Lihat Referensi Jenis Identitas"
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 7 Nama PLB/PDPLB"
+            },
+            "nibEntitas": {
+              "type": "string",
+              "description": "Nomor Induk Berusaha"
+            },
+            "nomorIdentitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 6 Nomor Identitas Pengusaha"
+            },
+            "nomorIjinEntitas": {
+              "type": "string",
+              "description": "Nomor Ijin Pengusaha"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "seri entitas"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeJenisIdentitas",
+            "namaEntitas",
+            "nomorIdentitas",
+            "seriEntitas"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Sesuai kolom formulir P3BET - Penerima. Data penerima barang dalam pengajuan dokumen pabean",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 17 Alamat Penerima"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas Penerima (8). Mengacu pada Referensi Entitas",
+              "const": "8"
+            },
+            "kodeNegara": {
+              "type": "string",
+              "description": "Lihat Referensi Negara",
+              "pattern": "(^[A-Z]{2}$)|(^$)"
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 16 Nama Penerima"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "seri entitas"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeNegara",
+            "namaEntitas",
+            "seriEntitas"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Sesuai kolom formulir P3BET Pemilik Barang. Data pemilik barang dalam pengajuan dokumen pabean",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 35 Alamat Pemilik"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas pemilik (7). Mengacu pada Referensi Entitas",
+              "const": "7"
+            },
+            "kodeJenisIdentitas": {
+              "type": "string",
+              "description": "Lihat Referensi Jenis Identitas"
+            },
+            "kodeStatus": {
+              "type": "string",
+              "description": "Lihat Referensi Status Perusahaan"
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 35 Nama Pemilik"
+            },
+            "nibEntitas": {
+              "type": "string",
+              "description": "Nomor Induk Berusaha"
+            },
+            "nomorIdentitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 35 Nomor Identitas Pemilik"
+            },
+            "nomorIjinEntitas": {
+              "type": "string",
+              "description": "Nomor Ijin Pemilik"
+            },
+            "tanggalIjinEntitas": {
+              "type": "string",
+              "format": "date",
+              "description": "Tanggal Ijin Pemilik"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "seri entitas"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeJenisIdentitas",
+            "namaEntitas",
+            "nomorIdentitas",
+            "seriEntitas"
+          ]
+        }
+      ]
+    },
+    "kemasan": {
+      "type": "array",
+      "description": "data kemasan dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "description": "data kemasan yang digunakan untuk mengemas barang ekspor",
+          "properties": {
+            "jumlahKemasan": {
+              "type": "integer",
+              "description": "Jumlah Kemasan"
+            },
+            "kodeJenisKemasan": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 25 Jenis Kemasan. Lihat Referensi Jenis Kemasan"
+            },
+            "merkKemasan": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 26 Merek Kemasan"
+            },
+            "seriKemasan": {
+              "type": "integer",
+              "description": "seri data kemasan berdasarkan data yang dimasukkan"
+            }
+          },
+          "required": [
+            "jumlahKemasan",
+            "kodeJenisKemasan",
+            "merkKemasan",
+            "seriKemasan"
+          ],
+          "message": {
+            "required": "Wajib mengisi jumlahKemasan, kodeJenisKemasan, merkKemasan, dan seriKemasan"
+          }
+        }
+      ]
+    },
+    "kontainer": {
+      "type": "array",
+      "description": "data kontainer dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "description": "data peti kemas/kontainer yang digunakan untuk mengangkut barang ekspor, apabila pengangkutan menggunakan peti kemas/kontainer",
+          "properties": {
+            "kodeJenisKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 25 Jenis Kemasan. Lihat Referensi Jenis Kontainer"
+            },
+            "kodeTipeKontainer": {
+              "type": "string",
+              "description": "Lihat Referensi Tipe Kontainer"
+            },
+            "kodeUkuranKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 27 Ukuran Kemasan. Kode ukuran kontainer: [20], [40], [45] atau [60]",
+              "enum": [
+                "20",
+                "40",
+                "45",
+                "60"
+              ]
+            },
+            "nomorKontainer": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 26 Nomor Kemasan"
+            },
+            "seriKontainer": {
+              "type": "integer",
+              "description": "seri data kontainer berdasarkan data yang dimasukkan"
+            }
+          },
+          "dependencies": {
+            "seriKontainer": [
+              "kodeTipeKontainer",
+              "kodeUkuranKontainer",
+              "nomorKontainer"
+            ]
+          },
+          "message": {
+            "dependencies": "Wajib mengisi kodeTipeKontainer, kodeUkuranKontainer, nomorKontainer, dan seriKontainer"
+          }
+        }
+      ]
+    },
+    "dokumen": {
+      "type": "array",
+      "description": "data dokumen pelengkap dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "description": "data BC 3.3 sebagai dokumen pelengkap",
+          "properties": {
+            "idDokumen": {
+              "type": "string",
+              "description": "ID Dokumen"
+            },
+            "kodeDokumen": {
+              "type": "string",
+              "description": "Set kode dokumen BC 3.3 (33)",
+              "const": "33"
+            },
+            "nomorDokumen": {
+              "type": "string",
+              "description": "Nomor Dokumen BC 3.3"
+            },
+            "seriDokumen": {
+              "type": "integer",
+              "description": "seri dokumen pelengkap pabean"
+            },
+            "tanggalDokumen": {
+              "type": "string",
+              "format": "date",
+              "description": "Tanggal Dokumen BC 3.3 dengan format YYYY-MM-DD"
+            },
+            "urlDokumen": {
+              "type": "string",
+              "description": "url dokumen"
+            }
+          },
+          "required": [
+            "kodeDokumen",
+            "nomorDokumen",
+            "seriDokumen",
+            "tanggalDokumen"
+          ],
+          "message": {
+            "required": "Wajib mengisi kodeDokumen, nomorDokumen, seriDokumen, dan tanggalDokumen Invoice"
+          }
+        },
+        {
+          "type": "object",
+          "description": "data BC 1.6 sebagai dokumen pelengkap",
+          "properties": {
+            "idDokumen": {
+              "type": "string",
+              "description": "ID Dokumen"
+            },
+            "kodeDokumen": {
+              "type": "string",
+              "description": "Set kode dokumen BC 1.6 (16)",
+              "const": "16"
+            },
+            "nomorDokumen": {
+              "type": "string",
+              "description": "Nomor dokumen BC 1.6"
+            },
+            "seriDokumen": {
+              "type": "integer",
+              "description": "seri dokumen pelengkap pabean"
+            },
+            "tanggalDokumen": {
+              "type": "string",
+              "format": "date",
+              "description": "Tanggal dokumen BC 1.6 dengan format YYYY-MM-DD"
+            },
+            "urlDokumen": {
+              "type": "string",
+              "description": "url dokumen"
+            }
+          },
+          "dependencies": {
+            "kodeDokumen": [
+              "seriDokumen",
+              "nomorDokumen",
+              "tanggalDokumen"
+            ]
+          },
+          "message": {
+            "dependencies": "Wajib mengisi kodeDokumen, nomorDokumen, seriDokumen, dan tanggalDokumen Packing List"
+          }
+        }
+      ]
+    },
+    "pengangkut": {
+      "type": "array",
+      "description": "data pengangkutan dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "namaPengangkut": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 12 Nama Sarana Pengangkut"
+            },
+            "nomorPengangkut": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 13 Nomor Pengangkut"
+            },
+            "kodeCaraAngkut": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 15 Moda Transportasi. Lihat Referensi Cara Angkut"
+            },
+            "seriPengangkut": {
+              "type": "integer",
+              "description": "seri data pengangkut"
+            },
+            "callSign": {
+              "type": "string",
+              "description": "Sesuai kolom formulir P3BET - 14 Call Sign"
+            }
+          },
+          "required": [
+            "namaPengangkut",
+            "nomorPengangkut",
+            "kodeCaraAngkut",
+            "seriPengangkut"
+          ],
+          "message": {
+            "required": "Wajib mengisi namaPengangkut, nomorPengangkut, kodeCaraAngkut, dan seriPengangkut"
+          }
+        }
+      ]
+    }
+  },
+  "required": [
+    "asuransi",
+    "barang",
+    "bruto",
+    "cif",
+    "dokumen",
+    "entitas",
+    "freight",
+    "jabatanTtd",
+    "jumlahKontainer",
+    "kemasan",
+    "kodeKantor",
+    "kodePelBongkar",
+    "kodePelMuat",
+    "kodePelTujuan",
+    "kodeValuta",
+    "kotaTtd",
+    "namaTtd",
+    "ndpbm",
+    "netto",
+    "nomorAju",
+    "pengangkut",
+    "tanggalTtd"
+  ]
+}

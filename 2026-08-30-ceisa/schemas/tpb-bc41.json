@@ -1,0 +1,995 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Schema Kirim Dokume BC 41",
+  "description": "JSON Schema untuk Kirim Dokumen Pabean v.0.8. Terdiri atas data header dan data barang. Data header merupakan data umum dokumen pabean sedangkan data barang merupakan data detil atas barang pada dokumen pabean",
+  "properties": {
+    "asalData": {
+      "type": "string",
+      "description": "set value [S]",
+      "message": "Asal pengiriman data secara Host to Host: S"
+    },
+    "asuransi": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - Asuransi LN/DN",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai asuransi maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "bruto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - D.21 Berat Kotor (kg)",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Nilai bruto maksimal 18 digit dengan empat angka dibelakang koma"
+    },
+    "cif": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - Nilai Pabean",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai cif maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "dasarPengenaanPajak": {
+      "type": "number",
+      "description": "Nilai dasar pengenaan pajak",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai dasar pengenaan pajak maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "kodeJenisTpb": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - B. Jenis TPB. Lihat Referensi Jenis TPB",
+      "message": "Format kode sesuai Referensi Jenis TPB"
+    },
+    "kodeJenisImpor": {
+      "type": "string",
+      "description": "Lihat Referensi Jenis Impor",
+      "message": "Format kode sesuai Referensi Jenis Impor"
+    },
+    "kodeJenisEkspor": {
+      "type": "string",
+      "description": "Lihat Referensi Jenis Ekspor",
+      "message": "Format kode sesuai Referensi Jenis Ekspor"
+    },
+    "freight": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - freight",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai freight maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "hargaPenyerahan": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - d.16 Harga Penyerahan",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Nilai harga penyerahan maksimal 18 digit dengan empat angka dibelakang koma"
+    },
+    "jabatanTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - Jabatan Pengusaha TPB",
+      "message": "Jabatan pengusaha TPB"
+    },
+    "jumlahKontainer": {
+      "type": "integer",
+      "description": "jumlah peti kemas yang digunakan untuk mengangkut barang",
+      "message": "Jumlah kontainer atau peti kemas"
+    },
+    "kodeDokumen": {
+      "type": "string",
+      "description": "set value [41]",
+      "const": "41",
+      "message": "Format kode sesuai Referensi Dokumen TPB BC 4.1: 41"
+    },
+    "kodeKantor": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - A. Kantor Pabean. Lihat Referensi Kantor",
+      "message": "Format kode sesuai Referensi Kantor"
+    },
+    "kodeLokasiBayar": {
+      "type": "string",
+      "description": "Kode Lokasi Bayar. Lihat Referensi Lokasi",
+      "message": "Format kode sesuai Referensi Lokasi"
+    },
+    "kodePembayar": {
+      "type": "string",
+      "description": "Kode Pembayar sesuai Kode Entitas dalam dokumen ini",
+      "message": "Format kode sesuai Kode Entitas dalam dokumen ini"
+    },
+    "kodeTujuanPengiriman": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - C. Tujuan Pengiriman. Lihat Referensi Tujuan Pengiriman",
+      "message": "Format kode sesuai Referensi Tujuan Pengiriman"
+    },
+    "kotaTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - E. Kota tempat pengguna membuat dokumen pabean",
+      "message": "Kota tempat pengguna membuat dokumen pabean"
+    },
+    "namaTtd": {
+      "type": "string",
+      "description": "Sesuai kolom formulir BC 4.1 - E. Nama pengguna yang membuat dokumen pabean",
+      "message": "Nama pengguna yang membuat dokumen pabean"
+    },
+    "ndpbm": {
+      "type": "number",
+      "description": "NDPBM",
+      "maxlength": 10,
+      "multipleOf": 0.0001,
+      "message": "Ndpbm maksimal 18 digit dengan empat angka dibelakang koma"
+    },
+    "netto": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - D.22 Berat Bersih (Kg)",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Nilai netto/berat bersih maksimal 18 digit dengan empat angka dibelakang koma"
+    },
+    "nik": {
+      "type": "string",
+      "description": "nomor nik"
+    },
+    "nilaiBarang": {
+      "type": "number",
+      "description": "Nilai barang",
+      "maxlength": 38,
+      "multipleOf": 0.01,
+      "message": "Nilai barang maksimal 38 digit dengan dua angka dibelakang koma"
+    },
+    "nomorAju": {
+      "type": "string",
+      "description": "nomor pengajuan dokumen pabean 26 digit dengan format 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen pabean",
+      "pattern": "^[A-Za-z0-9]{26}$",
+      "message": "Sesuaikan format nomor pengajuan dokumen tpb terdiri 26 digit: 4 digit kode kantor, 2 digit kode dokumen pabean, 6 digit unik perusahaan, 8 digit tanggal pengajuan dengan format YYYYMMDD, 6 digit sequence/nomor urut pengajuan dokumen TPB"
+    },
+    "seri": {
+      "type": "integer",
+      "description": "seri dokumen tpb",
+      "message": "seri dokumen tpb"
+    },
+    "tanggalAju": {
+      "type": "string",
+      "format": "date",
+      "description": "Tanggal pengajuan dokumen TPB dengan format YYYY-MM-DD",
+      "message": "Sesuaikan format tanggal pengajuan dokumen: YYYY-MM-DD"
+    },
+    "tanggalTtd": {
+      "type": "string",
+      "format": "date",
+      "description": "Sesuai kolom formulir BC 4.1 - Tanggal penandatanganan dokumen pabean dengan format YYYY-MM-DD",
+      "message": "Sesuaikan format tanggal penandatanganan dokumen: YYYY-MM-DD"
+    },
+    "volume": {
+      "type": "number",
+      "description": "Sesuai kolom formulir BC 4.1 - D.20 Total volume",
+      "maxlength": 18,
+      "multipleOf": 0.0001,
+      "message": "Total volume maksimal 18 digit dengan empat angka dibelakang koma"
+    },
+    "biayaTambahan": {
+      "type": "number",
+      "description": "biaya tambahan yang dikenakan",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Biaya tambahan maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "biayaPengurang": {
+      "type": "number",
+      "description": "biaya pengurang yang dikenakan",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Biaya pengurang maksimal 24 digit dengan dua angka dibelakang koma"
+    },
+    "vd": {
+      "type": "number",
+      "description": "Nilai Voluntary Declaration",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai VD maksimal 24 digit dengan empat angka dibelakang koma"
+    },
+    "uangMuka": {
+      "type": "number",
+      "description": "Nilai Uang Muka",
+      "maxlength": 24,
+      "multipleOf": 0.0001,
+      "message": "Nilai uang muka maksimal 24 digit dengan empat angka dibelakang koma"
+    },
+    "ppnPajak": {
+      "type": "number",
+      "description": "Nilai ppn pajak",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai ppn pajak maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "ppnbmPajak": {
+      "type": "number",
+      "description": "Nilai ppnbm pajak",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Nilai ppnbm pajak maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "tarifPpnPajak": {
+      "type": "number",
+      "description": "Tarif ppn pajak",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Tarif ppn pajak maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "tarifPpnbmPajak": {
+      "type": "number",
+      "description": "Tarif ppnbm pajak",
+      "maxlength": 18,
+      "multipleOf": 0.01,
+      "message": "Tarif ppnbm pajak maksimal 18 digit dengan dua angka dibelakang koma"
+    },
+    "entitas": {
+      "type": "array",
+      "description": "data entitas dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - E.1.3 Alamat Penyelenggara/Pengusaha TPB"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas Pengusaha (3). Mengacu pada Referensi Entitas",
+              "const": "3"
+            },
+            "kodeJenisIdentitas": {
+              "type": "string",
+              "description": "Referensi Jenis Identitas: [2] Paspor, [3] KTP, [4] Lainnya, [5] NPWP 15 Digit, [6] NPWP 16 Digit",
+              "enum": [
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+              ]
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - E.1.2 Nama Pengusaha"
+            },
+            "nibEntitas": {
+              "type": "string",
+              "description": "Nomor Induk Berusaha Penyelenggara/Pengusaha TPB"
+            },
+            "nomorIdentitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - E.1.1 NPWP"
+            },
+            "nomorIjinEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - E.1.4 No Izin TPB"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "Seri entitas"
+            },
+            "tanggalIjinEntitas": {
+              "type": "string",
+              "format": "date",
+              "description": "Tanggal izin Penyelenggara/Pengusaha TPB dengan format YYYY-MM-DD"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeJenisIdentitas",
+            "namaEntitas",
+            "nibEntitas",
+            "nomorIdentitas",
+            "nomorIjinEntitas",
+            "seriEntitas",
+            "tanggalIjinEntitas"
+          ],
+          "message": {
+            "required": "Wajib mengisi alamatEntitas, kodeEntitas, kodeJenisIdentitas, namaEntitas, nibEntitas, nomorIdentitas, nomorIjinEntitas, seriEntitas, tanggalIjinEntitas"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - Alamat Pemilik"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas Pemilik (7). Mengacu pada Referensi Entitas",
+              "const": "7"
+            },
+            "kodeJenisApi": {
+              "type": "string",
+              "description": "Referensi Jenis Api entitas: [01] APIU atau [02] APIP",
+              "enum": [
+                "01",
+                "02"
+              ]
+            },
+            "kodeJenisIdentitas": {
+              "type": "string",
+              "description": "Referensi Jenis Identitas: [2] Paspor, [3] KTP, [4] Lainnya, [5] NPWP 15 Digit, [6] NPWP 16 Digit",
+              "enum": [
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+              ]
+            },
+            "kodeStatus": {
+              "type": "string",
+              "description": "Referensi Kode Status Pengusaha: [1] KOPERASI, [2] PMDN (MIGAS), [3] PMDN (NON MIGAS), [4] PMA (MIGAS), [5] PMA (NON MIGAS), [6] BUMN, [7] BUMD, [8] PERORANGAN, [9] USAHA KECIL, MIKRO DAN MENENGAH, [10] LAINNYA",
+              "enum": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ]
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - Nama Pemilik"
+            },
+            "nomorIdentitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - NPWP"
+            },
+            "nomorIjinEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - No Izin TPB"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "Seri entitas"
+            },
+            "tanggalIjinEntitas": {
+              "type": "string",
+              "format": "date",
+              "description": "Tanggal izin TPB dengan format YYYY-MM-DD"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeJenisApi",
+            "kodeJenisIdentitas",
+            "kodeStatus",
+            "namaEntitas",
+            "nomorIdentitas",
+            "nomorIjinEntitas",
+            "seriEntitas",
+            "tanggalIjinEntitas"
+          ],
+          "message": {
+            "required": "Wajib mengisi alamatEntitas, kodeEntitas, kodeJenisApi, kodeJenisIdentitas, kodeStatus, namaEntitas, nomorIdentitas, nomorIjinEntitas, seriEntitas, tanggalIjinEntitas"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "alamatEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - Alamat Pemilik Barang"
+            },
+            "kodeEntitas": {
+              "type": "string",
+              "description": "Set kode entitas Penerima (8). Mengacu pada Referensi Entitas",
+              "const": "8"
+            },
+            "kodeJenisApi": {
+              "type": "string",
+              "description": "Referensi Jenis Api entitas: [01] APIU atau [02] APIP",
+              "enum": [
+                "01",
+                "02"
+              ]
+            },
+            "kodeJenisIdentitas": {
+              "type": "string",
+              "description": "Referensi Jenis Identitas: [2] Paspor, [3] KTP, [4] Lainnya, [5] NPWP 15 Digit, [6] NPWP 16 Digit",
+              "enum": [
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+              ]
+            },
+            "kodeStatus": {
+              "type": "string",
+              "description": "Referensi Kode Status Pengusaha: [1] KOPERASI, [2] PMDN (MIGAS), [3] PMDN (NON MIGAS), [4] PMA (MIGAS), [5] PMA (NON MIGAS), [6] BUMN, [7] BUMD, [8] PERORANGAN, [9] USAHA KECIL, MIKRO DAN MENENGAH, [10] LAINNYA",
+              "enum": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ]
+            },
+            "namaEntitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - E.1.2 Nama Pengusaha Pemilik Barang"
+            },
+            "nomorIdentitas": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.1 NPWP"
+            },
+            "seriEntitas": {
+              "type": "integer",
+              "description": "Seri entitas"
+            }
+          },
+          "required": [
+            "alamatEntitas",
+            "kodeEntitas",
+            "kodeJenisApi",
+            "kodeJenisIdentitas",
+            "kodeStatus",
+            "namaEntitas",
+            "nomorIdentitas",
+            "seriEntitas"
+          ],
+          "message": {
+            "required": "Wajib mengisi alamatEntitas, kodeEntitas, kodeJenisApi, kodeJenisIdentitas, kodeStatus, namaEntitas, nomorIdentitas, seriEntitas"
+          }
+        }
+      ]
+    },
+    "dokumen": {
+      "type": "array",
+      "description": "data dokumen pelengkap dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "idDokumen": {
+              "type": "string",
+              "description": "ID Dokumen"
+            },
+            "kodeDokumen": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.18 Surat Keputusan/Dokumen Lainnya. Lihat Referensi Dokumen"
+            },
+            "nomorDokumen": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.18 Surat Keputusan/Dokumen Lainnya. Lihat Referensi Dokumen"
+            },
+            "seriDokumen": {
+              "type": "integer",
+              "description": "Seri dokumen pelengkap pabean"
+            },
+            "tanggalDokumen": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.18 Tanggal Surat Keputusan/Dokumen Lainnya dengan format YYYY-MM-DD"
+            }
+          },
+          "dependencies": {
+            "seriDokumen": [
+              "kodeDokumen",
+              "nomorDokumen",
+              "tanggalDokumen"
+            ]
+          },
+          "message": {
+            "dependencies": "Jika terdapat seriDokumen Dokumen Pelengkap lainnya, maka wajib mengisi kodeDokumen, nomorDokumen, dan tanggalDokumen Dokumen Pelengkap Lainnya "
+          }
+        }
+      ]
+    },
+    "pengangkut": {
+      "type": "array",
+      "description": "data pengangkut dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "idPengangkut": {
+              "type": "number",
+              "description": "ID Pengangkut"
+            },
+            "namaPengangkut": {
+              "type": "string",
+              "description": "Nama sarana pengangkutan"
+            },
+            "nomorPengangkut": {
+              "type": "string",
+              "description": "Nomor Pengangkut"
+            },
+            "seriPengangkut": {
+              "type": "string",
+              "description": "seri data pengangkut"
+            }
+          },
+          "required": [
+            "namaPengangkut",
+            "nomorPengangkut",
+            "seriPengangkut"
+          ],
+          "message": {
+            "required": "Wajib mengisi idPengangkut, namaPengangkut, nomorPengangkut, seriPengangkut"
+          }
+        }
+      ]
+    },
+    "kontainer": {
+      "type": "array",
+      "description": "data kontainer dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "description": "data peti kemas/kontainer yang digunakan untuk mengangkut barang, apabila pengangkutan menggunakan peti kemas/kontainer",
+          "properties": {
+            "kodeJenisKontainer": {
+              "type": "string",
+              "description": "Referensi Jenis Kontainer: [4] Empty, [7] LCL, [8] FCL",
+              "enum": [
+                "4",
+                "7",
+                "8"
+              ]
+            },
+            "kodeTipeKontainer": {
+              "type": "string",
+              "description": "Referensi Tipe Kontainer: [1] General/Dry Cargo, [2] Tunne Type, [3] Open Top Steel, [4] Flat Rack, [5] Reefer/Refregete, [6] Barge Container, [7] Bulk Container, [8] Isotank, [99] Lain-lain ",
+              "enum": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "99"
+              ]
+            },
+            "kodeUkuranKontainer": {
+              "type": "string",
+              "description": "Referensi Ukuran Kontainer: [20] 20 feet, [40] 40 feet, [45] 45 feet, [60] 60 feet",
+              "enum": [
+                "20",
+                "40",
+                "45",
+                "60"
+              ]
+            },
+            "nomorKontainer": {
+              "type": "string",
+              "description": "Nomor Peti Kemas",
+              "message": "Nomor Peti Kemas"
+            },
+            "seriKontainer": {
+              "type": "integer",
+              "description": "seri data kontainer berdasarkan data yang dimasukkan",
+              "message": "Seri Peti Kemas"
+            }
+          },
+          "dependencies": {
+            "seriKontainer": [
+              "kodeTipeKontainer",
+              "kodeUkuranKontainer",
+              "nomorKontainer"
+            ]
+          },
+          "message": {
+            "dependencies": "Jika terdapat seriKontainer, wajib mengisi kodeTipeKontainer, kodeUkuranKontainer, dan nomorKontainer"
+          }
+        }
+      ]
+    },
+    "kemasan": {
+      "type": "array",
+      "description": "data kemasan dalam pengajuan dokumen pabean",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "jumlahKemasan": {
+              "type": "number",
+              "description": "Sesuai kolom formulir BC 4.1 - D.19 Jumlah Kemasan"
+            },
+            "kodeJenisKemasan": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.17 Jenis Kemasan. Lihat Referensi Jenis Kemasan"
+            },
+            "merkKemasan": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.18 Merek Kemasan"
+            },
+            "seriKemasan": {
+              "type": "integer",
+              "description": "seri data kemasan berdasarkan data yang dimasukkan"
+            }
+          },
+          "required": [
+            "jumlahKemasan",
+            "kodeJenisKemasan",
+            "seriKemasan"
+          ]
+        }
+      ]
+    },
+    "barang": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "description": "detil data barang dalam satu pengajuan dokumen pabean",
+          "properties": {
+            "cif": {
+              "type": "number",
+              "description": "Harga cif"
+            },
+            "hargaEkspor": {
+              "type": "number",
+              "description": "harga ekspor"
+            },
+            "hargaPenyerahan": {
+              "type": "number",
+              "description": "harga penyerahan barang"
+            },
+            "isiPerKemasan": {
+              "type": "number",
+              "description": "Isi per kemasan",
+              "multipleOf": 0.01
+            },
+            "jumlahKemasan": {
+              "type": "number",
+              "description": "sesuai kolom formulir BC 4.1 - D.25 Jumlah Kemasan",
+              "maxlength": 18,
+              "multipleOf": 0.01
+            },
+            "jumlahSatuan": {
+              "type": "number",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Jumlah barang",
+              "maxlength": 24,
+              "multipleOf": 0.0001
+            },
+            "kodeBarang": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Kode barang"
+            },
+            "kodeDokumen": {
+              "type": "string",
+              "description": "Kode dokumen"
+            },
+            "kodeJenisKemasan": {
+              "type": "string",
+              "description": "Lihat Referensi Jenis Kemasan"
+            },
+            "kodeKategoriBarang": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 2.5- D.33 Kategori Barang. Lihat Referensi Kategori Barang"
+            },
+            "kodeSatuanBarang": {
+              "type": "string",
+              "description": "Lihat Referensi Satuan Barang"
+            },
+            "merk": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 merk"
+            },
+            "netto": {
+              "type": "number",
+              "description": "Sesuai kolom formulir BC 4.1 - D.25 Berat Bersih (kg)",
+              "maxlength": 20,
+              "multipleOf": 0.0001
+            },
+            "nilaiBarang": {
+              "type": "number",
+              "description": "Nilai barang",
+              "maxlength": 18,
+              "multipleOf": 0.01
+            },
+            "posTarif": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - Pos Tarif/HS"
+            },
+            "seriBarang": {
+              "type": "integer",
+              "description": "Sesuai kolom formulir BC 4.1 - D.23 No. Seri barang"
+            },
+            "spesifikasiLain": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Spesifikasi lain"
+            },
+            "tipe": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Tipe"
+            },
+            "ukuran": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Ukuran"
+            },
+            "uraian": {
+              "type": "string",
+              "description": "Sesuai kolom formulir BC 4.1 - D.24 Uraian barang"
+            },
+            "volume": {
+              "type": "number",
+              "description": "Sesuai kolom formulir BC 4.1 - D.25 Total volume",
+              "maxlength": 24,
+              "multipleOf": 0.0001,
+              "message": "Total volume maksimal 24 digit dengan empat angka dibelakang koma"
+            },
+            "cifRupiah": {
+              "type": "number",
+              "description": "Harga cif rupiah"
+            },
+            "hargaPerolehan": {
+              "type": "number",
+              "description": "Harga perolehan"
+            },
+            "kodeAsalBahanBaku": {
+              "type": "string",
+              "description": "Kode Asal Bahan Baku. Referensi kode asal bahan baku: [0] Impor, [1] Lokal",
+              "enum": [
+                "0",
+                "1"
+              ]
+            },
+            "ndpbm": {
+              "type": "number",
+              "description": "Nilai dasar penghitungan bea masuk"
+            },
+            "uangMuka": {
+              "type": "number",
+              "description": "Harga uang muka"
+            },
+            "nilaiJasa": {
+              "type": "number",
+              "description": "Harga nilai jasa"
+            },
+            "bahanBaku": {
+              "type": "array",
+              "description": "data barang bahan baku",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "cif": {
+                      "type": "number",
+                      "description": "Harga cif",
+                      "maxlength": 18,
+                      "multipleOf": 0.01
+                    },
+                    "cifRupiah": {
+                      "type": "number",
+                      "description": "Harga cif rupiah",
+                      "maxlength": 18,
+                      "multipleOf": 0.01
+                    },
+                    "hargaPenyerahan": {
+                      "type": "number",
+                      "description": "Harga penyerahan",
+                      "maxlength": 18,
+                      "multipleOf": 0.01
+                    },
+                    "hargaPerolehan": {
+                      "type": "number",
+                      "description": "Harga perolehan",
+                      "maxlength": 18,
+                      "multipleOf": 0.01
+                    },
+                    "jumlahSatuan": {
+                      "type": "number",
+                      "description": "Jumlah satuan",
+                      "maxlength": 24,
+                      "multipleOf": 0.0001
+                    },
+                    "kodeSatuanBarang": {
+                      "type": "string",
+                      "description": "Kode Satuan Barang. Lihat Referensi Satuan Barang"
+                    },
+                    "kodeAsalBahanBaku": {
+                      "type": "string",
+                      "description": "Kode Asal Bahan Baku. Referensi kode asal bahan baku: [0] Impor, [1] Lokal",
+                      "enum": [
+                        "0",
+                        "1"
+                      ]
+                    },
+                    "kodeBarang": {
+                      "type": "string",
+                      "description": "Kode barang"
+                    },
+                    "kodeDokAsal": {
+                      "type": "string",
+                      "description": "Kode Dokumen Asal. Lihat referensi Dokumen"
+                    },
+                    "kodeDokumen": {
+                      "type": "string",
+                      "description": "Kode Dokumen. Lihat referensi Dokumen"
+                    },
+                    "kodeKantor": {
+                      "type": "string",
+                      "description": "Kode Kantor. Lihat Referensi Kantor"
+                    },
+                    "merkBarang": {
+                      "type": "string",
+                      "description": "Merk barang"
+                    },
+                    "ndpbm": {
+                      "type": "number",
+                      "description": "Nilai dasar penghitungan bea masuk"
+                    },
+                    "netto": {
+                      "type": "number",
+                      "description": "Sesuai kolom formulir BC 4.1 - Berat Bersih (kg)",
+                      "maxlength": 18,
+                      "multipleOf": 0.0001
+                    },
+                    "nomorAjuDokAsal": {
+                      "type": "string",
+                      "description": "Nomor aju dokumen asal"
+                    },
+                    "nomorDaftarDokAsal": {
+                      "type": "string",
+                      "description": "Nomor daftar dokumen asal"
+                    },
+                    "posTarif": {
+                      "type": "string",
+                      "description": "Pos Tarif/HS"
+                    },
+                    "seriBahanBaku": {
+                      "type": "integer",
+                      "description": "Nomor seri bahan baku"
+                    },
+                    "seriBarang": {
+                      "type": "integer",
+                      "description": "Nomor seri barang"
+                    },
+                    "seriBarangDokAsal": {
+                      "type": "integer",
+                      "description": "Nomor seri dokumen asal"
+                    },
+                    "seriIjin": {
+                      "type": "integer",
+                      "description": "Nomor seri ijin"
+                    },
+                    "spesifikasiLainBarang": {
+                      "type": "string",
+                      "description": "Spesifikasi lain barang"
+                    },
+                    "tanggalDaftarDokAsal": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Tanggal daftar dokumen asal dengan format YYYY-MM-DD"
+                    },
+                    "tipeBarang": {
+                      "type": "string",
+                      "description": "Tipe barang"
+                    },
+                    "ukuranBarang": {
+                      "type": "string",
+                      "description": "Ukuran barang"
+                    },
+                    "uraianBarang": {
+                      "type": "string",
+                      "description": "Uraian Barang"
+                    },
+                    "nilaiJasa": {
+                      "type": "integer",
+                      "description": "nilai jasa",
+                      "maxlength": 24,
+                      "multipleOf": 0.0001
+                    }
+                  },
+                  "required": [
+                    "cif",
+                    "cifRupiah",
+                    "hargaPenyerahan",
+                    "hargaPerolehan",
+                    "jumlahSatuan",
+                    "kodeSatuanBarang",
+                    "kodeAsalBahanBaku",
+                    "kodeBarang",
+                    "kodeDokAsal",
+                    "kodeDokumen",
+                    "kodeKantor",
+                    "ndpbm",
+                    "netto",
+                    "nomorAjuDokAsal",
+                    "nomorDaftarDokAsal",
+                    "posTarif",
+                    "seriBahanBaku",
+                    "seriBarang",
+                    "seriBarangDokAsal",
+                    "seriIjin",
+                    "tanggalDaftarDokAsal",
+                    "tipeBarang",
+                    "ukuranBarang",
+                    "uraianBarang",
+                    "nilaiJasa"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "cif",
+            "hargaEkspor",
+            "hargaPenyerahan",
+            "isiPerKemasan",
+            "jumlahKemasan",
+            "jumlahSatuan",
+            "kodeBarang",
+            "kodeDokumen",
+            "kodeJenisKemasan",
+            "kodeSatuanBarang",
+            "merk",
+            "netto",
+            "nilaiBarang",
+            "posTarif",
+            "seriBarang",
+            "spesifikasiLain",
+            "tipe",
+            "ukuran",
+            "uraian",
+            "volume",
+            "cifRupiah",
+            "hargaPerolehan",
+            "kodeAsalBahanBaku",
+            "ndpbm",
+            "bahanBaku"
+          ],
+          "message": {
+            "required": "Wajib mengisi cif, hargaEkspor, hargaPenyerahan, isiPerKemasan, jumlahKemasan, jumlahSatuan, kodeBarang, kodeDokumen, JenisKemasan, kodeSatuanBarang, merk, netto, nilaiBarang, posTarif, seriBarang, spesifikasiLain, tipe, ukuran, uraian, volume, cifRupiah, hargaPerolehan, kodeAsalBahanBaku, ndpbm, bahanBaku"
+          }
+        }
+      ]
+    }
+  },
+  "required": [
+    "asalData",
+    "asuransi",
+    "bruto",
+    "cif",
+    "kodeJenisTpb",
+    "freight",
+    "hargaPenyerahan",
+    "jabatanTtd",
+    "jumlahKontainer",
+    "kodeDokumen",
+    "kodeKantor",
+    "kodeLokasiBayar",
+    "kodePembayar",
+    "kodeTujuanPengiriman",
+    "kotaTtd",
+    "namaTtd",
+    "netto",
+    "nilaiBarang",
+    "nomorAju",
+    "seri",
+    "tanggalAju",
+    "tanggalTtd",
+    "userPortal",
+    "volume",
+    "biayaTambahan",
+    "biayaPengurang",
+    "entitas",
+    "dokumen",
+    "pengangkut",
+    "kemasan",
+    "barang"
+  ]
+}
