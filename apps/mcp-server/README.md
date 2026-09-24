@@ -27,7 +27,7 @@ openclaw mcp add vss \
   --command /usr/bin/node \
   --arg=--env-file=.env \
   --arg dist/server.js \
-  --cwd /home/aa/Projects/pesisir/vss-mcp \
+  --cwd /path/to/pesisir/apps/mcp-server \
   --approval auto
 ```
 
