@@ -61,7 +61,7 @@ The API must enforce invariants. The agent may propose an action, but prompts mu
 
 ### VSS Project Management web app
 
-`vss-project-management/` is the existing web-based operational workspace and domain reference. It provides the detailed visual interface for managing and reviewing the same operational data.
+`apps/project-management/` is the existing web-based operational workspace and domain reference. It provides the detailed visual interface for managing and reviewing the same operational data.
 
 It should evolve into a client of the shared backend rather than remain a separate source of truth. Existing domain models, screens, document comparison behavior, and workflow research are valuable inputs, but browser-local or Supabase-specific persistence should not define the final on-premise architecture.
 
@@ -94,7 +94,7 @@ The assistant should reduce repeated data entry and context loss without weakeni
 
 The repository currently contains components at different maturity levels:
 
-- `vss-project-management/` contains the earlier web-first implementation and substantial domain/workflow knowledge.
+- `apps/project-management/` contains the earlier web-first implementation and substantial domain/workflow knowledge.
 - `apps/api/` is the beginning of the on-premise backend and system of record.
 - the root Pesisir code contains the earlier INSW/LARTAS gateway.
 - the OpenClaw/WhatsApp tool layer still needs to be designed and connected to the API.

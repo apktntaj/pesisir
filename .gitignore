@@ -8,7 +8,7 @@ data/
 template-post-token.txt
 *.xlsx
 *.xls
-/vss-project-management/
+/apps/project-management/
 /pabean/pabean-docs/
 *-session-*.html
 WhatsApp Chat*.txt
