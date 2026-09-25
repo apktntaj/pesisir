@@ -18,6 +18,7 @@ import {
   updateVenueSchema,
 } from './modules/schemas'
 import { registerEventManagementRoutes } from './modules/event-management'
+import { registerSourceLineageRoutes } from './modules/source-lineage'
 import { ApiError, notFound } from './shared/errors'
 import { auditedMutation, type Transaction } from './shared/mutations'
 import { idSchema, paginationSchema } from './shared/responses'
@@ -352,6 +353,7 @@ export function createApp({ db, sql }: AppDependencies) {
   })
 
   registerEventManagementRoutes(app, db)
+  registerSourceLineageRoutes(app, db)
 
   return app
 }

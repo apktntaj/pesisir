@@ -1,6 +1,6 @@
 # VSS Operations API
 
-Canonical on-premise API for event organizers, venues, events, reusable exhibitor and agent companies, and their event participation. OpenClaw and future web clients use this service instead of owning independent event data.
+Canonical on-premise API for operational records, source messages and documents, event organizers, venues, events, reusable exhibitor and agent companies, and their event participation. OpenClaw and web clients use this service instead of owning independent operational data.
 
 ## Run locally
 
@@ -42,6 +42,14 @@ Event Organizer ──< Event >── Venue
 - Venue NPWP is optional.
 - Event cancellation and exhibitor withdrawal are explicit, reversible lifecycle commands.
 - Referenced master data is archived rather than deleted; archived records remain readable historically and cannot receive new references.
+
+## Source lineage
+
+- `POST /api/v1/source-messages` preserves WhatsApp message identity, sender, conversation, time, and optional text.
+- `POST /api/v1/source-documents` preserves the original document bytes and immutable metadata. Attachments from WhatsApp must reference a stored source-message UUID; manual uploads must not invent one.
+- Supported inputs are PDF, XLS, XLSX, CSV, JPEG, and PNG up to 20 MiB.
+- Document responses and audit records exclude file bytes. Retrieve the original through `GET /api/v1/source-documents/{id}/content`.
+- PostgreSQL is the on-premise byte store for this initial implementation; no external object-storage dependency is required.
 
 Example event creation:
 

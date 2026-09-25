@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   title: VSS Operations API
-  version: 0.2.0
-  description: Canonical on-premise event-management API for VSS/OpenClaw.
+  version: 0.3.0
+  description: Canonical on-premise operations API for VSS/OpenClaw.
 servers:
   - url: http://127.0.0.1:3001
 components:
@@ -79,6 +79,37 @@ components:
       required: [reason]
       properties:
         reason: { type: string, minLength: 1 }
+    SourceMessageInput:
+      type: object
+      required: [externalMessageId, conversationRef, senderRef, occurredAt]
+      properties:
+        channel: { const: WHATSAPP, default: WHATSAPP }
+        externalMessageId: { type: string, maxLength: 255 }
+        conversationRef: { type: string, maxLength: 255 }
+        senderRef: { type: string, maxLength: 255 }
+        occurredAt: { type: string, format: date-time }
+        bodyText: { type: [string, 'null'] }
+    SourceDocumentInput:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required: [sourceKind, sourceMessageId, fileName, mimeType, contentBase64, receivedAt]
+          properties:
+            sourceKind: { const: WHATSAPP_ATTACHMENT }
+            sourceMessageId: { type: string, format: uuid }
+            fileName: { type: string, maxLength: 255 }
+            mimeType: { enum: [application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv, image/jpeg, image/png] }
+            contentBase64: { type: string, contentEncoding: base64, maxLength: 27962028 }
+            receivedAt: { type: string, format: date-time }
+        - type: object
+          additionalProperties: false
+          required: [sourceKind, fileName, mimeType, contentBase64, receivedAt]
+          properties:
+            sourceKind: { const: MANUAL_UPLOAD }
+            fileName: { type: string, maxLength: 255 }
+            mimeType: { enum: [application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv, image/jpeg, image/png] }
+            contentBase64: { type: string, contentEncoding: base64, maxLength: 27962028 }
+            receivedAt: { type: string, format: date-time }
 paths:
   /health:
     get:
@@ -86,6 +117,28 @@ paths:
       responses:
         '200': { description: Healthy }
         '503': { description: Database unavailable }
+  /api/v1/source-messages:
+    post:
+      summary: Preserve a WhatsApp source message
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SourceMessageInput' } } }
+      responses: { '201': { description: Created }, '409': { description: External message already recorded } }
+  /api/v1/source-messages/{id}:
+    get: { summary: Get a preserved source message }
+  /api/v1/source-documents:
+    post:
+      summary: Preserve an original attachment and immutable metadata
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/SourceMessageId' }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: '#/components/schemas/SourceDocumentInput' } } }
+      responses: { '201': { description: Created }, '422': { description: Invalid lineage, MIME type, base64, or size } }
+  /api/v1/source-documents/{id}:
+    get: { summary: Get immutable source-document metadata }
+  /api/v1/source-documents/{id}/content:
+    get: { summary: Download the original source-document bytes }
   /api/v1/event-organizers:
     get: { summary: List active event organizers }
     post:

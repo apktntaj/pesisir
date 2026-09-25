@@ -6,6 +6,24 @@ const dateOnly = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Gunakan format YYYY-MM
 const uuid = z.string().uuid()
 const countryCode = z.string().trim().toUpperCase().regex(/^[A-Z]{2}$/).nullable().optional()
 const website = z.string().trim().url().nullable().optional()
+const instant = z.string().datetime({ offset: true })
+const base64Content = z.string()
+  .min(4)
+  .max(27_962_028, 'Ukuran dokumen maksimum 20 MiB.')
+  .regex(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/, 'contentBase64 harus berupa base64 yang valid.')
+const documentFields = {
+  fileName: requiredText.max(255),
+  mimeType: z.enum([
+    'application/pdf',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'text/csv',
+    'image/jpeg',
+    'image/png',
+  ]),
+  contentBase64: base64Content,
+  receivedAt: instant,
+}
 
 const nonEmptyPatch = <T extends z.ZodRawShape>(shape: T) => z.object(shape).refine(
   (value) => Object.keys(value).length > 0,
@@ -58,4 +76,19 @@ export const updateEventExhibitorSchema = nonEmptyPatch({
 })
 
 export const reasonSchema = z.object({ reason: requiredText })
+
+export const createSourceMessageSchema = z.object({
+  channel: z.literal('WHATSAPP').default('WHATSAPP'),
+  externalMessageId: requiredText.max(255),
+  conversationRef: requiredText.max(255),
+  senderRef: requiredText.max(255),
+  occurredAt: instant,
+  bodyText: z.string().nullable().optional(),
+})
+
+export const createSourceDocumentSchema = z.discriminatedUnion('sourceKind', [
+  z.object({ ...documentFields, sourceKind: z.literal('WHATSAPP_ATTACHMENT'), sourceMessageId: uuid }).strict(),
+  z.object({ ...documentFields, sourceKind: z.literal('MANUAL_UPLOAD') }).strict(),
+])
+
 export const archiveSchema = reasonSchema

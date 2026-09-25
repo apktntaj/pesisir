@@ -26,6 +26,8 @@ async function create(path: string, payload: unknown, key?: string) {
 }
 
 afterAll(async () => {
+  if (ids.sourceDocument) await database.client`delete from source_documents where id = ${ids.sourceDocument}`
+  if (ids.sourceMessage) await database.client`delete from source_messages where id = ${ids.sourceMessage}`
   await database.client`delete from event_exhibitor_lifecycle_events where event_exhibitor_id in (select id from event_exhibitors where event_id = ${ids.event ?? '00000000-0000-0000-0000-000000000000'})`
   await database.client`delete from event_exhibitors where event_id = ${ids.event ?? '00000000-0000-0000-0000-000000000000'}`
   await database.client`delete from event_lifecycle_events where event_id = ${ids.event ?? '00000000-0000-0000-0000-000000000000'}`
@@ -147,5 +149,57 @@ describe('complete event domain', () => {
   test('writes an audit record for every successful mutation', async () => {
     const rows = await database.client<{ total: number }[]>`select count(*)::int as total from audit_events where actor_ref = 'test:integration'`
     expect(rows[0]?.total).toBeGreaterThanOrEqual(12)
+  })
+})
+
+describe('source lineage', () => {
+  test('preserves a WhatsApp message, its attachment metadata, and original bytes', async () => {
+    const externalMessageId = `wamid.${crypto.randomUUID()}`
+    const sourceMessage = await create('/api/v1/source-messages', {
+      channel: 'WHATSAPP',
+      externalMessageId,
+      conversationRef: 'whatsapp:test-group',
+      senderRef: 'whatsapp:test-user',
+      occurredAt: '2026-09-25T08:00:00.000Z',
+      bodyText: 'Invoice attached',
+    })
+    expect(sourceMessage.response.status).toBe(201)
+    ids.sourceMessage = sourceMessage.body.data.id
+
+    const original = new TextEncoder().encode('source invoice bytes')
+    const sourceDocument = await json<{ data: { id: string; byteSize: number; sha256: string; content?: unknown } }>(
+      '/api/v1/source-documents',
+      {
+        method: 'POST',
+        headers: writeHeaders(),
+        body: JSON.stringify({
+          sourceKind: 'WHATSAPP_ATTACHMENT',
+          sourceMessageId: ids.sourceMessage,
+          fileName: 'invoice.pdf',
+          mimeType: 'application/pdf',
+          contentBase64: Buffer.from(original).toString('base64'),
+          receivedAt: '2026-09-25T08:00:01.000Z',
+        }),
+      },
+    )
+    expect(sourceDocument.response.status).toBe(201)
+    expect(sourceDocument.body.data.byteSize).toBe(original.byteLength)
+    expect(sourceDocument.body.data.sha256).toHaveLength(64)
+    expect(sourceDocument.body.data.content).toBeUndefined()
+    ids.sourceDocument = sourceDocument.body.data.id
+
+    const content = await app.request(`http://vss.local/api/v1/source-documents/${ids.sourceDocument}/content`)
+    expect(content.status).toBe(200)
+    expect(content.headers.get('content-type')).toBe('application/pdf')
+    expect(new Uint8Array(await content.arrayBuffer())).toEqual(original)
+
+    const duplicate = await create('/api/v1/source-messages', {
+      channel: 'WHATSAPP',
+      externalMessageId,
+      conversationRef: 'whatsapp:test-group',
+      senderRef: 'whatsapp:test-user',
+      occurredAt: '2026-09-25T08:00:00.000Z',
+    })
+    expect(duplicate.response.status).toBe(409)
   })
 })

@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'bun:test'
-import { createEventSchema, createExhibitorSchema, createVenueSchema, updateEventSchema } from '../src/modules/schemas'
+import {
+  createEventSchema,
+  createExhibitorSchema,
+  createSourceDocumentSchema,
+  createVenueSchema,
+  updateEventSchema,
+} from '../src/modules/schemas'
 
 describe('request validation', () => {
   test('rejects events ending before they begin', () => {
@@ -25,5 +31,25 @@ describe('request validation', () => {
     expect(local.success && local.data.countryCode).toBe('ID')
     expect(createExhibitorSchema.safeParse({ legalName: 'Foreign', kind: 'INTERNATIONAL', countryCode: 'ID' }).success).toBeFalse()
     expect(createExhibitorSchema.safeParse({ legalName: 'Foreign', kind: 'INTERNATIONAL', npwp: '01.234' }).success).toBeFalse()
+  })
+
+  test('requires source-message lineage for WhatsApp attachments and forbids it for manual uploads', () => {
+    const document = {
+      fileName: 'invoice.pdf',
+      mimeType: 'application/pdf',
+      contentBase64: 'JVBERg==',
+      receivedAt: '2026-09-25T08:00:00.000Z',
+    }
+    expect(createSourceDocumentSchema.safeParse({ ...document, sourceKind: 'WHATSAPP_ATTACHMENT' }).success).toBeFalse()
+    expect(createSourceDocumentSchema.safeParse({
+      ...document,
+      sourceKind: 'WHATSAPP_ATTACHMENT',
+      sourceMessageId: '00000000-0000-4000-8000-000000000001',
+    }).success).toBeTrue()
+    expect(createSourceDocumentSchema.safeParse({
+      ...document,
+      sourceKind: 'MANUAL_UPLOAD',
+      sourceMessageId: '00000000-0000-4000-8000-000000000001',
+    }).success).toBeFalse()
   })
 })

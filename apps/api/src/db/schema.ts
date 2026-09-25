@@ -1,9 +1,15 @@
-import { boolean, index, integer, jsonb, pgTable, primaryKey, text, date, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
+import { boolean, customType, index, integer, jsonb, pgTable, primaryKey, text, date, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
 
 const timestamps = {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }
+
+const bytea = customType<{ data: Uint8Array }>({
+  dataType() {
+    return 'bytea'
+  },
+})
 
 export const eventOrganizers = pgTable('event_organizers', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -116,6 +122,44 @@ export const eventExhibitorLifecycleEvents = pgTable('event_exhibitor_lifecycle_
   fromStatus: text('from_status').notNull(), toStatus: text('to_status').notNull(), reason: text('reason').notNull(), actorRef: text('actor_ref').notNull(),
   sourceMessageId: text('source_message_id'), occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+export const sourceMessages = pgTable('source_messages', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  channel: text('channel', { enum: ['WHATSAPP'] }).notNull(),
+  externalMessageId: text('external_message_id').notNull(),
+  conversationRef: text('conversation_ref').notNull(),
+  senderRef: text('sender_ref').notNull(),
+  occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull(),
+  bodyText: text('body_text'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  unique('source_messages_channel_external_unique').on(table.channel, table.externalMessageId),
+  index('source_messages_conversation_occurred_idx').on(table.conversationRef, table.occurredAt),
+])
+
+export const sourceDocuments = pgTable('source_documents', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sourceKind: text('source_kind', { enum: ['WHATSAPP_ATTACHMENT', 'MANUAL_UPLOAD'] }).notNull(),
+  sourceMessageId: uuid('source_message_id').references(() => sourceMessages.id, { onDelete: 'restrict' }),
+  fileName: text('file_name').notNull(),
+  mimeType: text('mime_type', { enum: [
+    'application/pdf',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'text/csv',
+    'image/jpeg',
+    'image/png',
+  ] }).notNull(),
+  byteSize: integer('byte_size').notNull(),
+  sha256: text('sha256').notNull(),
+  content: bytea('content').notNull(),
+  receivedAt: timestamp('received_at', { withTimezone: true }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  index('source_documents_message_idx').on(table.sourceMessageId),
+  index('source_documents_sha256_idx').on(table.sha256),
+  index('source_documents_received_idx').on(table.receivedAt),
+])
 
 export const auditEvents = pgTable('audit_events', {
   id: uuid('id').defaultRandom().primaryKey(), entityType: text('entity_type').notNull(), entityId: uuid('entity_id').notNull(), action: text('action').notNull(),
