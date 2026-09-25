@@ -1,0 +1,106 @@
+openapi: 3.1.0
+info:
+  title: Extraction Provenance API addition
+  version: 0.1.0
+paths:
+  /api/v1/source-documents/{sourceDocumentId}/extractions:
+    post:
+      summary: Persist one structured extraction for a stored source document
+      parameters:
+        - $ref: '#/components/parameters/SourceDocumentId'
+        - $ref: '#/components/parameters/ActorRef'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/SourceMessageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExtractionInput' }
+      responses:
+        '201': { description: Extraction persisted }
+        '404': { description: Source document not found }
+        '409': { description: Idempotency conflict }
+        '422': { description: Invalid fact or evidence state }
+    get:
+      summary: List extraction summaries for a stored source document
+      parameters:
+        - $ref: '#/components/parameters/SourceDocumentId'
+      responses:
+        '200': { description: Paginated extraction summaries without document bytes }
+        '404': { description: Source document not found }
+  /api/v1/extractions/{extractionId}:
+    get:
+      summary: Get an extraction with facts, evidence locators, and reviews
+      parameters:
+        - $ref: '#/components/parameters/ExtractionId'
+      responses:
+        '200': { description: Complete extraction provenance }
+        '404': { description: Extraction not found }
+  /api/v1/extraction-facts/{extractionFactId}/reviews:
+    post:
+      summary: Append a human confirmation or correction for one extraction fact
+      parameters:
+        - $ref: '#/components/parameters/ExtractionFactId'
+        - $ref: '#/components/parameters/ActorRef'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/SourceMessageId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FactReviewInput' }
+      responses:
+        '201': { description: Review appended }
+        '404': { description: Extraction fact not found }
+        '409': { description: Idempotency conflict }
+        '422': { description: Invalid state, value, reason, or evidence }
+components:
+  parameters:
+    SourceDocumentId: { name: sourceDocumentId, in: path, required: true, schema: { type: string, format: uuid } }
+    ExtractionId: { name: extractionId, in: path, required: true, schema: { type: string, format: uuid } }
+    ExtractionFactId: { name: extractionFactId, in: path, required: true, schema: { type: string, format: uuid } }
+    ActorRef: { name: X-Actor-Ref, in: header, required: true, schema: { type: string, minLength: 1 } }
+    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 8 } }
+    SourceMessageId: { name: X-Source-Message-Id, in: header, required: false, schema: { type: string } }
+  schemas:
+    InformationState:
+      enum: [SOURCE_BACKED, CONFIRMED, INFERRED, UNKNOWN, CONFLICTING, NOT_APPLICABLE]
+    EvidenceLocator:
+      type: object
+      required: [kind, reference]
+      properties:
+        kind: { enum: [PDF_PAGE, SPREADSHEET_RANGE, IMAGE_REGION, TEXT_SPAN] }
+        reference: { type: object, minProperties: 1 }
+        excerpt: { type: [string, 'null'], minLength: 1 }
+    FactInput:
+      type: object
+      required: [field, informationState]
+      properties:
+        field: { type: string, minLength: 1 }
+        informationState: { $ref: '#/components/schemas/InformationState' }
+        assertedValue: {}
+        confidencePercent: { type: integer, minimum: 0, maximum: 100 }
+        conflictExplanation: { type: string, minLength: 1 }
+        evidenceLocators:
+          type: array
+          items: { $ref: '#/components/schemas/EvidenceLocator' }
+    ExtractionInput:
+      type: object
+      required: [facts]
+      properties:
+        facts:
+          type: array
+          minItems: 1
+          items: { $ref: '#/components/schemas/FactInput' }
+    FactReviewInput:
+      type: object
+      required: [kind, resultingState, reason]
+      properties:
+        kind: { enum: [CONFIRM, CORRECT] }
+        resultingState: { $ref: '#/components/schemas/InformationState' }
+        resultingValue: {}
+        conflictExplanation: { type: [string, 'null'], minLength: 1 }
+        reason: { type: string, minLength: 1 }
+        evidenceLocators:
+          type: array
+          items: { $ref: '#/components/schemas/EvidenceLocator' }
