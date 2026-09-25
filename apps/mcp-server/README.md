@@ -2,7 +2,7 @@
 
 Local stdio MCP adapter for the VSS event-management API. It exposes event, organizer, venue, exhibitor-company, agent-company, participation, cancellation, and withdrawal operations to OpenClaw.
 
-Mutating tools require OpenClaw to provide a stable actor reference, originating message ID when available, and an idempotency UUID. Organizer and venue IDs are always selected explicitly; there are no silent configured defaults.
+Mutating tools require a stable actor reference, originating message ID when available, and an idempotency UUID. Channel prompts derive the actor from the authenticated sender; local development prompts use `openclaw:local-operator`. Organizer and venue IDs are always resolved explicitly; there are no silent defaults.
 
 ## Configure
 

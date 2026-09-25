@@ -23,7 +23,7 @@ function errorResult(error: unknown) {
 
 function buildServer() {
   const client = new VssClient(loadConfig())
-  const server = new McpServer({ name: 'vss-operations', version: '0.2.0' })
+  const server = new McpServer({ name: 'vss-operations', version: '0.3.0' })
   const readAnnotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true }
   const writeAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: true }
 
@@ -41,6 +41,16 @@ function buildServer() {
     async () => { try { return textResult(await client.listAgents()) } catch (error) { return errorResult(error) } })
   server.registerTool('list_event_exhibitors', { title: 'List event exhibitors', description: 'List exhibitors participating in one event.', inputSchema: z.object({ eventId: uuid }), annotations: readAnnotations },
     async ({ eventId }) => { try { return textResult(await client.listEventExhibitors(eventId)) } catch (error) { return errorResult(error) } })
+
+  server.registerTool('create_event_organizer', {
+    title: 'Create event organizer', description: 'Create a reusable event organizer after confirming that no existing organizer is the same entity.',
+    inputSchema: z.object({ name: z.string().trim().min(1), npwp: nullableText, address: nullableText, website: z.string().url().nullable().optional(), ...mutationFields }), annotations: writeAnnotations,
+  }, async (input) => { try { return textResult(await client.createEventOrganizer(input, meta(input))) } catch (error) { return errorResult(error) } })
+
+  server.registerTool('create_venue', {
+    title: 'Create venue', description: 'Create a reusable event venue after confirming that no existing venue is the same location.',
+    inputSchema: z.object({ name: z.string().trim().min(1), npwp: nullableText, address: nullableText, website: z.string().url().nullable().optional(), loadingAccessNotes: nullableText, ...mutationFields }), annotations: writeAnnotations,
+  }, async (input) => { try { return textResult(await client.createVenue(input, meta(input))) } catch (error) { return errorResult(error) } })
 
   server.registerTool('create_event', {
     title: 'Create event', description: 'Create an event only after explicit confirmation of event, organizer, venue, and dates.',

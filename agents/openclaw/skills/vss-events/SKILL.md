@@ -23,7 +23,11 @@ Before every create, update, cancellation, withdrawal, or reactivation:
 3. Display a concise summary of the exact write.
 4. Call the tool only after explicit confirmation of that summary.
 
-Derive `actorRef` from the authenticated OpenClaw sender and `sourceMessageId` from the originating message when available. Generate one UUID `idempotencyKey` for the confirmed operation and reuse it for retries. Never ask the user to provide these technical fields. Do not automatically retry a failed write with a new key.
+For channel messages, derive `actorRef` from the authenticated OpenClaw sender. For local prompt development without a channel identity, use the stable reference `openclaw:local-operator`. Use the originating message ID when one exists; omit it for local prompts. Generate one UUID `idempotencyKey` for each confirmed operation and reuse it for retries. Never ask the user to provide these technical fields. Do not automatically retry a failed write with a new key.
+
+## Organizer and venue masters
+
+Resolve organizers and venues before creating an event. When the intended organizer or venue does not exist, offer to create the reusable master record, show its exact fields, and obtain explicit confirmation. Never substitute a similarly named master silently.
 
 ## Events
 

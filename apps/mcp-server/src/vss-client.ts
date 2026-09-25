@@ -37,6 +37,15 @@ export class VssClient {
   listAgents() { return this.request<ListResult<MasterSummary>>('/api/v1/agents?limit=100&offset=0') }
   async listEventExhibitors(eventId: string) { return (await this.request<ApiData<EventExhibitor[]>>(`/api/v1/events/${encodeURIComponent(eventId)}/exhibitors`)).data }
 
+  async createEventOrganizer(input: { name: string; npwp?: string | null; address?: string | null; website?: string | null }, meta: MutationContext) {
+    const { name, npwp, address, website } = input
+    return (await this.mutate<ApiData<MasterSummary>>('/api/v1/event-organizers', 'POST', { name, npwp, address, website }, meta)).data
+  }
+  async createVenue(input: { name: string; npwp?: string | null; address?: string | null; website?: string | null; loadingAccessNotes?: string | null }, meta: MutationContext) {
+    const { name, npwp, address, website, loadingAccessNotes } = input
+    return (await this.mutate<ApiData<MasterSummary>>('/api/v1/venues', 'POST', { name, npwp, address, website, loadingAccessNotes }, meta)).data
+  }
+
   async createEvent(input: { name: string; alias?: string | null; notes?: string | null; startOn: string; endOn: string; eventOrganizerId: string; venueId: string }, meta: MutationContext) {
     const { name, alias, notes, startOn, endOn, eventOrganizerId, venueId } = input
     return (await this.mutate<ApiData<EventSummary>>('/api/v1/events', 'POST', { name, alias, notes, startOn, endOn, eventOrganizerId, venueId }, meta)).data

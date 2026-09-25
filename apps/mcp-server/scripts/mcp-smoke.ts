@@ -39,9 +39,10 @@ try {
   const tools = (toolResponse.result as { tools?: Array<{ name: string }> } | undefined)?.tools ?? []
   const names = tools.map((tool) => tool.name).sort()
   const expected = [
-    'add_event_exhibitor', 'cancel_event', 'create_agent', 'create_event', 'create_exhibitor', 'get_event',
-    'list_agents', 'list_event_exhibitors', 'list_event_organizers', 'list_events', 'list_exhibitors', 'list_venues',
-    'reactivate_event', 'reactivate_event_exhibitor', 'update_event_exhibitor', 'withdraw_event_exhibitor',
+    'add_event_exhibitor', 'cancel_event', 'create_agent', 'create_event', 'create_event_organizer', 'create_exhibitor',
+    'create_venue', 'get_event', 'list_agents', 'list_event_exhibitors', 'list_event_organizers', 'list_events',
+    'list_exhibitors', 'list_venues', 'reactivate_event', 'reactivate_event_exhibitor', 'update_event_exhibitor',
+    'withdraw_event_exhibitor',
   ]
   if (JSON.stringify(names) !== JSON.stringify(expected)) throw new Error(`Unexpected MCP tool list: ${names.join(', ')}`)
 
@@ -51,7 +52,7 @@ try {
   const text = result?.content?.find((item) => item.type === 'text')?.text
   const payload = text ? JSON.parse(text) as { meta?: { total?: number } } : null
   if (typeof payload?.meta?.total !== 'number') throw new Error('list_events returned an invalid payload.')
-  console.log(`VSS MCP smoke test passed; ${payload.meta.total} event(s) available through 16 tools.`)
+  console.log(`VSS MCP smoke test passed; ${payload.meta.total} event(s) available through 18 tools.`)
 } finally {
   child.stdin.end()
   child.kill()
