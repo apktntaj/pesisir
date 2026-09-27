@@ -3,6 +3,9 @@ import {
   createEventSchema,
   createExhibitorSchema,
   createSourceDocumentSchema,
+  createCiplSchema,
+  createDocumentExtractionFactReviewSchema,
+  createDocumentExtractionSchema,
   createVenueSchema,
   updateEventSchema,
 } from '../src/modules/schemas'
@@ -51,5 +54,55 @@ describe('request validation', () => {
       sourceKind: 'MANUAL_UPLOAD',
       sourceMessageId: '00000000-0000-4000-8000-000000000001',
     }).success).toBeFalse()
+  })
+
+  test('enforces extraction fact information states and unique fields', () => {
+    const sourceBacked = {
+      field: 'invoice.number',
+      informationState: 'SOURCE_BACKED',
+      assertedValue: 'INV-001',
+      evidenceLocators: [{ kind: 'PDF_PAGE', reference: { page: 1 }, excerpt: 'Invoice INV-001' }],
+    }
+    expect(createDocumentExtractionSchema.safeParse({ facts: [sourceBacked] }).success).toBeTrue()
+    expect(createDocumentExtractionSchema.safeParse({
+      facts: [{ field: 'consignee.name', informationState: 'UNKNOWN', assertedValue: 'PT Example' }],
+    }).success).toBeFalse()
+    expect(createDocumentExtractionSchema.safeParse({
+      facts: [{ field: 'weight.gross', informationState: 'CONFLICTING' }],
+    }).success).toBeFalse()
+    expect(createDocumentExtractionSchema.safeParse({ facts: [sourceBacked, sourceBacked] }).success).toBeFalse()
+  })
+
+  test('requires a resulting value for confirmation and a reason for every review', () => {
+    expect(createDocumentExtractionFactReviewSchema.safeParse({
+      kind: 'CONFIRM',
+      resultingState: 'CONFIRMED',
+      resultingValue: 'INV-001',
+      reason: 'Verified against original invoice.',
+    }).success).toBeTrue()
+    expect(createDocumentExtractionFactReviewSchema.safeParse({
+      kind: 'CONFIRM',
+      resultingState: 'INFERRED',
+      resultingValue: 'INV-001',
+      reason: 'Invalid confirmation.',
+    }).success).toBeFalse()
+    expect(createDocumentExtractionFactReviewSchema.safeParse({
+      kind: 'CORRECT',
+      resultingState: 'CONFIRMED',
+      resultingValue: 'INV-002',
+      reason: '',
+    }).success).toBeFalse()
+  })
+
+  test('requires complete positive CIPL version items', () => {
+    const input = {
+      eventExhibitorId: '00000000-0000-4000-8000-000000000001',
+      sourceDocumentId: '00000000-0000-4000-8000-000000000002',
+      receivedAt: '2026-09-25T08:00:00.000Z',
+      items: [{ lineNumber: 1, description: 'Display stand', quantity: 2, unit: 'PCS' }],
+    }
+    expect(createCiplSchema.safeParse(input).success).toBeTrue()
+    expect(createCiplSchema.safeParse({ ...input, items: [{ ...input.items[0], quantity: 0 }] }).success).toBeFalse()
+    expect(createCiplSchema.safeParse({ ...input, items: [input.items[0], input.items[0]] }).success).toBeFalse()
   })
 })

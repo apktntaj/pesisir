@@ -91,4 +91,160 @@ export const createSourceDocumentSchema = z.discriminatedUnion('sourceKind', [
   z.object({ ...documentFields, sourceKind: z.literal('MANUAL_UPLOAD') }).strict(),
 ])
 
+const informationState = z.enum(['SOURCE_BACKED', 'CONFIRMED', 'INFERRED', 'UNKNOWN', 'CONFLICTING', 'NOT_APPLICABLE'])
+const evidenceLocatorSchema = z.object({
+  kind: z.enum(['PDF_PAGE', 'SPREADSHEET_RANGE', 'IMAGE_REGION', 'TEXT_SPAN']),
+  reference: z.record(z.string(), z.unknown()).refine((value) => Object.keys(value).length > 0, 'reference wajib diisi.'),
+  excerpt: nullableText,
+}).strict()
+
+function validateFactState(
+  value: { informationState: z.infer<typeof informationState>; assertedValue?: unknown; conflictExplanation?: string | null },
+  context: z.RefinementCtx,
+  valueField: 'assertedValue' | 'resultingValue',
+) {
+  const hasValue = value.assertedValue !== undefined && value.assertedValue !== null
+  const conflictExplanation = value.conflictExplanation?.trim()
+  if (['SOURCE_BACKED', 'CONFIRMED', 'INFERRED'].includes(value.informationState)) {
+    if (!hasValue) context.addIssue({ code: 'custom', path: [valueField], message: `${valueField} wajib diisi untuk state ini.` })
+    if (conflictExplanation) context.addIssue({ code: 'custom', path: ['conflictExplanation'], message: 'conflictExplanation hanya boleh diisi untuk state CONFLICTING.' })
+  }
+  if (['UNKNOWN', 'NOT_APPLICABLE'].includes(value.informationState)) {
+    if (hasValue) context.addIssue({ code: 'custom', path: [valueField], message: `${valueField} tidak boleh diisi untuk state ini.` })
+    if (conflictExplanation) context.addIssue({ code: 'custom', path: ['conflictExplanation'], message: 'conflictExplanation hanya boleh diisi untuk state CONFLICTING.' })
+  }
+  if (value.informationState === 'CONFLICTING') {
+    if (hasValue) context.addIssue({ code: 'custom', path: [valueField], message: `${valueField} tidak boleh diisi untuk state CONFLICTING.` })
+    if (!conflictExplanation) context.addIssue({ code: 'custom', path: ['conflictExplanation'], message: 'conflictExplanation wajib diisi untuk state CONFLICTING.' })
+  }
+}
+
+const extractionFactSchema = z.object({
+  field: requiredText.max(255),
+  informationState,
+  assertedValue: z.unknown().optional(),
+  confidencePercent: z.number().int().min(0).max(100).optional(),
+  conflictExplanation: nullableText,
+  evidenceLocators: z.array(evidenceLocatorSchema).default([]),
+}).strict().superRefine((value, context) => validateFactState(value, context, 'assertedValue'))
+
+export const createDocumentExtractionSchema = z.object({
+  facts: z.array(extractionFactSchema).min(1),
+}).strict().superRefine((value, context) => {
+  const fields = new Set<string>()
+  for (const [index, fact] of value.facts.entries()) {
+    if (fields.has(fact.field)) context.addIssue({ code: 'custom', path: ['facts', index, 'field'], message: 'field harus unik dalam satu extraction.' })
+    fields.add(fact.field)
+  }
+})
+
+export const createDocumentExtractionFactReviewSchema = z.object({
+  kind: z.enum(['CONFIRM', 'CORRECT']),
+  resultingState: informationState,
+  resultingValue: z.unknown().optional(),
+  conflictExplanation: nullableText,
+  reason: requiredText,
+  evidenceLocators: z.array(evidenceLocatorSchema).default([]),
+}).strict().superRefine((value, context) => {
+  validateFactState({
+    informationState: value.resultingState,
+    assertedValue: value.resultingValue,
+    conflictExplanation: value.conflictExplanation,
+  }, context, 'resultingValue')
+  if (value.kind === 'CONFIRM' && value.resultingState !== 'CONFIRMED') {
+    context.addIssue({ code: 'custom', path: ['resultingState'], message: 'Review CONFIRM harus menghasilkan state CONFIRMED.' })
+  }
+})
+
+const ciplItemSchema = z.object({
+  lineNumber: z.number().int().positive(),
+  description: requiredText,
+  quantity: z.number().positive(),
+  unit: requiredText.max(50),
+  unitValue: z.number().nonnegative().nullable().optional(),
+  currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/).nullable().optional(),
+  grossWeightKg: z.number().nonnegative().nullable().optional(),
+  netWeightKg: z.number().nonnegative().nullable().optional(),
+  countryOfOrigin: countryCode,
+  identifiers: z.array(requiredText).default([]),
+  intendedUse: nullableText,
+  intendedDisposal: nullableText,
+}).strict()
+
+const ciplVersionInput = z.object({
+  sourceDocumentId: uuid,
+  receivedAt: instant,
+  revisionNote: nullableText,
+  items: z.array(ciplItemSchema).min(1),
+}).strict().superRefine((value, context) => {
+  const lines = new Set<number>()
+  for (const [index, item] of value.items.entries()) {
+    if (lines.has(item.lineNumber)) context.addIssue({ code: 'custom', path: ['items', index, 'lineNumber'], message: 'lineNumber harus unik dalam satu versi CIPL.' })
+    lines.add(item.lineNumber)
+  }
+})
+
+export const createCiplSchema = z.object({
+  eventExhibitorId: uuid,
+  referenceNumber: nullableText,
+  ...ciplVersionInput.shape,
+}).strict().superRefine((value, context) => {
+  const lines = new Set<number>()
+  for (const [index, item] of value.items.entries()) {
+    if (lines.has(item.lineNumber)) context.addIssue({ code: 'custom', path: ['items', index, 'lineNumber'], message: 'lineNumber harus unik dalam satu versi CIPL.' })
+    lines.add(item.lineNumber)
+  }
+})
+export const createCiplVersionSchema = ciplVersionInput
+const shipmentAllocationSchema = z.object({
+  ciplItemId: uuid,
+  quantity: z.number().positive(),
+  unit: requiredText.max(50),
+}).strict()
+
+export const createShipmentSchema = z.object({
+  ciplVersionId: uuid,
+  sourceDocumentId: uuid,
+  documentType: z.enum(['BL', 'AWB']),
+  documentNumber: requiredText,
+  shipmentMode: z.enum(['FCL', 'LCL']).nullable().optional(),
+  direction: z.enum(['IMPORT', 'EXPORT']),
+  shipper: nullableText,
+  consignee: nullableText,
+  notifyParty: nullableText,
+  carrier: nullableText,
+  etaOrEtd: instant.nullable().optional(),
+  origin: nullableText,
+  destination: nullableText,
+  legacyReference: nullableText,
+  allocations: z.array(shipmentAllocationSchema).min(1),
+}).strict().superRefine((value, context) => {
+  const items = new Set<string>()
+  for (const [index, allocation] of value.allocations.entries()) {
+    if (items.has(allocation.ciplItemId)) context.addIssue({ code: 'custom', path: ['allocations', index, 'ciplItemId'], message: 'Item hanya boleh dialokasikan sekali per shipment.' })
+    items.add(allocation.ciplItemId)
+  }
+})
+
+export const createTicketSchema = z.object({
+  contextKind: z.enum(['GENERAL', 'EVENT', 'CUSTOMS_JOB']),
+  eventId: uuid.nullable().optional(),
+  customsJobId: uuid.nullable().optional(),
+  assigneeId: uuid.nullable().optional(),
+  title: requiredText,
+  description: nullableText,
+  priority: z.enum(['NORMAL', 'URGENT']).default('NORMAL'),
+}).superRefine((value, context) => {
+  if (value.contextKind === 'GENERAL' && (value.eventId || value.customsJobId)) context.addIssue({ code: 'custom', message: 'General ticket tidak memiliki context ID.' })
+  if (value.contextKind === 'EVENT' && (!value.eventId || value.customsJobId)) context.addIssue({ code: 'custom', message: 'Event ticket memerlukan eventId saja.' })
+  if (value.contextKind === 'CUSTOMS_JOB' && (!value.customsJobId || value.eventId)) context.addIssue({ code: 'custom', message: 'Job ticket memerlukan customsJobId saja.' })
+})
+export const updateTicketSchema = z.object({
+  title: requiredText.optional(), description: nullableText, assigneeId: uuid.nullable().optional(),
+  priority: z.enum(['NORMAL', 'URGENT']).optional(), status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']).optional(),
+  outcome: nullableText, reason: nullableText,
+}).refine((value) => Object.keys(value).length > 0, 'Minimal satu field harus diberikan.').superRefine((value, context) => {
+  if (value.status === 'DONE' && !value.outcome) context.addIssue({ code: 'custom', path: ['outcome'], message: 'Outcome wajib untuk DONE.' })
+})
+export const createTicketCommentSchema = z.object({ authorUserId: uuid, body: requiredText }).strict()
 export const archiveSchema = reasonSchema

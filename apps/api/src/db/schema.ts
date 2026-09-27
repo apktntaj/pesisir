@@ -1,4 +1,4 @@
-import { boolean, customType, index, integer, jsonb, pgTable, primaryKey, text, date, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
+import { boolean, customType, doublePrecision, index, integer, jsonb, pgTable, primaryKey, text, date, timestamp, unique, uuid } from 'drizzle-orm/pg-core'
 
 const timestamps = {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -161,6 +161,107 @@ export const sourceDocuments = pgTable('source_documents', {
   index('source_documents_received_idx').on(table.receivedAt),
 ])
 
+export const documentExtractions = pgTable('document_extractions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sourceDocumentId: uuid('source_document_id').notNull().references(() => sourceDocuments.id, { onDelete: 'restrict' }),
+  submittedByActorRef: text('submitted_by_actor_ref').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [index('document_extractions_source_document_idx').on(table.sourceDocumentId, table.createdAt)])
+
+export const documentExtractionFacts = pgTable('document_extraction_facts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  extractionId: uuid('extraction_id').notNull().references(() => documentExtractions.id, { onDelete: 'restrict' }),
+  field: text('field').notNull(),
+  informationState: text('information_state', { enum: ['SOURCE_BACKED', 'CONFIRMED', 'INFERRED', 'UNKNOWN', 'CONFLICTING', 'NOT_APPLICABLE'] }).notNull(),
+  assertedValue: jsonb('asserted_value'),
+  confidencePercent: integer('confidence_percent'),
+  conflictExplanation: text('conflict_explanation'),
+  evidenceLocators: jsonb('evidence_locators').notNull().default([]),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  unique('document_extraction_facts_extraction_field_unique').on(table.extractionId, table.field),
+  index('document_extraction_facts_extraction_idx').on(table.extractionId, table.createdAt),
+])
+
+export const documentExtractionFactReviews = pgTable('document_extraction_fact_reviews', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  extractionFactId: uuid('extraction_fact_id').notNull().references(() => documentExtractionFacts.id, { onDelete: 'restrict' }),
+  kind: text('kind', { enum: ['CONFIRM', 'CORRECT'] }).notNull(),
+  resultingState: text('resulting_state', { enum: ['SOURCE_BACKED', 'CONFIRMED', 'INFERRED', 'UNKNOWN', 'CONFLICTING', 'NOT_APPLICABLE'] }).notNull(),
+  resultingValue: jsonb('resulting_value'),
+  conflictExplanation: text('conflict_explanation'),
+  reason: text('reason').notNull(),
+  evidenceLocators: jsonb('evidence_locators').notNull().default([]),
+  reviewedByActorRef: text('reviewed_by_actor_ref').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [index('document_extraction_fact_reviews_fact_idx').on(table.extractionFactId, table.createdAt)])
+
+export const cipls = pgTable('cipls', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  eventExhibitorId: uuid('event_exhibitor_id').notNull().references(() => eventExhibitors.id, { onDelete: 'restrict' }),
+  referenceNumber: text('reference_number'),
+  status: text('status', { enum: ['AWAITING_DOCUMENT', 'RECEIVED', 'UNDER_REVIEW', 'READY', 'ON_HOLD', 'CANCELLED'] }).notNull(),
+  activeVersionId: uuid('active_version_id'),
+  ...timestamps,
+})
+
+export const ciplVersions = pgTable('cipl_versions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  ciplId: uuid('cipl_id').notNull().references(() => cipls.id, { onDelete: 'restrict' }),
+  versionNumber: integer('version_number').notNull(),
+  status: text('status', { enum: ['DRAFT', 'READY'] }).notNull(),
+  sourceDocumentId: uuid('source_document_id').notNull().references(() => sourceDocuments.id, { onDelete: 'restrict' }),
+  receivedAt: timestamp('received_at', { withTimezone: true }).notNull(),
+  receivedByActorRef: text('received_by_actor_ref').notNull(),
+  revisionNote: text('revision_note'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [unique('cipl_versions_cipl_version_unique').on(table.ciplId, table.versionNumber), index('cipl_versions_cipl_idx').on(table.ciplId, table.versionNumber)])
+
+export const ciplItems = pgTable('cipl_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  ciplVersionId: uuid('cipl_version_id').notNull().references(() => ciplVersions.id, { onDelete: 'restrict' }),
+  lineNumber: integer('line_number').notNull(),
+  description: text('description').notNull(),
+  quantity: doublePrecision('quantity').notNull(),
+  unit: text('unit').notNull(),
+  unitValue: doublePrecision('unit_value'),
+  currency: text('currency'),
+  grossWeightKg: doublePrecision('gross_weight_kg'),
+  netWeightKg: doublePrecision('net_weight_kg'),
+  countryOfOrigin: text('country_of_origin'),
+  identifiers: jsonb('identifiers').notNull().default([]),
+  intendedUse: text('intended_use'),
+  intendedDisposal: text('intended_disposal'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [unique('cipl_items_version_line_unique').on(table.ciplVersionId, table.lineNumber), index('cipl_items_version_idx').on(table.ciplVersionId, table.lineNumber)])
+
+export const shipments = pgTable('shipments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  ciplVersionId: uuid('cipl_version_id').notNull().references(() => ciplVersions.id, { onDelete: 'restrict' }),
+  sourceDocumentId: uuid('source_document_id').notNull().references(() => sourceDocuments.id, { onDelete: 'restrict' }),
+  documentType: text('document_type', { enum: ['BL', 'AWB'] }).notNull(),
+  documentNumber: text('document_number').notNull(),
+  shipmentMode: text('shipment_mode', { enum: ['FCL', 'LCL'] }),
+  direction: text('direction', { enum: ['IMPORT', 'EXPORT'] }).notNull(),
+  shipper: text('shipper'), consignee: text('consignee'), notifyParty: text('notify_party'), carrier: text('carrier'),
+  etaOrEtd: timestamp('eta_or_etd', { withTimezone: true }), origin: text('origin'), destination: text('destination'), legacyReference: text('legacy_reference'),
+  status: text('status', { enum: ['DRAFT', 'DOCUMENT_RECEIVED', 'UNDER_REVIEW', 'READY_FOR_CUSTOMS', 'ON_HOLD', 'CANCELLED'] }).notNull(),
+  ...timestamps,
+}, (table) => [index('shipments_cipl_version_idx').on(table.ciplVersionId)])
+
+export const shipmentAllocations = pgTable('shipment_allocations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  shipmentId: uuid('shipment_id').notNull().references(() => shipments.id, { onDelete: 'restrict' }),
+  ciplItemId: uuid('cipl_item_id').notNull().references(() => ciplItems.id, { onDelete: 'restrict' }),
+  quantity: doublePrecision('quantity').notNull(),
+  unit: text('unit').notNull(),
+}, (table) => [unique('shipment_allocations_shipment_item_unique').on(table.shipmentId, table.ciplItemId), index('shipment_allocations_item_idx').on(table.ciplItemId)])
+
+export const users = pgTable('users', { id: uuid('id').defaultRandom().primaryKey(), name: text('name').notNull(), email: text('email').notNull(), passwordHash: text('password_hash').notNull(), isActive: boolean('is_active').notNull(), ...timestamps })
+export const userRoles = pgTable('user_roles', { userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'restrict' }), role: text('role').notNull() }, (table) => [primaryKey({ columns: [table.userId, table.role] })])
+export const tickets = pgTable('tickets', { id: uuid('id').defaultRandom().primaryKey(), contextKind: text('context_kind').notNull(), eventId: uuid('event_id').references(() => events.id), customsJobId: uuid('customs_job_id'), assigneeId: uuid('assignee_id').references(() => users.id), title: text('title').notNull(), description: text('description'), priority: text('priority').notNull(), status: text('status').notNull(), outcome: text('outcome'), createdByUserId: uuid('created_by_user_id').references(() => users.id), ...timestamps })
+export const ticketActivities = pgTable('ticket_activities', { id: uuid('id').defaultRandom().primaryKey(), ticketId: uuid('ticket_id').notNull().references(() => tickets.id, { onDelete: 'restrict' }), kind: text('kind').notNull(), actorUserId: uuid('actor_user_id').references(() => users.id), summary: text('summary').notNull(), occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull().defaultNow() })
+export const ticketComments = pgTable('ticket_comments', { id: uuid('id').defaultRandom().primaryKey(), ticketId: uuid('ticket_id').notNull().references(() => tickets.id, { onDelete: 'restrict' }), authorUserId: uuid('author_user_id').notNull().references(() => users.id), body: text('body').notNull(), createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow() })
 export const auditEvents = pgTable('audit_events', {
   id: uuid('id').defaultRandom().primaryKey(), entityType: text('entity_type').notNull(), entityId: uuid('entity_id').notNull(), action: text('action').notNull(),
   beforeData: jsonb('before_data'), afterData: jsonb('after_data'), actorRef: text('actor_ref').notNull(), sourceMessageId: text('source_message_id'),

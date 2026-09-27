@@ -110,6 +110,44 @@ components:
             mimeType: { enum: [application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv, image/jpeg, image/png] }
             contentBase64: { type: string, contentEncoding: base64, maxLength: 27962028 }
             receivedAt: { type: string, format: date-time }
+    InformationState:
+      enum: [SOURCE_BACKED, CONFIRMED, INFERRED, UNKNOWN, CONFLICTING, NOT_APPLICABLE]
+    EvidenceLocator:
+      type: object
+      additionalProperties: false
+      required: [kind, reference]
+      properties:
+        kind: { enum: [PDF_PAGE, SPREADSHEET_RANGE, IMAGE_REGION, TEXT_SPAN] }
+        reference: { type: object, minProperties: 1 }
+        excerpt: { type: [string, 'null'], minLength: 1 }
+    ExtractionFactInput:
+      type: object
+      additionalProperties: false
+      required: [field, informationState]
+      properties:
+        field: { type: string, minLength: 1, maxLength: 255 }
+        informationState: { $ref: '#/components/schemas/InformationState' }
+        assertedValue: {}
+        confidencePercent: { type: integer, minimum: 0, maximum: 100 }
+        conflictExplanation: { type: [string, 'null'], minLength: 1 }
+        evidenceLocators: { type: array, items: { $ref: '#/components/schemas/EvidenceLocator' } }
+    ExtractionInput:
+      type: object
+      additionalProperties: false
+      required: [facts]
+      properties:
+        facts: { type: array, minItems: 1, items: { $ref: '#/components/schemas/ExtractionFactInput' } }
+    ExtractionFactReviewInput:
+      type: object
+      additionalProperties: false
+      required: [kind, resultingState, reason]
+      properties:
+        kind: { enum: [CONFIRM, CORRECT] }
+        resultingState: { $ref: '#/components/schemas/InformationState' }
+        resultingValue: {}
+        conflictExplanation: { type: [string, 'null'], minLength: 1 }
+        reason: { type: string, minLength: 1 }
+        evidenceLocators: { type: array, items: { $ref: '#/components/schemas/EvidenceLocator' } }
 paths:
   /health:
     get:
@@ -139,6 +177,38 @@ paths:
     get: { summary: Get immutable source-document metadata }
   /api/v1/source-documents/{id}/content:
     get: { summary: Download the original source-document bytes }
+  /api/v1/source-documents/{sourceDocumentId}/extractions:
+    get:
+      summary: List extraction summaries for a stored source document
+      parameters:
+        - { name: sourceDocumentId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: offset, in: query, schema: { type: integer, minimum: 0, default: 0 } }
+      responses: { '200': { description: Paginated extraction summaries without source-document bytes }, '404': { description: Source document not found } }
+    post:
+      summary: Persist an immutable structured extraction for a stored source document
+      parameters:
+        - { name: sourceDocumentId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/ActorRef' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+        - { $ref: '#/components/parameters/SourceMessageId' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExtractionInput' } } } }
+      responses: { '201': { description: Created }, '404': { description: Source document not found }, '409': { description: Idempotency conflict }, '422': { description: Invalid fact state or evidence locator } }
+  /api/v1/extractions/{id}:
+    get:
+      summary: Get immutable extraction facts and append-only fact reviews
+      parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Extraction provenance without source-document bytes }, '404': { description: Extraction not found } }
+  /api/v1/extraction-facts/{extractionFactId}/reviews:
+    post:
+      summary: Append a human confirmation or correction to an extraction fact
+      parameters:
+        - { name: extractionFactId, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/ActorRef' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+        - { $ref: '#/components/parameters/SourceMessageId' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExtractionFactReviewInput' } } } }
+      responses: { '201': { description: Created }, '404': { description: Extraction fact not found }, '409': { description: Idempotency conflict }, '422': { description: Invalid review state, value, reason, or evidence locator } }
   /api/v1/event-organizers:
     get: { summary: List active event organizers }
     post:
@@ -234,3 +304,28 @@ paths:
     post: { summary: Withdraw active participation }
   /api/v1/event-exhibitors/{id}/reactivate:
     post: { summary: Reactivate withdrawn participation }
+  /api/v1/cipls:
+    post:
+      summary: Create a CIPL with immutable version 1 and its source-backed items
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/SourceMessageId' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '201': { description: Created }, '409': { description: Inactive event participation }, '422': { description: Invalid CIPL items } }
+  /api/v1/cipls/{id}:
+    get: { summary: Get CIPL with immutable version history and items }
+  /api/v1/cipls/{id}/versions:
+    post:
+      summary: Create the next immutable CIPL version
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/SourceMessageId' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '201': { description: Created } }
+  /api/v1/cipl-versions/{id}/ready:
+    post:
+      summary: Mark a valid CIPL version ready and make it the active version
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }, { $ref: '#/components/parameters/SourceMessageId' }]
+      responses: { '200': { description: Ready }, '409': { description: Version has no valid items } }
+  /api/v1/shipments:
+    post:
+      summary: Create a shipment with allocations from one ready CIPL version
+      parameters: [{ $ref: '#/components/parameters/ActorRef' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '201': { description: Created }, '409': { description: CIPL version not ready or allocation exceeds source quantity }, '422': { description: Invalid source item or allocation unit } }

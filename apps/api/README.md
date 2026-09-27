@@ -49,6 +49,8 @@ Event Organizer ──< Event >── Venue
 - `POST /api/v1/source-documents` preserves the original document bytes and immutable metadata. Attachments from WhatsApp must reference a stored source-message UUID; manual uploads must not invent one.
 - Supported inputs are PDF, XLS, XLSX, CSV, JPEG, and PNG up to 20 MiB.
 - Document responses and audit records exclude file bytes. Retrieve the original through `GET /api/v1/source-documents/{id}/content`.
+- `POST /api/v1/source-documents/{id}/extractions` preserves immutable structured extraction facts, their information states, confidence, and source locators; it does not interpret document bytes.
+- `POST /api/v1/extraction-facts/{id}/reviews` appends an attributable human confirmation or correction without overwriting the extraction.
 - PostgreSQL is the on-premise byte store for this initial implementation; no external object-storage dependency is required.
 
 Example event creation:

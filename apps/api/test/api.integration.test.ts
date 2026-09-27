@@ -26,6 +26,16 @@ async function create(path: string, payload: unknown, key?: string) {
 }
 
 afterAll(async () => {
+  if (ids.cipl) await database.client`delete from shipment_allocations where shipment_id in (select id from shipments where cipl_version_id in (select id from cipl_versions where cipl_id = ${ids.cipl}))`
+  if (ids.cipl) await database.client`delete from shipments where cipl_version_id in (select id from cipl_versions where cipl_id = ${ids.cipl})`
+  if (ids.cipl) await database.client`update cipls set active_version_id = null where id = ${ids.cipl}`
+  if (ids.cipl) await database.client`delete from cipl_items where cipl_version_id in (select id from cipl_versions where cipl_id = ${ids.cipl})`
+  if (ids.cipl) await database.client`delete from cipl_versions where cipl_id = ${ids.cipl}`
+  if (ids.cipl) await database.client`delete from cipls where id = ${ids.cipl}`
+  if (ids.extractionFact) await database.client`delete from document_extraction_fact_reviews where extraction_fact_id = ${ids.extractionFact}`
+  if (ids.extraction) await database.client`delete from document_extraction_facts where extraction_id = ${ids.extraction}`
+  if (ids.extraction) await database.client`delete from document_extractions where id = ${ids.extraction}`
+  if (ids.provenanceDocument) await database.client`delete from source_documents where id = ${ids.provenanceDocument}`
   if (ids.sourceDocument) await database.client`delete from source_documents where id = ${ids.sourceDocument}`
   if (ids.sourceMessage) await database.client`delete from source_messages where id = ${ids.sourceMessage}`
   await database.client`delete from event_exhibitor_lifecycle_events where event_exhibitor_id in (select id from event_exhibitors where event_id = ${ids.event ?? '00000000-0000-0000-0000-000000000000'})`
@@ -201,5 +211,158 @@ describe('source lineage', () => {
       occurredAt: '2026-09-25T08:00:00.000Z',
     })
     expect(duplicate.response.status).toBe(409)
+  })
+})
+
+describe('extraction provenance', () => {
+  test('persists information states, evidence, reviews, and idempotent retries', async () => {
+    const document = await create('/api/v1/source-documents', {
+      sourceKind: 'MANUAL_UPLOAD',
+      fileName: 'provenance-invoice.pdf',
+      mimeType: 'application/pdf',
+      contentBase64: Buffer.from('provenance invoice bytes').toString('base64'),
+      receivedAt: '2026-09-25T10:00:00.000Z',
+    })
+    expect(document.response.status).toBe(201)
+    ids.provenanceDocument = document.body.data.id
+
+    const key = 'integration-extraction-replay'
+    const payload = {
+      facts: [
+        {
+          field: 'invoice.number',
+          informationState: 'SOURCE_BACKED',
+          assertedValue: 'INV-001',
+          evidenceLocators: [{ kind: 'PDF_PAGE', reference: { page: 1 }, excerpt: 'Invoice INV-001' }],
+        },
+        {
+          field: 'currency',
+          informationState: 'INFERRED',
+          assertedValue: 'USD',
+          confidencePercent: 82,
+        },
+        {
+          field: 'consignee.name',
+          informationState: 'UNKNOWN',
+        },
+        {
+          field: 'weight.gross',
+          informationState: 'CONFLICTING',
+          conflictExplanation: 'Invoice and packing list differ.',
+          evidenceLocators: [{ kind: 'PDF_PAGE', reference: { page: 2 } }],
+        },
+      ],
+    }
+    const first = await json<{ data: { id: string; facts: Array<{ id: string; field: string; evidenceLocators: unknown }> } }>(
+      `/api/v1/source-documents/${ids.provenanceDocument}/extractions`,
+      { method: 'POST', headers: writeHeaders(key), body: JSON.stringify(payload) },
+    )
+    const replay = await json<{ data: { id: string } }>(`/api/v1/source-documents/${ids.provenanceDocument}/extractions`, {
+      method: 'POST', headers: writeHeaders(key), body: JSON.stringify(payload),
+    })
+    expect(first.response.status).toBe(201)
+    expect(replay.response.status).toBe(201)
+    expect(replay.body.data.id).toBe(first.body.data.id)
+    ids.extraction = first.body.data.id
+    const extractionFact = first.body.data.facts.find((fact) => fact.field === 'currency')
+    if (!extractionFact) throw new Error('Expected currency fact in extraction response.')
+    ids.extractionFact = extractionFact.id
+
+    const conflict = await json<{ error: { code: string } }>(`/api/v1/source-documents/${ids.provenanceDocument}/extractions`, {
+      method: 'POST', headers: writeHeaders(key), body: JSON.stringify({ facts: [payload.facts[0]] }),
+    })
+    expect(conflict.response.status).toBe(409)
+    expect(conflict.body.error.code).toBe('IDEMPOTENCY_CONFLICT')
+
+    const review = await json<{ data: { resultingState: string; resultingValue: string } }>(`/api/v1/extraction-facts/${ids.extractionFact}/reviews`, {
+      method: 'POST',
+      headers: writeHeaders(),
+      body: JSON.stringify({
+        kind: 'CONFIRM',
+        resultingState: 'CONFIRMED',
+        resultingValue: 'USD',
+        reason: 'Confirmed by commercial invoice review.',
+        evidenceLocators: [{ kind: 'PDF_PAGE', reference: { page: 1 } }],
+      }),
+    })
+    expect(review.response.status).toBe(201)
+    expect(review.body.data.resultingState).toBe('CONFIRMED')
+
+    const detail = await json<{ data: { facts: Array<{ field: string; reviews: Array<{ resultingValue: string }>; evidenceLocators: unknown }> } }>(`/api/v1/extractions/${ids.extraction}`)
+    expect(detail.response.status).toBe(200)
+    const currency = detail.body.data.facts.find((fact) => fact.field === 'currency')
+    expect(currency?.reviews[0]?.resultingValue).toBe('USD')
+    const invoice = detail.body.data.facts.find((fact) => fact.field === 'invoice.number')
+    expect(invoice?.evidenceLocators).toEqual([{ kind: 'PDF_PAGE', reference: { page: 1 }, excerpt: 'Invoice INV-001' }])
+    expect('content' in detail.body.data).toBeFalse()
+  })
+
+  test('rejects invalid fact combinations and unknown source documents without partial writes', async () => {
+    const invalid = await json<{ error: { code: string } }>(`/api/v1/source-documents/${ids.provenanceDocument}/extractions`, {
+      method: 'POST',
+      headers: writeHeaders(),
+      body: JSON.stringify({ facts: [{ field: 'consignee.name', informationState: 'UNKNOWN', assertedValue: 'PT Example' }] }),
+    })
+    expect(invalid.response.status).toBe(422)
+    expect(invalid.body.error.code).toBe('VALIDATION_ERROR')
+
+    const missing = await json<{ error: { code: string } }>('/api/v1/source-documents/00000000-0000-4000-8000-000000000001/extractions', {
+      method: 'POST',
+      headers: writeHeaders(),
+      body: JSON.stringify({ facts: [{ field: 'invoice.number', informationState: 'SOURCE_BACKED', assertedValue: 'INV-404' }] }),
+    })
+    expect(missing.response.status).toBe(404)
+    const extractions = await json<{ meta: { total: number } }>(`/api/v1/source-documents/${ids.provenanceDocument}/extractions`)
+    expect(extractions.response.status).toBe(200)
+    expect(extractions.body.meta.total).toBe(1)
+  })
+})
+
+describe('CIPL versions', () => {
+  test('preserves immutable revisions and selects a ready active version', async () => {
+    const initial = await json<{ data: { id: string; versions: Array<{ id: string; versionNumber: number }> } }>('/api/v1/cipls', {
+      method: 'POST', headers: writeHeaders(), body: JSON.stringify({
+        eventExhibitorId: ids.internationalParticipation,
+        referenceNumber: 'CIPL-001',
+        sourceDocumentId: ids.sourceDocument,
+        receivedAt: '2026-09-25T09:00:00.000Z',
+        items: [{ lineNumber: 1, description: 'Display stand', quantity: 2, unit: 'PCS' }],
+      }),
+    })
+    expect(initial.response.status).toBe(201)
+    ids.cipl = initial.body.data.id
+    const firstVersion = initial.body.data.versions[0]
+    if (!firstVersion) throw new Error('Expected initial CIPL version.')
+    const ready = await json<{ data: { status: string; cipl: { activeVersionId: string } } }>(`/api/v1/cipl-versions/${firstVersion.id}/ready`, { method: 'POST', headers: writeHeaders(), body: '{}' })
+    expect(ready.response.status).toBe(200)
+    expect(ready.body.data.cipl.activeVersionId).toBe(firstVersion.id)
+    const revision = await json<{ data: { id: string; versionNumber: number } }>(`/api/v1/cipls/${ids.cipl}/versions`, {
+      method: 'POST', headers: writeHeaders(), body: JSON.stringify({
+        sourceDocumentId: ids.sourceDocument, receivedAt: '2026-09-25T10:00:00.000Z',
+        revisionNote: 'Corrected quantity.', items: [{ lineNumber: 1, description: 'Display stand', quantity: 3, unit: 'PCS' }],
+      }),
+    })
+    expect(revision.response.status).toBe(201)
+    ids.readyCiplVersion = revision.body.data.id
+    expect(revision.body.data.versionNumber).toBe(2)
+    await json(`/api/v1/cipl-versions/${revision.body.data.id}/ready`, { method: 'POST', headers: writeHeaders(), body: '{}' })
+    const detail = await json<{ data: { activeVersionId: string; versions: Array<{ versionNumber: number; items: Array<{ quantity: number }> }> } }>(`/api/v1/cipls/${ids.cipl}`)
+    expect(detail.body.data.activeVersionId).toBe(revision.body.data.id)
+    expect(detail.body.data.versions[0]?.items[0]?.quantity).toBe(2)
+    expect(detail.body.data.versions[1]?.items[0]?.quantity).toBe(3)
+  })
+})
+
+describe('shipment allocations', () => {
+  test('accepts allocations from a ready CIPL version and rejects over-allocation', async () => {
+    const cipl = await json<{ data: { versions: Array<{ id: string; items: Array<{ id: string; unit: string }> }> } }>(`/api/v1/cipls/${ids.cipl}`)
+    const version = cipl.body.data.versions.find((value) => value.id === ids.readyCiplVersion)
+    const item = version?.items[0]
+    if (!item) throw new Error('Expected ready CIPL item.')
+    const payload = { ciplVersionId: ids.readyCiplVersion, sourceDocumentId: ids.sourceDocument, documentType: 'BL', documentNumber: 'BL-001', direction: 'IMPORT', allocations: [{ ciplItemId: item.id, quantity: 3, unit: item.unit }] }
+    const first = await create('/api/v1/shipments', payload)
+    expect(first.response.status).toBe(201)
+    const excess = await create('/api/v1/shipments', { ...payload, documentNumber: 'BL-002', allocations: [{ ...payload.allocations[0], quantity: 1 }] })
+    expect(excess.response.status).toBe(409)
   })
 })

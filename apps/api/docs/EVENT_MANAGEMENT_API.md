@@ -488,13 +488,85 @@ Archived records:
 
 Use `?includeArchived=true` on organizer, venue, exhibitor, and agent lists when an administrative view needs archived records. `DELETE` is intentionally rejected with `405`.
 
-## 9. Endpoint summary
+## 9. Source extraction provenance
+
+OpenClaw interprets source documents outside this API, then records structured facts
+through the API. The API preserves the source document, extracted facts, evidence
+locators, and later human review separately. It never infers or confirms a value merely
+because a confidence score exists.
+
+Create an extraction only for an existing source-document UUID:
+
+```bash
+curl -X POST "$BASE_URL/api/v1/source-documents/<SOURCE_DOCUMENT_UUID>/extractions" \
+  -H 'Content-Type: application/json' \
+  -H "X-Actor-Ref: $ACTOR_REF" \
+  -H 'Idempotency-Key: 2ab57870-4f83-485f-9a70-9871b53abb31' \
+  -d '{
+    "facts": [{
+      "field": "invoice.number",
+      "informationState": "SOURCE_BACKED",
+      "assertedValue": "INV-001",
+      "evidenceLocators": [{
+        "kind": "PDF_PAGE",
+        "reference": { "page": 1 },
+        "excerpt": "Invoice INV-001"
+      }]
+    }, {
+      "field": "consignee.name",
+      "informationState": "UNKNOWN"
+    }]
+  }'
+```
+
+Each fact has one state:
+
+| State | Meaning |
+|---|---|
+| `SOURCE_BACKED` | A value is supported by a cited source location. |
+| `CONFIRMED` | A human-confirmed value. |
+| `INFERRED` | Agent suggestion; confidence does not make it confirmed. |
+| `UNKNOWN` | The value is not available. |
+| `CONFLICTING` | Source evidence conflicts; `conflictExplanation` is required. |
+| `NOT_APPLICABLE` | The field does not apply. |
+
+`SOURCE_BACKED`, `CONFIRMED`, and `INFERRED` require `assertedValue`;
+`UNKNOWN`, `CONFLICTING`, and `NOT_APPLICABLE` prohibit it. A conflicting fact
+requires `conflictExplanation`.
+
+Retrieve summaries with `GET /api/v1/source-documents/{sourceDocumentId}/extractions`
+or facts and reviews with `GET /api/v1/extractions/{id}`. Neither response contains
+source-document bytes.
+
+An authorized integration can append, not overwrite, a review:
+
+```bash
+curl -X POST "$BASE_URL/api/v1/extraction-facts/<FACT_UUID>/reviews" \
+  -H 'Content-Type: application/json' \
+  -H "X-Actor-Ref: $ACTOR_REF" \
+  -H 'Idempotency-Key: 7aa6edba-9c17-4479-a913-0ef7a4801bf4' \
+  -d '{
+    "kind": "CONFIRM",
+    "resultingState": "CONFIRMED",
+    "resultingValue": "INV-001",
+    "reason": "Verified against the original invoice."
+  }'
+```
+
+`CONFIRM` must result in `CONFIRMED`. Reviews retain the actor, time, reason, result,
+and optional evidence; the original extraction fact remains immutable. Current
+`X-Actor-Ref` attribution is not production authorization—trusted identity and
+permission enforcement remain required before production agent writes.
+
+## 10. Endpoint summary
 
 | Resource | Operations |
 |---|---|
 | Health | `GET /health` |
 | Organizers | `GET/POST /api/v1/event-organizers`, `GET/PATCH /api/v1/event-organizers/{id}`, contacts, archive |
 | Venues | `GET/POST /api/v1/venues`, `GET/PATCH /api/v1/venues/{id}`, contacts, archive |
+| Source documents | `POST/GET /api/v1/source-documents`, document content, extraction list/create |
+| Extraction provenance | `GET /api/v1/extractions/{id}`, `POST /api/v1/extraction-facts/{id}/reviews` |
 | Events | `GET/POST /api/v1/events`, `GET/PATCH /api/v1/events/{id}`, cancel, reactivate |
 | Exhibitors | `GET/POST /api/v1/exhibitors`, `GET/PATCH /api/v1/exhibitors/{id}`, contacts, archive |
 | Agents | `GET/POST /api/v1/agents`, `GET/PATCH /api/v1/agents/{id}`, contacts, archive |

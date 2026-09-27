@@ -18,6 +18,10 @@ import {
   updateVenueSchema,
 } from './modules/schemas'
 import { registerEventManagementRoutes } from './modules/event-management'
+import { registerCiplVersionRoutes } from './modules/cipl-versions'
+import { registerExtractionProvenanceRoutes } from './modules/extraction-provenance'
+import { registerShipmentRoutes } from './modules/shipments'
+import { registerTicketRoutes } from './modules/tickets'
 import { registerSourceLineageRoutes } from './modules/source-lineage'
 import { ApiError, notFound } from './shared/errors'
 import { auditedMutation, type Transaction } from './shared/mutations'
@@ -354,6 +358,10 @@ export function createApp({ db, sql }: AppDependencies) {
 
   registerEventManagementRoutes(app, db)
   registerSourceLineageRoutes(app, db)
+  registerExtractionProvenanceRoutes(app, db)
+  registerCiplVersionRoutes(app, db)
+  registerShipmentRoutes(app, db)
+  registerTicketRoutes(app, db)
 
   return app
 }
