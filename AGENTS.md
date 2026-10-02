@@ -10,10 +10,14 @@ The product helps Indonesian customs-brokerage (PPJK) teams turn conversations a
 
 ## Architecture boundaries
 
-- **OpenClaw agent:** primary conversational interface and orchestration layer. It receives WhatsApp messages and files, understands user intent, extracts information from PDFs and spreadsheets, asks clarifying questions, and calls application tools/APIs.
+- **OpenClaw agent:** WhatsApp integration layer. Receives messages and files from WhatsApp, maintains conversational context, and calls `apps/mcp-server/` tools to act on operational data.
+- **Pi (`agents/pi/ppjk-tools/`):** PPJK domain tool layer. Provides deterministic primitive tools for document identification, trade document verification, HS classification, and structured extraction. Pi calls API tools; it does not own operational data.
 - **`apps/api/`:** on-premise system of record and deterministic business API. It owns persisted operational data, validation, relationships, lifecycle rules, authorization boundaries, and auditability.
-- **`apps/project-management/`:** web-based operational workspace and domain reference. It is the richer interface for supervisors and staff to inspect, correct, approve, and manage events, exhibitors, documents, shipments, customs jobs, and coordination work.
+- **`apps/project-management/`:** web-based operational workspace (Next.js). Active for the current phase. Being migrated from browser-local storage to `apps/api/` HTTP client one aggregate at a time. See `specs/005-workspace-api-cutover.md`.
+- **`apps/workspace/`:** Svelte workspace scaffold. Frozen — not under active development. Revisit after Next.js API cutover is complete.
 - **`apps/insw-gateway/`:** existing INSW/LARTAS gateway. Treat it as a supporting integration, not the overall product identity.
+
+> Platform decisions are recorded in `.kiro/steering.md`. Read it before making implementation suggestions.
 
 Do not reintroduce Gemini or another embedded cloud document-extraction dependency into the upgraded architecture. Document interpretation belongs to the OpenClaw agent. The backend and web app should accept structured results, preserve source-document lineage, validate inputs, and expose corrections and approvals.
 

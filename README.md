@@ -23,13 +23,17 @@ docs/
   research/            Riset produk dan PPJK
 ```
 
-## Menjalankan alur utama
+## Menjalankan dengan Docker
 
-1. Jalankan PostgreSQL dan API dari `apps/api/`.
-2. Jalankan workspace dari `apps/workspace/`.
-3. Build dan daftarkan MCP server dari `apps/mcp-server/` bila memakai OpenClaw.
+```bash
+cp .env.example .env
+# Isi AUTH_SECRET — buat dengan: openssl rand -base64 32
+docker compose up -d
+```
 
-Instruksi rinci tersedia di README masing-masing komponen.
+Service yang berjalan: PostgreSQL (5432), API (3001), web UI (3000), INSW gateway (3002).
+
+Instruksi rinci per komponen tersedia di README masing-masing.
 
 ## Prinsip pengembangan
 

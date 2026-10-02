@@ -1,0 +1,74 @@
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vss}
+      POSTGRES_USER: ${POSTGRES_USER:-vss}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vss}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vss} -d ${POSTGRES_DB:-vss}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ── VSS Operations API ────────────────────────────────────────────────────────
+  api:
+    build:
+      context: ./apps/api
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vss}:${POSTGRES_PASSWORD:-vss}@postgres:5432/${POSTGRES_DB:-vss}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "127.0.0.1:3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Project Management Web UI ─────────────────────────────────────────────────
+  project-management:
+    build:
+      context: ./apps/project-management
+    environment:
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET wajib diisi di .env}
+      VSS_API_BASE_URL: http://api:3001
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ── INSW / LARTAS Gateway ─────────────────────────────────────────────────────
+  insw-gateway:
+    build:
+      context: ./apps/insw-gateway
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3002
+      LARTAS_BASE_URL: ${LARTAS_BASE_URL:-https://api.insw.go.id}
+      INSW_CLIENT_ID: ${INSW_CLIENT_ID:-}
+      INSW_CLIENT_BEARER: ${INSW_CLIENT_BEARER:-}
+      TOKEN_FILE_PATH: /data/token.txt
+      REQUEST_TIMEOUT_MS: ${REQUEST_TIMEOUT_MS:-30000}
+      MAX_RETRIES: ${MAX_RETRIES:-3}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      API_KEY: ${INSW_API_KEY:-}
+      ADMIN_KEY: ${INSW_ADMIN_KEY:-}
+    ports:
+      - "127.0.0.1:3002:3002"
+    volumes:
+      - insw_token:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  insw_token:

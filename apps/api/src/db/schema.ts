@@ -257,6 +257,37 @@ export const shipmentAllocations = pgTable('shipment_allocations', {
   unit: text('unit').notNull(),
 }, (table) => [unique('shipment_allocations_shipment_item_unique').on(table.shipmentId, table.ciplItemId), index('shipment_allocations_item_idx').on(table.ciplItemId)])
 
+export const customsJobs = pgTable('customs_jobs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  shipmentId: uuid('shipment_id').notNull().references(() => shipments.id, { onDelete: 'restrict' }),
+  documentType: text('document_type', { enum: ['BC_2_3', 'BC_2_5', 'BC_3_0'] }).notNull(),
+  status: text('status', { enum: ['DRAFT', 'PREPARING', 'SUBMITTED', 'REGISTERED', 'RELEASED', 'COMPLETED', 'ON_HOLD', 'CANCELLED'] }).notNull().default('DRAFT'),
+  notes: text('notes'),
+  ...timestamps,
+}, (table) => [index('customs_jobs_shipment_idx').on(table.shipmentId)])
+
+export const customsJobAllocations = pgTable('customs_job_allocations', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  customsJobId: uuid('customs_job_id').notNull().references(() => customsJobs.id, { onDelete: 'restrict' }),
+  shipmentAllocationId: uuid('shipment_allocation_id').notNull().references(() => shipmentAllocations.id, { onDelete: 'restrict' }),
+  quantity: doublePrecision('quantity').notNull(),
+  unit: text('unit').notNull(),
+}, (table) => [
+  unique('customs_job_allocations_job_shipment_alloc_unique').on(table.customsJobId, table.shipmentAllocationId),
+  index('customs_job_allocations_job_idx').on(table.customsJobId),
+])
+
+export const customsJobTransitions = pgTable('customs_job_transitions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  customsJobId: uuid('customs_job_id').notNull().references(() => customsJobs.id, { onDelete: 'restrict' }),
+  fromStatus: text('from_status').notNull(),
+  toStatus: text('to_status').notNull(),
+  reason: text('reason'),
+  evidenceSourceDocumentId: uuid('evidence_source_document_id').references(() => sourceDocuments.id, { onDelete: 'restrict' }),
+  actorRef: text('actor_ref').notNull(),
+  occurredAt: timestamp('occurred_at', { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [index('customs_job_transitions_job_idx').on(table.customsJobId, table.occurredAt)])
+
 export const users = pgTable('users', { id: uuid('id').defaultRandom().primaryKey(), name: text('name').notNull(), email: text('email').notNull(), passwordHash: text('password_hash').notNull(), isActive: boolean('is_active').notNull(), ...timestamps })
 export const userRoles = pgTable('user_roles', { userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'restrict' }), role: text('role').notNull() }, (table) => [primaryKey({ columns: [table.userId, table.role] })])
 export const tickets = pgTable('tickets', { id: uuid('id').defaultRandom().primaryKey(), contextKind: text('context_kind').notNull(), eventId: uuid('event_id').references(() => events.id), customsJobId: uuid('customs_job_id'), assigneeId: uuid('assignee_id').references(() => users.id), title: text('title').notNull(), description: text('description'), priority: text('priority').notNull(), status: text('status').notNull(), outcome: text('outcome'), createdByUserId: uuid('created_by_user_id').references(() => users.id), ...timestamps })

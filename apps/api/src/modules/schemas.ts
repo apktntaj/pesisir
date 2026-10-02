@@ -226,6 +226,42 @@ export const createShipmentSchema = z.object({
   }
 })
 
+const customsJobAllocationSchema = z.object({
+  shipmentAllocationId: uuid,
+  quantity: z.number().positive(),
+  unit: requiredText.max(50),
+}).strict()
+
+export const createCustomsJobSchema = z.object({
+  shipmentId: uuid,
+  documentType: z.enum(['BC_2_3', 'BC_2_5', 'BC_3_0']),
+  notes: nullableText,
+  allocations: z.array(customsJobAllocationSchema).min(1),
+}).strict().superRefine((value, context) => {
+  const seen = new Set<string>()
+  for (const [index, allocation] of value.allocations.entries()) {
+    if (seen.has(allocation.shipmentAllocationId)) context.addIssue({ code: 'custom', path: ['allocations', index, 'shipmentAllocationId'], message: 'Setiap shipment allocation hanya boleh dialokasikan sekali per customs job.' })
+    seen.add(allocation.shipmentAllocationId)
+  }
+})
+
+const normalTransitions = ['DRAFT', 'PREPARING', 'SUBMITTED', 'REGISTERED', 'RELEASED', 'COMPLETED'] as const
+const allStatuses = [...normalTransitions, 'ON_HOLD', 'CANCELLED'] as const
+export type CustomsJobStatus = typeof allStatuses[number]
+
+export const transitionCustomsJobSchema = z.discriminatedUnion('toStatus', [
+  z.object({ toStatus: z.enum(['PREPARING', 'SUBMITTED', 'REGISTERED', 'RELEASED', 'COMPLETED']) }).strict(),
+  z.object({ toStatus: z.literal('ON_HOLD'), reason: requiredText }).strict(),
+  z.object({ toStatus: z.literal('CANCELLED'), reason: requiredText }).strict(),
+  z.object({
+    toStatus: z.literal('PREPARING'),
+    reason: requiredText,
+    evidenceSourceDocumentId: uuid,
+  }).strict(),
+])
+
+export const resumeCustomsJobSchema = z.object({ reason: requiredText, evidenceSourceDocumentId: uuid }).strict()
+
 export const createTicketSchema = z.object({
   contextKind: z.enum(['GENERAL', 'EVENT', 'CUSTOMS_JOB']),
   eventId: uuid.nullable().optional(),

@@ -21,6 +21,7 @@ import { registerEventManagementRoutes } from './modules/event-management'
 import { registerCiplVersionRoutes } from './modules/cipl-versions'
 import { registerExtractionProvenanceRoutes } from './modules/extraction-provenance'
 import { registerShipmentRoutes } from './modules/shipments'
+import { registerCustomsJobRoutes } from './modules/customs-jobs'
 import { registerTicketRoutes } from './modules/tickets'
 import { registerSourceLineageRoutes } from './modules/source-lineage'
 import { ApiError, notFound } from './shared/errors'
@@ -361,6 +362,7 @@ export function createApp({ db, sql }: AppDependencies) {
   registerExtractionProvenanceRoutes(app, db)
   registerCiplVersionRoutes(app, db)
   registerShipmentRoutes(app, db)
+  registerCustomsJobRoutes(app, db)
   registerTicketRoutes(app, db)
 
   return app
